@@ -1,3 +1,4 @@
 # simpleobserver
 
-The beginnings of a web-based observatory control application.
+The beginnings of a web-based observatory control application using flask.
+
