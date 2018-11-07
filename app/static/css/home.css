@@ -1,0 +1,356 @@
+
+@import url('https://fonts.googleapis.com/css?family=Oswald:200,400');
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+.hidden {
+    display: none !important;
+}
+
+input[type="text"] {
+    padding-left: 5px;
+}
+
+body {
+    background-color: #222;
+    font-family: Helvetica;
+    color: #ccc;
+    overflow: hidden;
+}
+
+.header {
+    grid-area: header;
+    background: #282828;
+}
+.info {
+    grid-area: info;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: calc(100vh - 100px) !important;
+    overflow:hidden;
+}
+.controls {
+    grid-area: controls;
+    overflow-y:auto;
+}
+.scroll-icons {
+    grid-area: scroll-icons;
+    /*border: #f00 2px solid;*/
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding-top: 100px;
+}
+
+
+.wrapper {
+    display: grid;
+    grid-template-areas:
+        "header"
+        "info"
+        "scroll-icons"
+        "controls";
+}
+@media (min-width: 700px) {
+    .wrapper {
+        grid-template-columns: 1fr 1fr 40px;
+        grid-template-rows: 100px calc(100vh - 100px - 1em);  
+        grid-gap: 20px;
+        height: 90vh;
+        grid-template-areas:
+            "header header header"
+            "info controls scroll-icons";
+    }
+}
+
+/* Header Layout */
+.header .section-wrapper {
+    display: flex;
+    justify-content: space-between;
+    height: 100px;
+    width: 100vw;
+}
+.header h1 {
+    font: 48px/1 'Oswald', sans-serif;
+    font-weight: lighter;
+    padding: 25px;
+    margin-left: 50px;
+}
+.header .title-link{
+    color: #bbb;
+    outline: 0;
+    text-decoration: none;
+}
+.header .title-link:hover, 
+.header .title-link.focus {
+    color: #ddd;
+    outline: 0;
+    cursor: pointer;
+    text-decoration: none;
+}
+.header .title-link:active {
+    text-decoration: underline;
+}
+.header .notloggedin {
+    background: #444;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    
+    grid-gap: 10px;
+    height: 100%;
+    width: 300px;
+    padding: 10px;
+    margin-left: auto;
+}
+a {
+    text-decoration: none;
+}
+#login-register-button {
+    width: 100%;
+    height: 100%;
+}
+.loggedin {
+    list-style: none;
+    margin: 0;
+}
+.loggedin li {
+    color: #fff;
+    background: #333;
+    display: block;
+    float: left;
+    padding: 1rem;
+    position: relative;
+    text-decoration: none;
+    transition-duration: 0.3s;
+}
+.loggedin li a {
+    color: #fff;
+}
+.loggedin li:hover {
+    background: #444;
+    cursor: pointer;
+}
+.loggedin li ul {
+    visibility: hidden;
+    opacity: 0;
+    min-width: 5rem;
+    text-justify: right;
+    transition: all 0.3s ease;
+    margin-top: 1em;
+    left: 0;
+    display: none;
+}
+.loggedin li:hover > ul,
+.loggedin li:focus-within > ul, 
+.loggedin li ul:hover {
+    visibility: visible;
+    opacity: 1;
+    display: block;
+}
+.loggedin li ul li {
+    clear: both;
+    width: 100%;
+}
+
+/* Registration Form */
+.register-form {
+    grid-row: 2/3;
+    grid-column: 1/4;
+
+    display: flex;
+    flex-direction: column;
+    
+    margin: 30px;
+}
+.register-form form {
+    align-self: center;
+    padding: 20px;
+    border: #888 1px solid;
+}
+.register-form input {
+    width: 200px;
+    margin: 10px;
+    align-self: center;
+}
+.register-form label {
+    margin: 10px;
+    align-self: center;
+}
+
+
+/* Info Panel (left half of page) */
+.statusbar {
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    border: #666 1px solid;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+.statusbar .status {
+    margin: 15px 5px;
+}
+
+.views {
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    position: relative;
+    height: calc(100% - 200px);
+}
+.views > .views-menu {
+    border-bottom: #555 3px solid;
+}
+.views ul.views-tabs {
+    list-style: none;
+    color: #888;
+}
+.views ul.views-tabs li {
+    background: #333;
+    font: 14px/1 'Open Sans', sans-serif;
+    color: #aaa;
+    display: inline-block;
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.views ul.views-tabs li:hover {
+    background: #444;
+    cursor: pointer;
+}
+.views ul.views-tabs li.current {
+    background:#555;
+    color: #fff;
+}
+.views-content{
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+.views-content.current{
+    display: block;
+    object-fit: contain;
+}
+.views > .views-content {
+    margin: 10px;
+}
+
+
+
+/* Module Styles */
+.module {
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 20px;
+    border: #444 2px solid;
+    margin-bottom: 40px;
+}
+.module .module-head {
+    height: 70px;
+    background-color: #444;
+    cursor: pointer;
+    width: 100%;
+    padding: 12px 20px;
+}
+.module .module-head .module-head-wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+.module .head-title {
+    font: 14px/1 'Helvetica', sans-serif;
+    margin: 5px;
+    margin-top: 10px;
+}
+.module .module-head .module-head-wrapper .head-inputs, 
+.module .module-head .module-head-wrapper .head-inputs form {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    color: #000;
+}
+.module .head-inputs input {
+    margin-right: 20px;
+    padding-left: 5px;
+    width: minmax(40px, 100px);
+}
+.module .head-inputs button {
+    width: 120px;
+    margin-left: 15px;
+    margin-top: 5px;
+    height: 2em;
+}
+.module .module-body {
+    height: auto;
+    overflow: hidden;
+    background-color: #333;
+    transition: height 0.3s ease-out;
+}
+.module .module-body .module-body-wrapper {
+    padding: 4px;
+    margin: 20px;
+}
+
+
+/* Specific Module Panes */
+#target-search {
+    width: 220px;
+}
+#module-go {
+    display: flex;
+    flex-direction: column;
+    margin: 30px;
+    height: 70vh;
+}
+#go-filters{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-bottom: 2em;
+    margin-bottom: 2em;
+    border-bottom: #444 1px solid;
+}
+#go-filters label {
+    padding: 15px;
+}
+#go-filters input {
+    margin-bottom: 8px;
+}
+#go-filters button {
+    margin-bottom: 6px;
+    width: 100%;
+}
+#go-table {
+    height: 50vh;
+}
+#mag-filter-slider .noUi-connect {
+    background: #f00;
+}
+
+
+/* Scroll Icons */
+.scroll-icons .scroll-button {
+    background-color: rgb(90, 1, 1);
+    border: rgb(121, 0, 0) 3px solid;
+    border-right: none;
+    width: 40px;
+    height: 40px;
+    margin-bottom: 20px;
+    padding-top: 7px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+}
+.scroll-icons a {
+    color: #ccc;
+    outline: 0;
+    text-decoration: none;
+}

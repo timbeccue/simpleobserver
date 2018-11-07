@@ -1,0 +1,77 @@
+<!doctype html>
+
+<head>
+    <link type="text/css" rel="stylesheet" href="static/css/home.css">
+    <link type="text/css" rel="stylesheet" href="static/css/obvious-buttons.css">
+
+</head>
+<body>
+
+    <div class="wrapper">
+        <section class="header">
+            <div class="section-wrapper">
+                <h1><a class="title-link" href=".">photon <b>ranch</b></a></h1>
+
+                {% if current_user.is_anonymous %}
+                <form class='notloggedin' id="login" method="POST" action="/login">
+                    {{ loginform.hidden_tag() }}
+                    {{ loginform.username.label }}
+                    {{ loginform.username() }}
+                    {{ loginform.password.label }}
+                    {{ loginform.password() }}
+                    {# loginform.remember_me() #}
+                    {# loginform.remember_me.label #}
+                    {{ loginform.submit() }}
+                    <a href="{{ url_for('register') }}"><button id="login-register-button" type="button">Create New Account</button></a>
+                </form>
+                {% else %}
+                <ul class='loggedin'>
+                    <li><a href="#">Hello, {{ current_user.username }}</a>
+                        <ul class="dropdown">
+                            <li><a href="{{ url_for('logout') }}">logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                {% endif %}
+            </div>
+        </section>
+
+        <div class="register-form">
+            <form action="" method="post">
+                {{ form.hidden_tag() }}
+                <p>
+                    {{ form.username.label }}<br>
+                    {{ form.username(size=32) }}<br>
+                    {% for error in form.username.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form.email.label }}<br>
+                    {{ form.email(size=64) }}<br>
+                    {% for error in form.email.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form.password.label }}<br>
+                    {{ form.password(size=32) }}<br>
+                    {% for error in form.password.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form.password2.label }}<br>
+                    {{ form.password2(size=32) }}<br>
+                    {% for error in form.password2.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+                <p>{{ form.submit(class_="btn btn-inverse") }}</p>
+            </form>
+        </div>
+
+    </div>
+
+
+</body>

@@ -1,0 +1,25 @@
+# Sources:
+# SIMBAD Astronomical Database [http://simbad.u-strasbg.fr]
+# NED (NASA/IPAC EXTRAGALACTIC DATABASE) [http://ned.ipac.caltech.edu]
+# Catalogue of HII Regions (Sharpless 1959) [http://vizier.u-strasbg.fr/viz-bin/VizieR?-source=VII/20]
+# H-α emission regions in Southern Milky Way (Rodgers+ 1960) [http://vizier.u-strasbg.fr/viz-bin/VizieR?-source=VII/216]
+# Catalogue of Reflection Nebulae (Van den Bergh, 1966) [http://vizier.u-strasbg.fr/viz-bin/VizieR?-source=VII/21]
+# Lynds' Catalogue of Dark Nebulae (LDN) (Lynds 1962) [http://vizier.u-strasbg.fr/viz-bin/VizieR?-source=VII/7A]
+# Lynds' Catalogue of Bright Nebulae (Lynds 1965) [http://vizier.u-strasbg.fr/viz-bin/VizieR?-source=VII/9]
+# Catalog of bright diffuse Galactic nebulae (Cederblad, 1946) [http://vizier.u-strasbg.fr/viz-bin/VizieR?-source=VII/231]
+# Barnard's Catalogue of 349 Dark Objects in the Sky (Barnard, 1927) [http://vizier.u-strasbg.fr/viz-bin/VizieR?-source=VII/220A]
+# A Catalogue of Star Clusters shown on Franklin-Adams Chart Plates (Melotte, 1915) [http://adsabs.harvard.edu/abs/1915MmRAS..60..175M]
+# On Structural Properties of Open Galactic Clusters and their Spatial Distribution. Catalog of Open Galactic Clusters. (Collinder, 1931) [http://adsabs.harvard.edu/abs/1931AnLun...2....1C]
+# The Collinder Catalog of Open Star Clusters. An Observer’s Checklist. Edited by Thomas Watson [http://www.cloudynights.com/page/articles/cat/articles/the-collinder-catalog-updated-r2467]
+# For cross-index: 
+# Merged catalogue of reflection nebulae (Magakian, 2003) [http://vizier.u-strasbg.fr/viz-bin/VizieR-3?-source=J/A+A/399/141]
+# Morphology and magnitudes (partially) for Melotte catalogue:
+# List:Melotte - DeepSkyPedia :: Astronomy [http://deepskypedia.com/wiki/List:Melotte]
+# ATLAS OF PECULIAR GALAXIES (https://ned.ipac.caltech.edu/level5/Arp/frames.html)
+# Interacting galaxies catalogue (Vorontsov-Velyaminov+, 2001) [http://vizier.u-strasbg.fr/viz-bin/VizieR?-source=VII/236]
+# Catalogue of Galactic Planetary Nebulae (Kohoutek, 2001) [http://vizier.u-strasbg.fr/viz-bin/VizieR?-source=IV/24]
+# Strasbourg-ESO Catalogue of Galactic Planetary Nebulae (Acker+, 1992) [http://vizier.u-strasbg.fr/viz-bin/VizieR?-source=V/84]
+# A catalogue of Galactic supernova remnants (Green, 2014) [http://vizier.u-strasbg.fr/viz-bin/VizieR?-source=VII/272]
+# A catalog of rich clusters of galaxies (Abell+, 1989) [http://vizier.u-strasbg.fr/viz-bin/VizieR?-source=VII/110A]
+# The Magellanic Cloud Calibration of the Galactic Planetary Nebula Distance Scale. The Astrophysical Journal, Volume 689, Issue 1, pp. 194-202 (2008). [http://adsabs.harvard.edu/abs/2008ApJ...689..194S]
+# Observe all of the Abell planetary nebulae. Astronomy, Issue 4 (2011). http://www.astronomy.com/magazine/2011/04/observe-all-of-the-abell-planetary-nebulae
