@@ -7,16 +7,16 @@ var state_rot1 = {};
 
 $(document).ready( function() {
 
-    var old_source = new EventSource('/status/old/1');
+    //var old_source = new EventSource('/status/old/1');
     var mnt1_source = new EventSource('/status/mnt/1');
-    var foc1_source = new EventSource('/status/foc/1');
-    var rot1_source = new EventSource('/status/rot/1');
+    //var foc1_source = new EventSource('/status/foc/1');
+    //var rot1_source = new EventSource('/status/rot/1');
 
-    old_source.onmessage = function(event){
+    /*old_source.onmessage = function(event){
         $.extend(state, JSON.parse(event.data));
         $('#state-dome').text(state.dome);
         //$('#state-lmst').text(state.lmst);
-    };
+    };*/
     mnt1_source.onmessage = function(event){
         $.extend(state_mnt1, JSON.parse(event.data));
         var telescope_action = 'unknown';
@@ -46,10 +46,10 @@ $(document).ready( function() {
         $('#state-enclosure').text(state_mnt1.enclosure_status);
         $('#state-lmst').text(parseFloat(state_mnt1.tel_sid_time).toFixed(3));
     };
-    foc1_source.onmessage = function(event){
+    /*foc1_source.onmessage = function(event){
         $.extend(state_foc1, JSON.parse(event.data));
     };
     rot1_source.onmessage = function(event){
         $.extend(state_rot1, JSON.parse(event.data));
-    };
+    };*/
 });

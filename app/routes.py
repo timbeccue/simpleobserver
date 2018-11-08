@@ -1,7 +1,7 @@
 
 
 from app import app, db, core1_redis
-from flask import Flask, render_template, request, Response, redirect, jsonify, url_for, flash
+from flask import Flask, render_template, request, Response, redirect, jsonify, url_for, flash, send_from_directory
 import re, datetime, time, json, redis
 import datetime
 
@@ -78,7 +78,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash('Congratulations, you are now a registered user!')
-        return redirect(url_for('home')) 
+        return redirect(url_for('home'))
     return render_template('register.html', form=form, loginform = loginform)
 
 
@@ -92,12 +92,12 @@ def send(cmd):
         print("Commands are offline right now.")
 
 def event_stream(state_key, refresh_frequency):
-    while True: 
+    while True:
         state_dict = core1_redis.get(state_key)
         yield 'data: {}\n\n'.format(state_dict)
-        time.sleep(refresh_frequency) 
+        time.sleep(refresh_frequency)
 
-# Push telescope_state to the client. 
+# Push telescope_state to the client.
 @app.route('/status/<device>/<id>', methods=['GET', 'POST'])
 def stream(device,id):
     state_key = f"<ptr-{device}-{id}_state"
@@ -112,7 +112,7 @@ def home():
 
 @app.route('/textcommand', methods=['GET', 'POST'])
 @login_required
-def textcommand(): 
+def textcommand():
     #print("form dict: "+str(request.form.to_dict()))
     command = request.form['console-text'].strip()
     cmd = ''
@@ -142,7 +142,7 @@ def textcommand():
         t = re.search(r"\d+[^\sx]+",command)
         c = re.search(r"\d*x", command)
         b = re.search(r"[124]?bin[124]?", command)
-        count = c.group() if c else '1' 
+        count = c.group() if c else '1'
         time = t.group() if t else '5'
         binning = b.group() if b else '1'
         count = re.sub(r"\D", "", count)
@@ -154,7 +154,7 @@ def textcommand():
     if first == 'track' or first == 'track:':
         split = command.split(" ")
         if len(split) == 2: cmd = cmd_track(split[1])
-        if len(split) == 3: 
+        if len(split) == 3:
             ra = split[1]
             de = split[2]
             cmd = cmd_track('custom', ra, de)
@@ -183,7 +183,7 @@ def command():
         device = request.form['command']
         logtext = 'button: ' + device
         if device == 'lamp':
-            
+
             cmd = cmd_lamp('on')
             send(cmd)
         if device == 'ir':
@@ -197,11 +197,11 @@ def command():
         text = request.form['goto-box']
         logtext = 'goto: ' + text
         coordinates = parse_goto_input(text)
-        cmd = cmd_slew(coordinates) 
+        cmd = cmd_slew(coordinates)
         print('from /command')
         print(cmd)
         send(cmd)
-    
+
 
     requested = str(datetime.datetime.now()).split('.')[0]+": . . . . . \t"+logtext
     processed = cmd[1] if (len(cmd)>0) else ''
@@ -226,7 +226,7 @@ def tablelookup():
     # GET parameters
     params = request.args.to_dict()
 
-    # instantiating a DataTable for the query and table 
+    # instantiating a DataTable for the query and table
     rowTable = DataTables(params, query, columns)
 
     # returns data to DataTable

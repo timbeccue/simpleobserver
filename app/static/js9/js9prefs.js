@@ -1,7 +1,7 @@
 var JS9Prefs = {
   "globalOpts": {
-		"helperType":	     "nodejs",
-		"helperPort":       2718, 
+		"helperType":	     "none",
+		"helperPort":       2718,
 		"helperCGI":        "./cgi-bin/js9/js9Helper.cgi",
 		"fits2png":         false,
 		"debug":	     0,
@@ -17,7 +17,7 @@ var JS9Prefs = {
 		"colormap":	     "grey",
 		"scale":     	     "log"
 	},
-  "emscriptenOpts": { 
-		"wasmBinaryFile": "static/js9/astroemw.wasm" 
+  "emscriptenOpts": {
+		"wasmBinaryFile": "static/js9/astroemw.wasm"
 	}
 }
