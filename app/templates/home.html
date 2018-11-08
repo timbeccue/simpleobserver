@@ -4,13 +4,13 @@
 
     <link rel="stylesheet" href="https://ofrohn.github.io/celestial.css">
 
-    <script 
-        type="text/javascript" 
+    <script
+        type="text/javascript"
         src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
     </script>
 
     <!-- JS9 -->
-    <script type="text/javascript" src="static/MouseTouchExtend.js"></script> 
+    <script type="text/javascript" src="static/MouseTouchExtend.js"></script>
     <link type="text/css" rel="stylesheet" href="static/js9/js9support.css">
     <link type="text/css" rel="stylesheet" href="static/js9/js9.css">
     <script type="text/javascript" src="static/js9/js9prefs.js"></script>
@@ -30,8 +30,8 @@
 
     <div id="static-state" data-lat={{state.lat}} data-lon={{state.lon}}></div>
 
-    <script 
-        type="text/javascript" 
+    <script
+        type="text/javascript"
         src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js">
     </script>
 
@@ -73,7 +73,7 @@
 
             <div class="statusbar">
                 <div class="status" id="status-ra">
-                    <div>Ra:</div> 
+                    <div>Ra:</div>
                     <p id="state-ra">-</p>
                 </div>
                 <div class="status" id="status-dec">
@@ -89,32 +89,32 @@
                     <div id="state-telescope">-</div>
                 </div>
                 <div class="status" id="status-dome">
-                    <div>Dome:</div>
-                    <div id="state-dome">-</div>
+                    <div>Enclosure:</div>
+                    <div id="state-enclosure">-</div>
                 </div>
                 <div class="status" id="status-siderealtime">
                     <div>Sidereal Time:</div>
                     <div id="state-lmst">-</div>
                 </div>
 
-                
-            
+
+
             </div>
             <div class="views" id="views">
                 <div class="views-menu">
                     <ul class="views-tabs">
-                        <li class="views-tab" data-tab="viewtab1">sky camera</li> 
-                        <li class="views-tab" data-tab="viewtab2">dome camera</li> 
-                        <li class="views-tab" data-tab="viewtab3">star map</li> 
-                        <li class="views-tab" data-tab="viewtab4" id="js9-tab">images</li> 
-                        <li class="views-tab current" data-tab="viewtab5">console</li> 
+                        <li class="views-tab" data-tab="viewtab1">sky camera</li>
+                        <li class="views-tab" data-tab="viewtab2">dome camera</li>
+                        <li class="views-tab" data-tab="viewtab3">star map</li>
+                        <li class="views-tab" data-tab="viewtab4" id="js9-tab">images</li>
+                        <li class="views-tab current" data-tab="viewtab5">console</li>
                     </ul>
 
                 </div>
                 <div id="view-size-helper" style="width:100%; height: 100%; top: 60px; position: absolute;">
-                
+
                     <div id="viewtab1" class="views-content">
-                        allsky camera feed here 
+                        allsky camera feed here
                     </div>
                     <div id="viewtab2" class="views-content">
                         <div id="dome-cam"></div>
@@ -150,7 +150,7 @@
                             <input type="hidden" name="category" value="console">
                         </form>
                     </div>
-                
+
                 </div>
             </div>
 
@@ -166,7 +166,7 @@
                         </div>
                         <div class="head-inputs">
                             <button class="head-input-item btn btn-inverse button-command" data-category="dome" value="lamp">Lamp</button>
-                            <button class="head-input-item btn btn-inverse button-command" data-category="dome" value="ir">IR</button> 
+                            <button class="head-input-item btn btn-inverse button-command" data-category="dome" value="ir">IR</button>
                             <button class="head-input-item btn btn-inverse button-command" data-category="dome" value="roof" >Roof</button>
                         </div>
                     </div>
@@ -241,7 +241,7 @@
                                 <tbody></tbody>
                             </table>
                         </div>
-                       
+
                     </div>
                 </div>
             </div>
@@ -254,7 +254,11 @@
                         <div class="head-inputs">
                             <form>
                                 <input class="head-input-item" type="text" id="time"placeholder=" time... ">
-                                <input class="head-input-item" type="text" id="count"placeholder=" amount... "> 
+                                <select class="head-input-item" id="filter" placeholder="filter...">
+                                    <option value='r'>red</option>
+                                    <option value='g'>green</option>
+                                    <option value='b'>blue</option>
+                                </select>
                                 <button class="head-input-item btn" id="expose-button">Expose</button>
                             </form>
                         </div>
@@ -263,12 +267,88 @@
                 <div class="testmodule-body module-body">
                     <div class="module-body-wrapper">
                         Module Body
-                        <ul>
-                            <li>1</li>
-                            <li>2</li>
-                            <li>3</li>
-                            <li>4</li>
+                        <ul class='getimage-tabs'>
+                            <li><a class='getimage-tab' href='#camera-tab'>Camera</a></li>
+                            <li><a class='getimage-tab' href='#focus-tab'>Focus</a></li>
+                            <li><a class='getimage-tab' href='#rotate-tab'>Rotate</a></li>
                         </ul>
+                        <div id="camera-tab">
+                            <p>camera tab</p>
+                        </div>
+                        <div id="focus-tab">
+                            <p>focus tab</p>
+                        </div>
+                        <div id="rotate-tab">
+                            <p>rotate tab</p>
+                        </div>
+
+                        <script>
+                            /*global $*/
+
+                            // a temp value to cache *what* we're about to show
+                            var target = null;
+
+                            // collect all the tabs
+                            var tabs = $('.getimage-tab').on('click', function () {
+                            target = $(this.hash).removeAttr('id');
+
+                            // if the URL isn't going to change, then hashchange
+                            // event doesn't fire, so we trigger the update manually
+                            if (location.hash === this.hash) {
+                            // but this has to happen after the DOM update has
+                            // completed, so we wrap it in a setTimeout 0
+                            setTimeout(update, 0);
+                            }
+                            });
+
+                            // get an array of the panel ids (from the anchor hash)
+                            var targets = tabs.map(function () {
+                            return this.hash;
+                            }).get();
+
+                            // use those ids to get a jQuery collection of panels
+                            var panels = $(targets.join(',')).each(function () {
+                            // keep a copy of what the original el.id was
+                            $(this).data('old-id', this.id);
+                            });
+
+                            function update() {
+                            if (target) {
+                            target.attr('id', target.data('old-id'));
+                            target = null;
+                            }
+
+                            var hash = window.location.hash;
+                            if (targets.indexOf(hash) !== -1) {
+                            show(hash);
+                            }
+                            }
+
+                            function show(id) {
+                            // if no value was given, let's take the first panel
+                            if (!id) {
+                            id = targets[0];
+                            }
+                            // remove the selected class from the tabs,
+                            // and add it back to the one the user selected
+                            tabs.removeClass('selected').filter(function () {
+                            return (this.hash === id);
+                            }).addClass('selected');
+
+                            // now hide all the panels, then filter to
+                            // the one we're interested in, and show it
+                            panels.hide().filter(id).show();
+                            }
+
+                            $(window).on('hashchange', update);
+
+                            // initialise
+                            if (targets.indexOf(window.location.hash) !== -1) {
+                            update();
+                            } else {
+                            show();
+                            }
+                        </script>
                     </div>
                 </div>
             </div>
