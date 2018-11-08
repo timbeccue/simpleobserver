@@ -74,8 +74,9 @@ function newSkyMap() {
         Celestial.resize({ width: dim }); 
     }
 
-    var lat = $('#static-state').data('lat');
-    var lon = $('#static-state').data('lon');
+    /* NOTE: lat-lon temporary fix with hardcoded value. Get these from state. */
+    var lat = 34;//$('#static-state').data('lat');
+    var lon = -119;//$('#static-state').data('lon');
 
     var config = { 
             width: 0,     // Default width, 0 = full parent width; height is determined by projection
