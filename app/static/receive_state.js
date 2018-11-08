@@ -19,25 +19,31 @@ $(document).ready( function() {
     };
     mnt1_source.onmessage = function(event){
         $.extend(state_mnt1, JSON.parse(event.data));
-        var telescope_action;
+        var telescope_action = 'unknown';
         if (state_mnt1.mnt1_connected == 'no') {
             telescope_action = 'disconnected';
         }
-        else if (state_mnt1.mnt1_connected == 'yes'){
+        if (state_mnt1.mnt1_connected == 'yes'){
+            telescope_action = 'connected';
+        }
+        if (state_mnt1.parked == 'no') {
+            telescope_action = 'unparked';
+        }
+        if (state_mnt1.parked == 'yes') {
             telescope_action = 'parked';
         }
-        else if (state_mnt1.slewing == 'yes') {
-            telescope_action = 'slewing';
-        }
-        else if (state_mnt1.tracking == 'yes') {
+        if (state_mnt1.tracking == 'yes') {
             telescope_action = 'tracking';
         }
-        else telescope_action = 'unknown';
+        if (state_mnt1.slewing == 'yes') {
+            telescope_action = 'slewing';
+        }
 
         $('#state-ra').text(parseFloat(state_mnt1.ra).toFixed(2));
         $('#state-de').text(parseFloat(state_mnt1.dec).toFixed(2));
         $('#state-telescope').text(telescope_action);
         $('#state-alt').text(parseFloat(state_mnt1.alt).toFixed(3));
+        $('#state-enclosure').text(state_mnt1.enclosure_status);
         $('#state-lmst').text(parseFloat(state_mnt1.tel_sid_time).toFixed(3));
     };
     foc1_source.onmessage = function(event){
