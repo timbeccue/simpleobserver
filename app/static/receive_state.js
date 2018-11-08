@@ -38,7 +38,7 @@ $(document).ready( function() {
         $('#state-de').text(parseFloat(state_mnt1.dec).toFixed(2));
         $('#state-telescope').text(telescope_action);
         $('#state-alt').text(parseFloat(state_mnt1.alt).toFixed(3));
-        $('#state-lmst').text(parseFloat(state_mnt1.tel_time).toFixed(3));
+        $('#state-lmst').text(parseFloat(state_mnt1.tel_sid_time).toFixed(3));
     };
     foc1_source.onmessage = function(event){
         $.extend(state_foc1, JSON.parse(event.data));
