@@ -113,7 +113,7 @@ function newSkyMap() {
             propernamelimit: 1.5,  // Show proper names for stars brighter than propernamelimit
             size: 7,       // Maximum size (radius) of star circle in pixels
             exponent: -0.28, // Scale exponent for star size, larger = more linear
-            data: 'stars.8.json' // Data source for stellar data
+            data: 'stars.6.json' // Data source for stellar data
             //data: 'stars.8.json' // Alternative deeper data source for stellar data
         },
         dsos: {
