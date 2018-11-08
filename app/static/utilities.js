@@ -30,6 +30,8 @@ function newUtilities() {
         } else {
             lon = parseFloat(state.lon);
         }
+        /* NOTE: Temporary fix. Hardcoded lon val. Should get value from state. */
+        lon = 34;
 
         // Calculate days since J2000
         today_date = new Date();
