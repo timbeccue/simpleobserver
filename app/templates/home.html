@@ -22,8 +22,10 @@
     <script type="text/javascript" src="static/js9/js9.js"></script>
     <script type="text/javascript" src="static/js9/js9plugins.js"></script>
 
-    <link type="text/css" rel="stylesheet" href="static/css/home.css">
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
     <link type="text/css" rel="stylesheet" href="static/css/obvious-buttons.css">
+    <link type="text/css" rel="stylesheet" href="static/css/home.css">
 
     <link rel="stylesheet" type="text/css" href="static/css/datatables.css">
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.18/b-1.5.2/b-colvis-1.5.2/b-html5-1.5.2/cr-1.5.0/kt-2.4.0/r-2.2.2/rg-1.0.3/sc-1.5.0/sl-1.2.6/datatables.min.js"></script>
@@ -108,10 +110,10 @@
                 <div class="views-menu">
                     <ul class="js-tabs">
                         <li class="tab views-tab" data-tabtype="views" data-tab="viewtab1">sky camera</li>
-                        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab2">dome camera</li>
+                        <li class="tab views-tab current" data-tabtype="views" data-tab="viewtab2">dome camera</li>
                         <li class="tab views-tab" data-tabtype="views" data-tab="viewtab3">star map</li>
                         <li class="tab views-tab" data-tabtype="views" data-tab="viewtab4" id="js9-tab">images</li>
-                        <li class="tab views-tab current" data-tabtype="views" data-tab="viewtab5">console</li>
+                        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab5">console</li>
                     </ul>
 
                 </div>
@@ -120,8 +122,19 @@
                     <div id="viewtab1" class="tabs-content views-content">
                         allsky camera feed here
                     </div>
-                    <div id="viewtab2" class="tabs-content views-content">
+                    <div id="viewtab2" class="tabs-content views-content current">
                         <div id="dome-cam"></div>
+                        <h3>Lamp: </h3>
+                        <input type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success" data-width="90px" autocomplete="off">
+                        <h3>IR Lamp: </h3>
+                        <input type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success" data-width="90px"autocomplete="off">
+                        <h3>Roof: </h3>
+                        <input type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success" data-width="90px" autocomplete="off"data-on="Open" data-off="Closed">
+                        <h3>Parking: </h3>
+                        <input type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success"  data-width="90px" autocomplete="off" data-on="Unparked" data-off="Parked">
+                        <div>
+
+                        </div>
                     </div>
                     <div id="viewtab3" class="tabs-content views-content">
                         <div class="container">
@@ -135,9 +148,7 @@
                             <div class="JS9" id="default-js9"></div>
                         </div>
                     </div>
-                    <div id="viewtab5" class="tabs-content views-content current">
-
-
+                    <div id="viewtab5" class="tabs-content views-content">
                         <form id="textcommand" method="POST" action="/textcommand" data-consolesubmit>
                             <br>
                             <input type="text" name="console-text" style="height: 30px; width: 400px; padding-left: 5px;">
@@ -153,6 +164,13 @@
                             </table>
                             <input type="hidden" name="category" value="console">
                         </form>
+                            <button class="head-input-item btn btn-inverse button-command" data-category="mount" value="park">Park</button>
+                            <button class="head-input-item btn btn-inverse button-command" data-category="mount" value="unpark">Unpark</button>
+                            <button class="head-input-item btn btn-inverse button-command" data-category="mount" value="track on" >Tracking On</button>
+                            <button class="head-input-item btn btn-inverse button-command" data-category="mount" value="track off" >Tracking Off</button>
+                            <button class="head-input-item btn btn-inverse button-command" data-category="enclosure" value="lamp">Lamp</button>
+                            <button class="head-input-item btn btn-inverse button-command" data-category="enclosure" value="ir">IR</button>
+                            <button class="head-input-item btn btn-inverse button-command" data-category="enclosure" value="roof" >Roof</button>
                     </div>
 
                 </div>
@@ -167,11 +185,6 @@
                     <div class="module-head-wrapper">
                         <div class="head-title">
                             <h1> Dome Controls</h1>
-                        </div>
-                        <div class="head-inputs">
-                            <button class="head-input-item btn btn-inverse button-command" data-category="dome" value="lamp">Lamp</button>
-                            <button class="head-input-item btn btn-inverse button-command" data-category="dome" value="ir">IR</button>
-                            <button class="head-input-item btn btn-inverse button-command" data-category="dome" value="roof" >Roof</button>
                         </div>
                     </div>
                 </div>

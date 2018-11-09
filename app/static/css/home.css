@@ -209,6 +209,28 @@ a {
 .views > .views-menu {
     border-bottom: #555 3px solid;
 }
+#viewtab2.current {
+    display: grid;
+    grid-template-columns: 60% 15% 15%;
+    grid-template-rows: 40px 40px 40px 40px;
+    align-items: center;
+    grid-gap: 1em;
+    margin-top: 20px;
+    margin-right: 35px;
+}
+#viewtab2 #dome-cam {
+    grid-column: 1/2;
+    grid-row: 1/5;
+    align-self: start;
+}
+#viewtab2 .toggle {
+    margin: 10px;
+}
+#viewtab2 h3,
+#viewtab2 .toggle {
+    text-align: right;
+    align-self: center;
+}
 .js-tabs {
     list-style: none;
     color: #888;
@@ -231,17 +253,15 @@ a {
     background:#555;
     color: #fff;
 }
-.tabs-content{
+.tabs-content {
     width: 100%;
     height: 100%;
+    margin: 10px;
     display: none;
 }
 .tabs-content.current{
     display: block;
     object-fit: contain;
-}
-.tabs-content {
-    margin: 10px;
 }
 
 
@@ -370,4 +390,18 @@ a {
     color: #ccc;
     outline: 0;
     text-decoration: none;
+}
+
+
+/* Bootstrap Toggle v2.2.2 corrections for Bootsrtap 4*/
+.toggle-off {
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+}
+.toggle.off {
+    border-color: rgba(0, 0, 0, .25);
+}
+
+.toggle-handle {
+    background-color: white;
+    border: thin rgba(0, 0, 0, .25) solid;
 }

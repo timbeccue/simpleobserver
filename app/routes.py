@@ -179,11 +179,10 @@ def command():
     text = str(request.form.to_dict())
     cmd = ['','']
 
-    if category == 'dome':
+    if category == 'enclosure':
         device = request.form['command']
         logtext = 'button: ' + device
         if device == 'lamp':
-
             cmd = cmd_lamp('on')
             send(cmd)
         if device == 'ir':
