@@ -8,7 +8,7 @@ function newUI() {
         var sectionHeight = element.scrollHeight+8;
         var elementTransition = element.style.transition;
         element.style.transition = '';
-        
+
         requestAnimationFrame(function() {
             element.style.height = sectionHeight + 'px';
             element.style.transition  = elementTransition;
@@ -36,7 +36,7 @@ function newUI() {
             // prevent action if user clicks on form elements in header bar
             var noRedirect = '.head-inputs *';
             if (!e.target.matches(noRedirect)) {
-                var section = this.nextElementSibling; 
+                var section = this.nextElementSibling;
                 var isCollapsed = section.getAttribute('data-collapsed') === 'true';
                 if(isCollapsed) {
                     expandSection(section);
@@ -50,11 +50,12 @@ function newUI() {
 
     /* tabs */
     $(document).ready(function(){
-        $('ul.views-tabs li').click(function(){
-            var tab_id = $(this).attr('data-tab');
+        $('li.tab').click(function(){
+            var tab_id = $(this).data('tab');
+            var tabtype = $(this).data('tabtype');
 
-            $('ul.views-tabs li').removeClass('current');
-            $('.views-content').removeClass('current');
+            $('.'+tabtype+'-tab').removeClass('current');
+            $('.'+tabtype+'-content').removeClass('current');
 
             $(this).addClass('current');
             $('#'+tab_id).addClass('current');
@@ -78,7 +79,7 @@ function newUI() {
     /* slider bar for table magnitude filter */
     var magfilterslider = document.getElementById('mag-filter-slider');
     noUiSlider.create(magfilterslider, {
-        start: [4, 18], 
+        start: [4, 18],
         connect: true,
         direction: 'rtl',
         orientation: 'vertical',
@@ -93,9 +94,9 @@ function newUI() {
     function target_clicked(ra, de) {
         state.ra_selected = ra;
         state.de_selected = de;
-        
+
         $('#target-search').val(ra.toFixed(2)+', '+de.toFixed(2));
-    } 
+    }
 
     window.onbeforeunload = function() {
         window.scrollTo(0,0);

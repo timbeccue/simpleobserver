@@ -58,7 +58,7 @@ body {
 @media (min-width: 700px) {
     .wrapper {
         grid-template-columns: 1fr 1fr 40px;
-        grid-template-rows: 100px calc(100vh - 100px - 1em);  
+        grid-template-rows: 100px calc(100vh - 100px - 1em);
         grid-gap: 20px;
         height: 90vh;
         grid-template-areas:
@@ -85,7 +85,7 @@ body {
     outline: 0;
     text-decoration: none;
 }
-.header .title-link:hover, 
+.header .title-link:hover,
 .header .title-link.focus {
     color: #ddd;
     outline: 0;
@@ -99,7 +99,7 @@ body {
     background: #444;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    
+
     grid-gap: 10px;
     height: 100%;
     width: 300px;
@@ -145,7 +145,7 @@ a {
     display: none;
 }
 .loggedin li:hover > ul,
-.loggedin li:focus-within > ul, 
+.loggedin li:focus-within > ul,
 .loggedin li ul:hover {
     visibility: visible;
     opacity: 1;
@@ -163,7 +163,7 @@ a {
 
     display: flex;
     flex-direction: column;
-    
+
     margin: 30px;
 }
 .register-form form {
@@ -209,11 +209,11 @@ a {
 .views > .views-menu {
     border-bottom: #555 3px solid;
 }
-.views ul.views-tabs {
+.js-tabs {
     list-style: none;
     color: #888;
 }
-.views ul.views-tabs li {
+.js-tabs li {
     background: #333;
     font: 14px/1 'Open Sans', sans-serif;
     color: #aaa;
@@ -223,24 +223,24 @@ a {
     padding-top: 10px;
     padding-bottom: 10px;
 }
-.views ul.views-tabs li:hover {
+.js-tabs li:hover {
     background: #444;
     cursor: pointer;
 }
-.views ul.views-tabs li.current {
+.js-tabs li.current {
     background:#555;
     color: #fff;
 }
-.views-content{
+.tabs-content{
     width: 100%;
     height: 100%;
     display: none;
 }
-.views-content.current{
+.tabs-content.current{
     display: block;
     object-fit: contain;
 }
-.views > .views-content {
+.tabs-content {
     margin: 10px;
 }
 
@@ -270,7 +270,7 @@ a {
     margin: 5px;
     margin-top: 10px;
 }
-.module .module-head .module-head-wrapper .head-inputs, 
+.module .module-head .module-head-wrapper .head-inputs,
 .module .module-head .module-head-wrapper .head-inputs form {
     display: flex;
     flex-direction: row;
@@ -297,6 +297,23 @@ a {
 .module .module-body .module-body-wrapper {
     padding: 4px;
     margin: 20px;
+}
+.module-body-wrapper li {
+    background: #252525;
+    font: 14px/1 'Open Sans', sans-serif;
+    color: #aaa;
+    display: inline-block;
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.module-body-wrapper li:hover {
+    cursor: pointer;
+}
+.module-body-wrapper li.active {
+    background: #444;
+    color: #fff;
 }
 
 

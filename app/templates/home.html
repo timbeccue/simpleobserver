@@ -106,36 +106,36 @@
             </div>
             <div class="views" id="views">
                 <div class="views-menu">
-                    <ul class="views-tabs">
-                        <li class="views-tab" data-tab="viewtab1">sky camera</li>
-                        <li class="views-tab" data-tab="viewtab2">dome camera</li>
-                        <li class="views-tab" data-tab="viewtab3">star map</li>
-                        <li class="views-tab" data-tab="viewtab4" id="js9-tab">images</li>
-                        <li class="views-tab current" data-tab="viewtab5">console</li>
+                    <ul class="js-tabs">
+                        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab1">sky camera</li>
+                        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab2">dome camera</li>
+                        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab3">star map</li>
+                        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab4" id="js9-tab">images</li>
+                        <li class="tab views-tab current" data-tabtype="views" data-tab="viewtab5">console</li>
                     </ul>
 
                 </div>
                 <div id="view-size-helper" style="width:100%; height: 100%; top: 60px; position: absolute;">
 
-                    <div id="viewtab1" class="views-content">
+                    <div id="viewtab1" class="tabs-content views-content">
                         allsky camera feed here
                     </div>
-                    <div id="viewtab2" class="views-content">
+                    <div id="viewtab2" class="tabs-content views-content">
                         <div id="dome-cam"></div>
                     </div>
-                    <div id="viewtab3" class="views-content">
+                    <div id="viewtab3" class="tabs-content views-content">
                         <div class="container">
                             <div class="container" id="celestial-map"></div>
                             <div class="container" id="celestial-form" style="display:none;"></div>
                         </div>
                     </div>
-                    <div id="viewtab4" class="views-content">
+                    <div id="viewtab4" class="tabs-content views-content">
                         <div class="js9-container" id="default-js9">
                             <div class="JS9Menubar" id="default-js9Menubar" data-buttonClass="JS9Button-flat"></div>
                             <div class="JS9" id="default-js9"></div>
                         </div>
                     </div>
-                    <div id="viewtab5" class="views-content current">
+                    <div id="viewtab5" class="tabs-content views-content current">
 
 
                         <form id="textcommand" method="POST" action="/textcommand" data-consolesubmit>
@@ -166,7 +166,7 @@
                 <div class="module-head">
                     <div class="module-head-wrapper">
                         <div class="head-title">
-                            <h1>0. Dome Controls</h1>
+                            <h1> Dome Controls</h1>
                         </div>
                         <div class="head-inputs">
                             <button class="head-input-item btn btn-inverse button-command" data-category="dome" value="lamp">Lamp</button>
@@ -185,7 +185,55 @@
                 <div class="module-head">
                     <div class="module-head-wrapper">
                         <div class="head-title">
-                            <h1>1. Go to a target</h1>
+                            <h1> Image Settings</h1>
+                        </div>
+                        <div class="head-inputs">
+                            <form id=camerasettings action="{{ url_for('command') }}" method="POST" data-autosubmit>
+                                <input class="hidden" type="hidden head-input-item" name="category" value="camerasettings">
+                                <input class="head-input-item" type="text" name="exposure-time" id="time" placeholder=" time... ">
+                                <select class="head-input-item" id="filter" name="filter" placeholder="filter...">
+                                    <option value='' disabled selected hidden>select filter...</option>
+                                    <option value='clr'>clear</option>
+                                    <option value='r'>red</option>
+                                    <option value='g'>green</option>
+                                    <option value='b'>blue</option>
+                                </select>
+                                <button class="head-input-item btn" id="expose-button">Expose</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="testmodule-body module-body">
+                    <div class="module-body-wrapper">
+                        <ul class="js-tabs">
+                            <li class="tab camerasettings-tab current" data-tabtype="camerasettings" data-tab="camera-tab-content">Camera</li>
+                            <li class="tab camerasettings-tab" data-tabtype="camerasettings" data-tab="focus-tab-content">Focus</li>
+                            <li class="tab camerasettings-tab" data-tabtype="camerasettings" data-tab="rotate-tab-content">Rotate</li>
+                        </ul>
+                        <div id="camera-tab-content" class="tabs-content camerasettings-content current">
+                            <input form="camerasettings" type="text" name="number-of-images" placeholder=" # of images... ">
+                            <input form="camerasettings" type="text" name="time-between-images" placeholder=" time between images... ">
+                            <input form="camerasettings" type="text" name="start-delay" placeholder=" delay before start... ">
+                            <select form="camerasettings" name="camera-binning">
+                                <option value='1'>1</option>
+                                <option value='2'>2</option>
+                                <option value='4'>4</option>
+                            </select>
+                        </div>
+                        <div id="focus-tab-content" class="tabs-content camerasettings-content">
+                            <p>Focus tab</p>
+                        </div>
+                        <div id="rotate-tab-content" class="tabs-content camerasettings-content">
+                            <p>Rotate tab</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="module" id="module2">
+                <div class="module-head">
+                    <div class="module-head-wrapper">
+                        <div class="head-title">
+                            <h1> Go to a target</h1>
                         </div>
                         <div class="head-inputs">
                             <form id="goto" method="POST" action="/command" data-autosubmit>
@@ -249,40 +297,34 @@
                     </div>
                 </div>
             </div>
-            <div class="module" id="module2">
+            <div class="module" id="module3">
                 <div class="module-head">
                     <div class="module-head-wrapper">
                         <div class="head-title">
-                            <h1>2. Image Settings</h1>
+                            <h1>Test Module</h1>
                         </div>
                         <div class="head-inputs">
                             <form>
-                                <input class="head-input-item" type="text" id="time"placeholder=" time... ">
-                                <select class="head-input-item" id="filter" placeholder="filter...">
-                                    <option value='r'>red</option>
-                                    <option value='g'>green</option>
-                                    <option value='b'>blue</option>
-                                </select>
-                                <button class="head-input-item btn" id="expose-button">Expose</button>
+                                <input class="head-input-item" type="text"placeholder="search...">
+                                <button class="head-input-item btn btn-inverse">GO</button>
                             </form>
                         </div>
                     </div>
                 </div>
                 <div class="testmodule-body module-body">
-                    <div class="module-body-wrapper">
-                        Module Body
+                    <div class="hidden module-body-wrapper">
                         <ul class='getimage-tabs'>
-                            <li><a class='getimage-tab' href='#camera-tab'>Camera</a></li>
-                            <li><a class='getimage-tab' href='#focus-tab'>Focus</a></li>
-                            <li><a class='getimage-tab' href='#rotate-tab'>Rotate</a></li>
+                            <li><a class='getimage-tab' href='#camera1-tab'>Camera</a></li>
+                            <li><a class='getimage-tab' href='#focus1-tab'>Focus</a></li>
+                            <li><a class='getimage-tab' href='#rotate1-tab'>Rotate</a></li>
                         </ul>
-                        <div id="camera-tab">
+                        <div id="camera1-tab">
                             <p>camera tab</p>
                         </div>
-                        <div id="focus-tab">
+                        <div id="focus1-tab">
                             <p>focus tab</p>
                         </div>
-                        <div id="rotate-tab">
+                        <div id="rotate1-tab">
                             <p>rotate tab</p>
                         </div>
 
@@ -353,32 +395,6 @@
                             show();
                             }
                         </script>
-                    </div>
-                </div>
-            </div>
-            <div class="module" id="module3">
-                <div class="module-head">
-                    <div class="module-head-wrapper">
-                        <div class="head-title">
-                            <h1>Test Module</h1>
-                        </div>
-                        <div class="head-inputs">
-                            <form>
-                                <input class="head-input-item" type="text"placeholder="search...">
-                                <button class="head-input-item btn btn-inverse">GO</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="testmodule-body module-body">
-                    <div class="module-body-wrapper">
-                        Module Body
-                        <ul>
-                            <li>1</li>
-                            <li>2</li>
-                            <li>3</li>
-                            <li>4</li>
-                        </ul>
                     </div>
                 </div>
             </div>

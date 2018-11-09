@@ -202,6 +202,18 @@ def command():
         print(cmd)
         send(cmd)
 
+    #TODO: finish camera command
+    if category == 'camerasettings':
+        # initialize with default values
+        number_images = 1
+        between_images = 0
+        start_delay = 0
+        bin = 1
+        time = request.form['exposure-time']
+        filter = request.form['filter']
+
+
+
 
     requested = str(datetime.datetime.now()).split('.')[0]+": . . . . . \t"+logtext
     processed = cmd[1] if (len(cmd)>0) else ''
