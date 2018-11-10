@@ -2,6 +2,8 @@
 
 <head>
 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <!-- Favicons -->
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
@@ -109,9 +111,9 @@
             <div class="views" id="views">
                 <div class="views-menu">
                     <ul class="js-tabs">
-                        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab1">sky camera</li>
-                        <li class="tab views-tab current" data-tabtype="views" data-tab="viewtab2">dome camera</li>
-                        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab3">star map</li>
+                        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab1">sky</li>
+                        <li class="tab views-tab current" data-tabtype="views" data-tab="viewtab2">observatory</li>
+                        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab3">chart</li>
                         <li class="tab views-tab" data-tabtype="views" data-tab="viewtab4" id="js9-tab">images</li>
                         <li class="tab views-tab" data-tabtype="views" data-tab="viewtab5">console</li>
                     </ul>
@@ -125,16 +127,11 @@
                     <div id="viewtab2" class="tabs-content views-content current">
                         <div id="dome-cam"></div>
                         <h3>Lamp: </h3>
-                        <input type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success" data-width="90px" autocomplete="off">
+                        <input class="toggle-flip" value="lamp" data-category="enclosure" type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success" data-width="90px" autocomplete="off">
                         <h3>IR Lamp: </h3>
-                        <input type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success" data-width="90px"autocomplete="off">
+                        <input class="toggle-flip" value="ir-lamp" data-category="enclosure" type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success" data-width="90px"autocomplete="off">
                         <h3>Roof: </h3>
-                        <input type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success" data-width="90px" autocomplete="off"data-on="Open" data-off="Closed">
-                        <h3>Parking: </h3>
-                        <input type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success"  data-width="90px" autocomplete="off" data-on="Unparked" data-off="Parked">
-                        <div>
-
-                        </div>
+                        <input class="toggle-flip" value="roof" data-category="enclosure" type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success" data-width="90px" autocomplete="off"data-on="Open" data-off="Closed">
                     </div>
                     <div id="viewtab3" class="tabs-content views-content">
                         <div class="container">
@@ -184,7 +181,7 @@
                 <div class="module-head">
                     <div class="module-head-wrapper">
                         <div class="head-title">
-                            <h1> Dome Controls</h1>
+                            <h1> <span>&#9658;</span> &nbsp;Dome Controls</h1>
                         </div>
                     </div>
                 </div>
@@ -198,7 +195,7 @@
                 <div class="module-head">
                     <div class="module-head-wrapper">
                         <div class="head-title">
-                            <h1> Image Settings</h1>
+                            <h1><span style="transition:0.5s;">&#9660;</span> &nbsp;Settings</h1>
                         </div>
                         <div class="head-inputs">
                             <form id=camerasettings action="{{ url_for('command') }}" method="POST" data-autosubmit>
@@ -216,7 +213,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="testmodule-body module-body">
+                <div class="module-body">
                     <div class="module-body-wrapper">
                         <ul class="js-tabs">
                             <li class="tab camerasettings-tab current" data-tabtype="camerasettings" data-tab="camera-tab-content">Camera</li>
@@ -246,7 +243,7 @@
                 <div class="module-head">
                     <div class="module-head-wrapper">
                         <div class="head-title">
-                            <h1> Go to a target</h1>
+                            <h1><span>&#9660;</span> &nbsp;Target</h1>
                         </div>
                         <div class="head-inputs">
                             <form id="goto" method="POST" action="/command" data-autosubmit>
@@ -326,6 +323,7 @@
                 </div>
                 <div class="testmodule-body module-body">
                     <div class="hidden module-body-wrapper">
+                        <h2> These camera buttons don't work yet.</h2>
                         <ul class='getimage-tabs'>
                             <li><a class='getimage-tab' href='#camera1-tab'>Camera</a></li>
                             <li><a class='getimage-tab' href='#focus1-tab'>Focus</a></li>
@@ -415,7 +413,7 @@
                 <div class="module-head">
                     <div class="module-head-wrapper">
                         <div class="head-title">
-                            <h1>Test Module</h1>
+                            <h1><span>&#9660;</span> &nbsp;Test Module</h1>
                         </div>
                         <div class="head-inputs">
                             <input type="text"placeholder="search...">
@@ -463,7 +461,7 @@
                 <div class="module-head">
                     <div class="module-head-wrapper">
                         <div class="head-title">
-                            <h1>Test Module</h1>
+                            <h1><span>&&#9660;</span> &nbsp;Test Module</h1>
                         </div>
                         <div class="head-inputs">
                             <input type="text"placeholder="search...">

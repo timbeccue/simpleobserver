@@ -12,10 +12,10 @@
                 data: form.serialize()
             }).done(function(data) {
                 if (data.requested) {
-                    form.find('input:text').val(''); 
+                    form.find('input:text').val('');
                     var log = $('#cmd-log');
                     var sent_cmd = data.requested;
-                    var processed_cmd = JSON.stringify(data.processed); 
+                    var processed_cmd = JSON.stringify(data.processed);
                     if (data.live == false) {
                         is_command_live = '<span style="color: red;"> offline </span>';
                     } else {
@@ -48,10 +48,10 @@ $(function() {
                 data: form.serialize()
             }).done(function(data) {
                 if (data.requested) {
-                    form.find('input:text').val(''); 
+                    form.find('input:text').val('');
                     var log = $('#cmd-log');
                     var sent_cmd = data.requested;
-                    var processed_cmd = JSON.stringify(data.processed); 
+                    var processed_cmd = JSON.stringify(data.processed);
                     if (data.live == false) {
                         is_command_live = '<span style="color: red;"> offline </span>';
                     } else {
@@ -71,21 +71,26 @@ $(function() {
     $('form[data-consolesubmit]').console_submit();
 });
 
+$(function() {
+    $('.button-command').click( click_command);
+    $('.toggle-flip').change(click_command);
+})
 
-$('.button-command').click(function(e) {
+function click_command(e) {
     e.preventDefault();
     $.ajax({
         type: 'POST',
         url: '/command',
         data: {
             category: $(this).data('category'),
-            command: $(this).val()
+            command: $(this).val(),
+            checked: $(this).is(':checked') || false
         },
         success: function(data) {
             if (data.requested) {
                 var log = $('#cmd-log');
                 var sent_cmd = data.requested;
-                var processed_cmd = JSON.stringify(data.processed); 
+                var processed_cmd = JSON.stringify(data.processed);
                 if (data.live == false) {
                     is_command_live = '<span style="color: red;"> offline </span>';
                 } else {
@@ -95,10 +100,10 @@ $('.button-command').click(function(e) {
             }
         },
         error: function(data) {
-            console.log('error'); 
+            console.log('error');
         }
     });
-});
+};
 
 $('.login-form').click(function(e) {
     e.preventDefault()
@@ -114,4 +119,3 @@ $('.login-form').click(function(e) {
         }
     });
 });
-

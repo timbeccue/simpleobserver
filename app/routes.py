@@ -178,18 +178,21 @@ def command():
 
     text = str(request.form.to_dict())
     cmd = ['','']
+    logtext = ''
 
     if category == 'enclosure':
         device = request.form['command']
-        logtext = 'button: ' + device
+        checked = request.form['checked']
+        on_off = 'on' if checked=='true' else 'off'
+        open_close = 'open' if checked=='true' else 'close'
         if device == 'lamp':
-            cmd = cmd_lamp('on')
+            cmd_lamp(on_off)
             send(cmd)
-        if device == 'ir':
-            cmd = cmd_ir('on')
+        if device == 'ir-lamp':
+            cmd_ir(on_off)
             send(cmd)
         if device == 'roof':
-            cmd = cmd_dome('open')
+            cmd_roof(open_close)
             send(cmd)
 
     if category == 'goto':

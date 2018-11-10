@@ -16,7 +16,6 @@ function newUI() {
                 element.style.height = 0 + 'px';
             });
         });
-
         element.setAttribute('data-collapsed', 'true');
     }
     function expandSection(element) {
@@ -34,6 +33,7 @@ function newUI() {
     for (var i=0, j=modules.length; i<j; i++) {
         modules[i].addEventListener('click', function(e) {
             // prevent action if user clicks on form elements in header bar
+            arrows(this);
             var noRedirect = '.head-inputs *';
             if (!e.target.matches(noRedirect)) {
                 var section = this.nextElementSibling;
@@ -46,6 +46,14 @@ function newUI() {
                 }
             }
         })
+    }
+    function arrows(head) {
+        if (head.nextElementSibling.getAttribute('data-collapsed') === 'true') {
+            head.querySelector('span').innerHTML = '&#9660;';
+        }
+        else {
+            head.querySelector('span').innerHTML = '&#9658;';
+        }
     }
 
     /* tabs */

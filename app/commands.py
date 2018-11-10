@@ -1,5 +1,5 @@
 
-import re 
+import re
 # functions here should return an array with two strings:
 #    array[0] is the key string for a redis command
 #    array[1] is the value for a redis command, in the form of a dictionary(?)
@@ -18,9 +18,9 @@ def parse_goto_input(text):
                 pair = [round(float(i),4) for i in pair]
                 if pair[0] >= valid_ra[0] and pair[0] <= valid_ra[1] and\
                    pair[1] >= valid_de[0] and pair[1] <= valid_de[1]:
-                    print('d') 
+                    print('d')
                     return pair
-            
+
     return[-1,-1]
 
 def cmd_slew(eq):
@@ -32,7 +32,7 @@ def cmd_slew(eq):
     }
     return [key,val]
 
-# park/unpark 
+# park/unpark
 def cmd_mount(cmd):
     key = '>ptr-mnt-1'
     val = {
@@ -75,11 +75,11 @@ def cmd_track(track_type, ra=0, de=0):
 
 
 # Open/Close the dome roof
-def cmd_dome(open_or_close):
+def cmd_roof(open_or_close):
     ''' open_or_close is a string either 'open' or 'close'.'''
     key = '>ptr-enc-1'
     val = {
-        'command': open_or_close 
+        'command': open_or_close
     }
     return [key, val]
 
@@ -98,8 +98,5 @@ def cmd_ir(on_or_off):
     key = '>ptr-ir-1'
     val = {
         'command': on_or_off
-    } 
+    }
     return [key, val]
-
-
-

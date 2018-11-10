@@ -18,7 +18,7 @@ body {
     background-color: #222;
     font-family: Helvetica;
     color: #ccc;
-    overflow: hidden;
+    overflow:auto;
 }
 
 .header {
@@ -30,8 +30,9 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    height: calc(100vh - 100px) !important;
-    overflow:hidden;
+    height: calc(50vh);
+    overflow-y:auto;
+    overflow-x: hidden;
 }
 .controls {
     grid-area: controls;
@@ -52,18 +53,21 @@ body {
     grid-template-areas:
         "header"
         "info"
-        "scroll-icons"
         "controls";
 }
-@media (min-width: 700px) {
+
+@media (min-width: 1000px) {
     .wrapper {
         grid-template-columns: 1fr 1fr 40px;
         grid-template-rows: 100px calc(100vh - 100px - 1em);
-        grid-gap: 20px;
         height: 90vh;
         grid-template-areas:
             "header header header"
             "info controls scroll-icons";
+    }
+    .info {
+        overflow: hidden;
+        height: calc(100vh - 100px);
     }
 }
 

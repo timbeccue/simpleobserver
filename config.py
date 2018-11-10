@@ -4,7 +4,6 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config(object):
 
-    DEBUG = True
     SECRET_KEY = 'NOT_SECURE'
 
     #SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
@@ -29,4 +28,3 @@ class Site:
 
     def get_site(self):
         return (self.__dict__)
-        
