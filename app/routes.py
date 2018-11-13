@@ -186,13 +186,16 @@ def command():
         on_off = 'on' if checked=='true' else 'off'
         open_close = 'open' if checked=='true' else 'close'
         if device == 'lamp':
-            cmd_lamp(on_off)
+            cmd = cmd_lamp(on_off)
+            logtext = f"Light {on_off}"
             send(cmd)
         if device == 'ir-lamp':
-            cmd_ir(on_off)
+            cmd = cmd_ir(on_off)
+            logtext = f"IR Lamp {on_off}"
             send(cmd)
         if device == 'roof':
-            cmd_roof(open_close)
+            cmd = cmd_roof(open_close)
+            logtext = f"{open_close} roof"
             send(cmd)
 
     if category == 'goto':
@@ -211,8 +214,17 @@ def command():
         between_images = 0
         start_delay = 0
         bin = 1
+        # get form values
         time = request.form['exposure-time']
         filter = request.form['filter']
+        number_images = request.form['number-of-images']
+        between_images = request.form['time-between-images']
+        start_delay = request.form['start-delay']
+        bin = request.form['camera-binning']
+
+        cmd = cmd_expose(time, number_images, bin, start_delay, between_images, filter)
+        logtext = f"Exposure: {time}s, {filter} filter, {number_images}x."
+        send(cmd)
 
 
 

@@ -94,7 +94,7 @@ function click_command(e) {
                 if (data.live == false) {
                     is_command_live = '<span style="color: red;"> offline </span>';
                 } else {
-                    is_command_live = '<span style="color: 83ff33;"> online </span>';
+                    is_command_live = '<span style="color: #83ff33;"> online </span>';
                 }
                 log.find('tbody').prepend( '<tr><td>'+sent_cmd+'</td><td>'+processed_cmd+'</td><td>'+is_command_live+'</td></tr>');
             }

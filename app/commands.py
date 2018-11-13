@@ -41,12 +41,15 @@ def cmd_mount(cmd):
     return [key, val]
 
 # capture image(s)
-def cmd_expose(time, count, binning):
+def cmd_expose(time, count, binning, start_delay, between_images, filter):
     key = '>ptr-cam-1'
     val = {
         'time': time,
         'count': count,
-        'bin': binning
+        'bin': binning,
+        'start_delay': start_delay,
+        'time_between_images': between_images,
+        'filter': filter
     }
     return [key, val]
 

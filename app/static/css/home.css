@@ -342,6 +342,17 @@ a {
 
 
 /* Specific Module Panes */
+
+.camerasettings-content.current {
+    width: 60%;
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+    grid-gap: 5px;
+}
+
+
 #target-search {
     width: 220px;
 }

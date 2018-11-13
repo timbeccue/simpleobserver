@@ -214,10 +214,15 @@
                             <li class="tab camerasettings-tab" data-tabtype="camerasettings" data-tab="rotate-tab-content">Rotate</li>
                         </ul>
                         <div id="camera-tab-content" class="tabs-content camerasettings-content current">
-                            <input form="camerasettings" type="text" name="number-of-images" placeholder=" # of images... ">
-                            <input form="camerasettings" type="text" name="time-between-images" placeholder=" time between images... ">
-                            <input form="camerasettings" type="text" name="start-delay" placeholder=" delay before start... ">
-                            <select form="camerasettings" name="camera-binning">
+                            <label for="number-of-images">Number of Images</label>
+                            <label for="time-between-images">Time between images (s)</label>
+                            <input form="camerasettings" type="text" name="number-of-images" id="number-of-images" >
+                            <input form="camerasettings" type="text" name="time-between-images" id="time-between-images" >
+                            <div></div><div></div>
+                            <label for="start-delay">Start delay (s)</label>
+                            <label for="camera-binning">Bin</label>
+                            <input form="camerasettings" type="text" name="start-delay" id="start-delay">
+                            <select form="camerasettings" id="camera-binning" name="camera-binning">
                                 <option value='1'>1</option>
                                 <option value='2'>2</option>
                                 <option value='4'>4</option>
@@ -504,7 +509,7 @@ var lmst = 15.000;
 </script>
 
 <script> /* proper loading/resizing of map and js9 */
-    $('#views').ready(function(){
+    /*$('#views').ready(function(){
         JS9.Preload('static/images/555wmos.fits', {display: "default-js9"});
         js9resize("default-js9");
         $(window).resize(function(){
@@ -516,7 +521,7 @@ var lmst = 15.000;
         let height = $('#view-size-helper').height() - 60;
         JS9.ResizeDisplay(width, height, {display: display });
     }
-
+*/
 </script>
 
 

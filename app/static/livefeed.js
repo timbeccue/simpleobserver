@@ -1,10 +1,10 @@
 
-      
+
       var BaseURL = "http://10.15.0.19/";
-      
+
       var Camera = ""; // If you use an AXIS 240Q/241S(A)/241Q(A)/243SA, comment away this line by inserting "//"
       // var Camera = "n"; // Change n to the Video source used in the AXIS 240Q/ 241S(A)/241Q(A)/243SA and remove "//"
-      
+
       var ImageResolution = "480x270"; var DisplayWidth = "480";var DisplayHeight = "270";
       // This is the path to the image generating file inside the camera itself
       var File = "axis-cgi/mjpg/video.cgi?resolution="+ImageResolution;
@@ -52,4 +52,3 @@
       }
       document.getElementById('dome-cam').innerHTML = output;
       //document.Player.ToolbarConfiguration = "play,+snapshot,+fullscreen";
-      

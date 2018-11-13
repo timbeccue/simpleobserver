@@ -8,7 +8,6 @@ import redis
 
 app = Flask(__name__)
 app.config.from_object(Config)
-app.config['DEBUG'] = True
 db = SQLAlchemy(app)
 login = LoginManager(app)
 login.login_view = 'login'
