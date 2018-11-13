@@ -111,27 +111,24 @@
             <div class="views" id="views">
                 <div class="views-menu">
                     <ul class="js-tabs">
-                        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab1">sky</li>
-                        <li class="tab views-tab current" data-tabtype="views" data-tab="viewtab2">observatory</li>
-                        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab3">chart</li>
-                        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab4" id="js9-tab">images</li>
-                        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab5">console</li>
+                        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab1">weather</li>
+                        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab2">log</li>
+                        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab3">sky chart</li>
+                        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab4">sky cam</li>
+                        <li class="tab views-tab current" data-tabtype="views" data-tab="viewtab5">enclosure</li>
+                        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab6">mountings</li>
+                        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab7" id="js9-tab">instruments</li>
+                        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab8">_dev</li>
                     </ul>
-
                 </div>
+
                 <div id="view-size-helper" style="width:100%; height: 100%; top: 60px; position: absolute;">
 
                     <div id="viewtab1" class="tabs-content views-content">
-                        allsky camera feed here
+                        weather info here
                     </div>
-                    <div id="viewtab2" class="tabs-content views-content current">
-                        <div id="dome-cam"></div>
-                        <h3>Lamp: </h3>
-                        <input class="toggle-flip" value="lamp" data-category="enclosure" type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success" data-width="90px" autocomplete="off">
-                        <h3>IR Lamp: </h3>
-                        <input class="toggle-flip" value="ir-lamp" data-category="enclosure" type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success" data-width="90px"autocomplete="off">
-                        <h3>Roof: </h3>
-                        <input class="toggle-flip" value="roof" data-category="enclosure" type="checkbox" data-toggle="toggle" data-size="mini" data-onstyle="success" data-width="90px" autocomplete="off"data-on="Open" data-off="Closed">
+                    <div id="viewtab2" class="tabs-content views-content">
+                        schedule log here
                     </div>
                     <div id="viewtab3" class="tabs-content views-content">
                         <div class="container">
@@ -140,12 +137,31 @@
                         </div>
                     </div>
                     <div id="viewtab4" class="tabs-content views-content">
+                        all sky camera here
+                    </div>
+                    <div id="viewtab5" class="tabs-content views-content current">
+                        <div id="dome-cam"></div>
+                        <h3>Lamp: </h3>
+                            <button value="lamp" class="btn btn-danger btn-small button-command" data-category="enclosure" data-state="false">Off</button>
+                            <button value="lamp" class="btn btn-success btn-small button-command" data-category="enclosure" data-state="true">On</button>
+                        <h3>IR Lamp: </h3>
+                            <button value="ir-lamp" class="btn btn-danger btn-small button-command" data-category="enclosure" data-state="false">Off</button>
+                            <button value="ir-lamp" class="btn btn-success btn-small button-command" data-category="enclosure" data-state="true">On</button>
+                        <h3>Roof: </h3>
+                            <button value="roof" class="btn btn-danger btn-small button-command" data-category="enclosure" data-state="false">Close</button>
+                            <button value="roof" class="btn btn-success btn-small button-command" data-category="enclosure" data-state="true">Open</button>
+                    </div>
+                    <div id="viewtab6" class="tabs-content views-content">
+                        mountings info/selection here
+                    </div>
+                    <div id="viewtab7" class="tabs-content views-content">
+                        instruments/images here
                         <div class="js9-container" id="default-js9">
                             <div class="JS9Menubar" id="default-js9Menubar" data-buttonClass="JS9Button-flat"></div>
                             <div class="JS9" id="default-js9"></div>
                         </div>
                     </div>
-                    <div id="viewtab5" class="tabs-content views-content">
+                    <div id="viewtab8" class="tabs-content views-content">
                         <form id="textcommand" method="POST" action="/textcommand" data-consolesubmit>
                             <br>
                             <input type="text" name="console-text" style="height: 30px; width: 400px; padding-left: 5px;">
@@ -215,18 +231,18 @@
                         </ul>
                         <div id="camera-tab-content" class="tabs-content camerasettings-content current">
                             <label for="number-of-images">Number of Images</label>
-                            <label for="time-between-images">Time between images (s)</label>
-                            <input form="camerasettings" type="text" name="number-of-images" id="number-of-images" >
-                            <input form="camerasettings" type="text" name="time-between-images" id="time-between-images" >
-                            <div></div><div></div>
-                            <label for="start-delay">Start delay (s)</label>
                             <label for="camera-binning">Bin</label>
-                            <input form="camerasettings" type="text" name="start-delay" id="start-delay">
+                            <input form="camerasettings" type="text" name="number-of-images" id="number-of-images" >
                             <select form="camerasettings" id="camera-binning" name="camera-binning">
                                 <option value='1'>1</option>
                                 <option value='2'>2</option>
                                 <option value='4'>4</option>
                             </select>
+                            <div></div><div></div>
+                            <label for="time-between-images">Time between images (s)</label>
+                            <label for="start-delay">Start delay (s)</label>
+                            <input form="camerasettings" type="text" name="start-delay" id="start-delay">
+                            <input form="camerasettings" type="text" name="time-between-images" id="time-between-images" >
                         </div>
                         <div id="focus-tab-content" class="tabs-content camerasettings-content">
                             <p>Focus tab</p>

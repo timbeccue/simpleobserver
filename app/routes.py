@@ -102,7 +102,7 @@ def event_stream(state_key, refresh_frequency):
 def stream(device,id):
     state_key = f"<ptr-{device}-{id}_state"
     refresh_frequency = .8
-
+    
     sse = event_stream(state_key, refresh_frequency)
     return Response(sse, mimetype="text/event-stream")
 

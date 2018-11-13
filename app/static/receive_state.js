@@ -4,6 +4,7 @@ var state = {};
 var state_mnt1 = {};
 var state_foc1 = {};
 var state_rot1 = {};
+var state_wx = {};
 
 $(document).ready( function() {
 
@@ -11,6 +12,7 @@ $(document).ready( function() {
     var mnt1_source = new EventSource('/status/mnt/1');
     var foc1_source = new EventSource('/status/foc/1');
     var rot1_source = new EventSource('/status/rot/1');
+    var wx_source = new EventSource('/status/wx/1');
 
     old_source.onmessage = function(event){
         var sse_contents = tryParseJSON(event.data);
@@ -61,6 +63,12 @@ $(document).ready( function() {
         var sse_contents = tryParseJSON(event.data);
         if (sse_contents) {
             $.extend(state_rot1, sse_contents);
+        }
+    };
+    wx_source.onmessage = function(event){
+        var sse_contents = tryParseJSON(event.data);
+        if (sse_contents) {
+            $.extend(state_wx, sse_contents);
         }
     };
 });

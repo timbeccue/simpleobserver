@@ -84,7 +84,7 @@ function click_command(e) {
         data: {
             category: $(this).data('category'),
             command: $(this).val(),
-            checked: $(this).is(':checked') || false
+            checked: $(this).is(':checked') || $(this).data('state') || false
         },
         success: function(data) {
             if (data.requested) {
