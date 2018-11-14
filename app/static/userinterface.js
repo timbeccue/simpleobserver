@@ -33,9 +33,9 @@ function newUI() {
     for (var i=0, j=modules.length; i<j; i++) {
         modules[i].addEventListener('click', function(e) {
             // prevent action if user clicks on form elements in header bar
-            arrows(this);
             var noRedirect = '.head-inputs *';
             if (!e.target.matches(noRedirect)) {
+                arrows(this);
                 var section = this.nextElementSibling;
                 var isCollapsed = section.getAttribute('data-collapsed') === 'true';
                 if(isCollapsed) {
