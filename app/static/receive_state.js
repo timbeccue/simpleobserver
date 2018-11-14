@@ -69,6 +69,12 @@ $(document).ready( function() {
         var sse_contents = tryParseJSON(event.data);
         if (sse_contents) {
             $.extend(state_wx, sse_contents);
+            var table = $('#weather-table')
+            table.find('tr').remove();
+            for (var key in state_wx) {
+                var obj = state_wx[key]
+                table.prepend('<tr><th>'+key+'</th><td>'+obj+'</td></tr>');
+            }
         }
     };
 });

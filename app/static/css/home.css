@@ -212,6 +212,8 @@ a {
 }
 .views > .views-menu {
     border-bottom: #555 3px solid;
+    display: flex;
+    overflow: hidden;
 }
 #viewtab5.current {
     display: grid;
