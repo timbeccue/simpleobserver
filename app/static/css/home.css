@@ -217,11 +217,11 @@ a {
 }
 #viewtab5.current {
     display: grid;
-    grid-template-columns: 60% 14% 8% 8%;
+    grid-template-columns: 55% 15% 10% 10%;
     grid-template-rows: 40px 40px 40px 40px;
     align-items: center;
     grid-gap: 1em;
-    margin-top: 20px;
+    margin-top: 40px;
     margin-right: 35px;
 }
 #viewtab5 #dome-cam {
@@ -285,40 +285,49 @@ a {
     background-color: #444;
     cursor: pointer;
     width: 100%;
-    padding: 12px 20px;
-}
-.module .module-head .module-head-wrapper {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
 }
 .module .head-title {
     font: 14px/1 'Helvetica', sans-serif;
+    width: 140px;
     margin: 5px;
-    margin-top: 10px;
+    padding-left: 1.5em;
+    white-space: nowrap;
 }
-.module .module-head .module-head-wrapper .head-inputs,
-.module .module-head .module-head-wrapper .head-inputs form {
+.module .head-inputs form {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     color: #000;
+    width: 100%;
+    padding-right: 1.5em;
 }
 .module .head-inputs input {
-    margin-right: 20px;
     padding-left: 5px;
-    width: minmax(40px, 100px);
+    width: 100%;
 }
-.module .head-inputs button {
-    width: 120px;
-    margin-left: 15px;
+.module .head-inputs label {
+    color: white;
+    margin-bottom: 15px;
+}
+.module .head-inputs .head-input-item {
+    flex: 1 1 1;
+    margin-left: 10px;
+    margin-right: 10px;
     margin-top: 5px;
-    height: 2em;
+    height: 50px;
 }
 .module .module-body {
     height: auto;
     overflow: hidden;
     background-color: #333;
-    transition: height 0.3s ease-out;
+    transition: 0.3s ease-out;
+}
+.module .module-body input[type='text'] {
+    width: 100%;
 }
 .module .module-body .module-body-wrapper {
     padding: 4px;
@@ -346,14 +355,13 @@ a {
 /* Specific Module Panes */
 
 .camerasettings-content.current {
-    width: 60%;
+    width: 40%;
     margin-top: 20px;
     display: grid;
-    grid-template-columns: 5fr 4fr;
+    grid-template-columns: 100px 100px;
     grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
     grid-gap: 5px;
 }
-
 
 #target-search {
     width: 220px;

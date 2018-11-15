@@ -52,7 +52,9 @@ function newUI() {
             head.querySelector('span').innerHTML = '&#9660;';
         }
         else {
-            head.querySelector('span').innerHTML = '&#9658;';
+            setTimeout(function(){
+                head.querySelector('span').innerHTML = '&#9658;';
+            }, 300);
         }
     }
 

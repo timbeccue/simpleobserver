@@ -80,11 +80,9 @@ function click_command(e) {
     e.preventDefault();
     $.ajax({
         type: 'POST',
-        url: '/command',
+        url: '/command/'+$(this).data('msg'),
         data: {
-            category: $(this).data('category'),
             command: $(this).val(),
-            checked: $(this).is(':checked') || $(this).data('state') || false
         },
         success: function(data) {
             if (data.requested) {

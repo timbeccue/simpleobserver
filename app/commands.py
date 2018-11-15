@@ -33,7 +33,7 @@ def cmd_slew(eq):
     return [key,val]
 
 # park/unpark
-def cmd_mount(cmd):
+def cmd_parking(cmd):
     key = '>ptr-mnt-1'
     val = {
         'command': cmd
@@ -41,15 +41,16 @@ def cmd_mount(cmd):
     return [key, val]
 
 # capture image(s)
-def cmd_expose(time, count, binning, start_delay, between_images, filter):
+def cmd_expose(time, count, binning, dither, soft_bin=0, start_delay=0, filter='c'):
     key = '>ptr-cam-1'
     val = {
         'time': time,
         'count': count,
         'bin': binning,
+        'soft_bin': soft_bin,
         'start_delay': start_delay,
-        'time_between_images': between_images,
-        'filter': filter
+        'filter': filter,
+        'dither': dither
     }
     return [key, val]
 

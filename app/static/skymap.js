@@ -28,12 +28,12 @@ function newSkyMap() {
                 if (Celestial.clip(p_coords)) {
                     Celestial.Canvas.symbol()
                     .type("marker")
-                    .size(170)
+                    .size(220)
                     .position(Celestial.mapProjection(p_coords))(Celestial.context);
                 }
                 Celestial.Canvas.symbol()
                     .type("cross-circle")
-                    .size(170)
+                    .size(220)
                     .position(Celestial.mapProjection(t_coords))(Celestial.context);
                 Celestial.context.stroke();
             });
