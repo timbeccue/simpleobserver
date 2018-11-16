@@ -34,7 +34,10 @@ def save_weather():
         weather_log = json.loads(redis_wx.get('weather_log_24hr'))
 
         # Update weather log with new status
-        weather_log.append(vals)
+        print('checking for values')
+        if weather_log[-1] != vals:
+            print('adding values')
+            weather_log.append(vals)
 
         # Delete row in log if timestamp is older than 24hrs.
         current_time = time.time()
@@ -46,7 +49,7 @@ def save_weather():
         redis_wx.set('weather_log_24hr', weather_log_tosend)
 
         # Wait for next weather status
-        time.sleep(60)
+        time.sleep(50)
 
 def get_weather_log():
     return json.loads(redis_wx.set('weather_log_24hr'))
