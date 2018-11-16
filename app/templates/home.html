@@ -33,10 +33,6 @@
     <link rel="stylesheet" type="text/css" href="static/css/datatables.css">
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.18/b-1.5.2/b-colvis-1.5.2/b-html5-1.5.2/cr-1.5.0/kt-2.4.0/r-2.2.2/rg-1.0.3/sc-1.5.0/sl-1.2.6/datatables.min.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="static/slider/nouislider.min.css">
-    <script type="text/javascript" src="static/slider/nouislider.min.js"></script>
-
-
     <div id="static-state" data-lat={{state.lat}} data-lon={{state.lon}}></div>
 
     <script
@@ -192,11 +188,11 @@
                                 <div class="JS9" id="guideview-right" data-width="150px" data-height="150px"></div>
                             </div>
                         </div>
-                        <script>
+                        <!--script>
                         $('.guiding-display-grid').ready(function(){
-                            let width = $('#view-size-helper').width();
-                            let height = $('#view-size-helper').height();
-                            let dim = width < height ? width:height;
+                            //let width = $('#view-size-helper').width();
+                            //let height = $('#view-size-helper').height();
+                            //let dim = width < height ? width:height;
                             dim -= 200;
                             $('#guiding-display-grid').css({"height": ""+dim.toString() + "px"});
                             var width = $('#guide-container-primary').width();
@@ -218,7 +214,7 @@
                                 JS9.ResizeDisplay(swidth,swidth, {display: 'guideview-right'});
                             })
                         });
-                        </script>
+                    </script-->
                         <style>
                             .guiding-display-grid {
                                 display: grid;

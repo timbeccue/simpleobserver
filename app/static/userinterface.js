@@ -86,21 +86,6 @@ function newUI() {
         });
     });
 
-    /* slider bar for table magnitude filter */
-    var magfilterslider = document.getElementById('mag-filter-slider');
-    noUiSlider.create(magfilterslider, {
-        start: [4, 18],
-        connect: true,
-        direction: 'rtl',
-        orientation: 'vertical',
-        //tooltips: [true, true],
-        range: {
-            'min': -1,
-            'max': 20,
-        }
-    });
-    magfilterslider.style.height = '100px';
-
     function target_clicked(ra, de) {
         state.ra_selected = ra;
         state.de_selected = de;
@@ -117,4 +102,4 @@ function newUI() {
     return public;
 }
 
-var UI= newUI();
+var UI = newUI();
