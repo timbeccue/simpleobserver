@@ -12,14 +12,15 @@ $(document).ready(function(){
         scroller: { loadingIndicator: true},
         select: true,
         stateSave: true,
-        ajax: "/tablelookup"
+        ajax: "/tablelookup",
+        oSearch: { "sSearch": "M" }
     });
 
     // Respond to row click
     $('#targets-table').on("click", 'tr', function() {
         var ra = table.row(this).data()[3];
         var de = table.row(this).data()[4];
-        SkyMap.update_pointer(ra, de); 
+        SkyMap.update_pointer(ra, de);
         UI.target_clicked(ra, de);
     } );
 });
