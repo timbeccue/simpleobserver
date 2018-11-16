@@ -52,7 +52,9 @@ def save_weather():
         time.sleep(50)
 
 def get_weather_log():
-    return json.loads(redis_wx.set('weather_log_24hr'))
+    return json.loads(redis_wx.get('weather_log_24hr'))
+
+
 
 def main():
     threading.Thread(target=save_weather()).start()

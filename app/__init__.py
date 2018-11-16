@@ -16,4 +16,4 @@ core1_redis = redis.StrictRedis(host='10.15.0.15', port=6379, db=0, decode_respo
 
 #migrate = Migrate(app, db)
 
-from app import routes, models
+from app import routes, models, weather_data

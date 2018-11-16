@@ -41,7 +41,6 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
             raise ValidationError('Please use a different email address.')
-
 class CameraForm(FlaskForm):
     time = DecimalField('Exposure Time', validators=[DataRequired()])
     count = IntegerField('Count', default=1, validators=[DataRequired(), NumberRange(min=1)])
