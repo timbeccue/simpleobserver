@@ -47,7 +47,8 @@ class CameraForm(FlaskForm):
     delay = FloatField('Delay', default=0)
     dither = SelectField('Dithering', default='off', choices=[('off','off'), ('on','on'), ('random','random')])
     bin = SelectField('Binning', default='1', choices=[('1','1'), ('2','2'), ('4','4')])
-    filter = SelectField('Filter', default='c', choices=[('c','Clear'), ('r','Red'), ('g','Green'), ('b','Blue')])
+    filter_choices = [('PL', 'Clear'), ('PR', 'Red'), ('PG', 'Green'), ('PB', 'Blue'), ('S2', 'S2'), ('HA', 'H\u03B1'), ('O3', 'O3'), ('N2', 'N2')]
+    filter = SelectField('Filter', default='c', choices=filter_choices)
     capture = SubmitField(' Capture')
 
 ####################################################################################
