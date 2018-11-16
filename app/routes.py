@@ -19,7 +19,7 @@ live_commands = True
 ####################################################################################
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, DecimalField, SelectField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, FloatField, SelectField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired, EqualTo, Email, ValidationError, NumberRange
 class LoginForm(FlaskForm):
@@ -42,9 +42,9 @@ class RegistrationForm(FlaskForm):
         if user is not None:
             raise ValidationError('Please use a different email address.')
 class CameraForm(FlaskForm):
-    time = DecimalField('Exposure Time', validators=[DataRequired()])
+    time = FloatField('Exposure Time', validators=[DataRequired()])
     count = IntegerField('Count', default=1, validators=[DataRequired(), NumberRange(min=1)])
-    delay = DecimalField('Delay', default=0)
+    delay = FloatField('Delay', default=0)
     dither = SelectField('Dithering', default='off', choices=[('off','off'), ('on','on'), ('random','random')])
     bin = SelectField('Binning', default='1', choices=[('1','1'), ('2','2'), ('4','4')])
     filter = SelectField('Filter', default='c', choices=[('c','Clear'), ('r','Red'), ('g','Green'), ('b','Blue')])
@@ -247,8 +247,9 @@ def command1(msg):
             dither = form.dither.data
             bin = form.bin.data
             filter = form.filter.data
-            cmd = cmd_expose(time,count,bin,delay,filter,dither)
+            cmd = cmd_expose(time,count,bin,dither,delay,filter)
             send(cmd)
+            print(cmd)
 
     if msg == 'lamp': send(cmd_parking(request.form['command']))
     if msg == 'ir-lamp': send(cmd_ir(request.form['command']))

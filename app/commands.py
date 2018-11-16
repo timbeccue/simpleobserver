@@ -41,7 +41,7 @@ def cmd_parking(cmd):
     return [key, val]
 
 # capture image(s)
-def cmd_expose(time, count, binning, dither, soft_bin=0, start_delay=0, filter='c'):
+def cmd_expose(time, count, binning, dither, start_delay=0, filter='c',soft_bin=0):
     key = '>ptr-cam-1'
     val = {
         'time': time,
