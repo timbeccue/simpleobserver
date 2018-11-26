@@ -48,7 +48,8 @@ $(document).ready( function() {
             $('#state-ra').text(parseFloat(state_mnt1.ra).toFixed(2));
             $('#state-de').text(parseFloat(state_mnt1.dec).toFixed(2));
             $('#state-telescope').text(telescope_action);
-            $('#state-alt').text(parseFloat(state_mnt1.alt).toFixed(3));
+            $('#state-alt').text(parseFloat(state_mnt1.alt).toFixed(3)+'\u00B0');
+            $('#state-az').text(parseFloat(state_mnt1.az).toFixed(3)+'\u00B0');
             $('#state-enclosure').text(state_mnt1.enclosure_status);
             $('#state-lmst').text(parseFloat(state_mnt1.tel_sid_time).toFixed(3));
         }

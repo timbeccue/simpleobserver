@@ -54,6 +54,10 @@
                     <div>Altitude:</div>
                     <div id="state-alt">-&deg;</div>
                 </div>
+                <div class="status" id="status-azimuth">
+                    <div>Azimuth:</div>
+                    <div id="state-az">-&deg;</div>
+                </div>
                 <div class="status" id="status-action">
                     <div>Telescope:</div>
                     <div id="state-telescope">-</div>
@@ -117,6 +121,9 @@
                         <h3>Lamp: </h3>
                             <button value="off" data-msg="lamp" class="btn btn-inverse btn-small button-command">Off</button>
                             <button value="on" data-msg="lamp" class="btn btn-small button-command">On</button>
+                        <h3>Lamp2: </h3>
+                            <div data-msg="lamp" class="status-box">Off</div>
+                            <button data-msg="lamp" class="btn btn-small button-command">On</button>
                         <h3>IR Lamp: </h3>
                             <button value="off" data-msg="ir-lamp" class="btn btn-inverse btn-small button-command">Off</button>
                             <button value="on" data-msg="ir-lamp" class="btn btn-small button-command">On</button>
