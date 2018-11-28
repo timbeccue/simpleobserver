@@ -1,12 +1,12 @@
 
 // Create a global state variable recieved from flask server
-var state = {};
-var state_mnt1 = {};
-var state_foc1 = {};
-var state_rot1 = {};
-var state_wx = {};
 
 $(document).ready( function() {
+    var state = {};
+    var state_mnt1 = {};
+    var state_foc1 = {};
+    var state_rot1 = {};
+    var state_wx = {};
 
     var old_source = new EventSource('/status/old/1');
     var mnt1_source = new EventSource('/status/mnt/1');
@@ -23,6 +23,7 @@ $(document).ready( function() {
     };
     mnt1_source.onmessage = function(event){
         var sse_contents = tryParseJSON(event.data);
+        console.log('sse contents: '+sse_contents);
         if (sse_contents) {
             $.extend(state_mnt1, sse_contents);
             var telescope_action = 'unknown';
@@ -78,6 +79,14 @@ $(document).ready( function() {
             }
         }
     };
+        /*
+        old_source.close();
+        wx_source.close();
+        rot1_source.close();
+        foc1_source.close();
+        mnt1_source.close();
+        console.log("closed sources");
+        */
 });
 
 function tryParseJSON (jsonString){

@@ -125,8 +125,9 @@
                     </div>
                     <div id="viewtab5" class="tabs-content views-content current">
                         <div id="dome-cam"></div>
+                        <script type="text/javascript" src="static/livefeed.js"></script>
 
-                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-2">
+                        <!--label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-2">
                           <span class="mdl-switch__label">Lamp: </span>
                           <input type="checkbox" id="switch-2" class="mdl-switch__input">
                         </label>
@@ -152,11 +153,12 @@
                           <input type="checkbox" id="park" class="mdl-switch__input">
                         </label>
                         <div></div>
-                        <div></div>
+                        <div></div-->
 
-                        <!--h3>Lamp2: </h3>
-                            <div data-msg="lamp" class="status-box">Off</div>
-                            <button data-msg="lamp" class="btn btn-small button-command">On</button>
+                        <h3>Lamp: </h3>
+                            <!--div data-msg="lamp" class="status-box">Off</div-->
+                            <button value="off" data-msg="lamp" class="btn btn-inverse btn-small button-command">Off</button>
+                            <button value="on" data-msg="lamp" class="btn btn-small button-command">On</button>
                         <h3>IR Lamp: </h3>
                             <button value="off" data-msg="ir-lamp" class="btn btn-inverse btn-small button-command">Off</button>
                             <button value="on" data-msg="ir-lamp" class="btn btn-small button-command">On</button>
@@ -165,7 +167,7 @@
                             <button value="on" data-msg="roof" class="btn btn-small button-command">Open</button>
                         <h3>Park: </h3>
                             <button value="park" data-msg="parking" class="btn btn-inverse btn-small button-command">Park</button>
-                            <button value="unpark" data-msg="parking" class="btn btn-small button-command">Unpark</button-->
+                            <button value="unpark" data-msg="parking" class="btn btn-small button-command">Unpark</button>
                     </div>
                     <div id="viewtab6" class="tabs-content views-content">
                         mountings info/selection here
@@ -585,11 +587,12 @@
         let width = $('#view-size-helper').width();
         let height = $('#view-size-helper').height() - 60;
         JS9.ResizeDisplay(width, height, {display: display });
-    }
-    */
+    }*/
+
 </script>
 
 <!-- Other CSS -->
+
 <link type="text/css" rel="stylesheet" href="static/css/obvious-buttons.css">
 <link rel="stylesheet" href="https://ofrohn.github.io/celestial.css">
 <link rel="stylesheet" type="text/css" href="static/css/datatables.css">
@@ -617,7 +620,6 @@
 
 <script type="text/javascript" src="static/userinterface.js"></script>
 <script type="text/javascript" src="static/table.js"></script>
-<script type="text/javascript" src="static/livefeed.js"></script>
 <script type="text/javascript" src="static/ajax_submit.js"></script>
 <script type="text/javascript" src="static/receive_state.js"></script>
 </body>

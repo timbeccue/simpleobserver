@@ -48,37 +48,74 @@
                 {{ form.hidden_tag() }}
                 <p>
                     {{ form.username.label }}<br>
-                    {{ form.username(size=64) }}<br>
+                    {{ form.username(size=64, id="reg_username") }}<br>
                     {% for error in form.username.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                     {% endfor %}
                 </p>
                 <p>
                     {{ form.email.label }}<br>
-                    {{ form.email(size=64) }}<br>
+                    {{ form.email(size=64, id="reg_email") }}<br>
                     {% for error in form.email.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                     {% endfor %}
                 </p>
                 <p>
                     {{ form.password.label }}<br>
-                    {{ form.password(size=32) }}<br>
+                    {{ form.password(size=32, id="reg_password") }}<br>
                     {% for error in form.password.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                     {% endfor %}
                 </p>
                 <p>
                     {{ form.password2.label }}<br>
-                    {{ form.password2(size=32) }}<br>
+                    {{ form.password2(size=32, id="reg_password2") }}<br>
                     {% for error in form.password2.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                     {% endfor %}
                 </p>
-                <p>{{ form.submit(class_="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary mdl-color--light-green") }}</p>
+                <p>{{ form.submit(id="reg_submit", class_="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary mdl-color--light-green") }}</p>
             </form>
         </div>
 
     </div>
+
+    <link rel="stylesheet" type="text/css" href="static/css/loading.css"/>
+    <link rel="stylesheet" type="text/css" href="static/css/loading-btn.css"/>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"> </script>
+    <!--div>
+        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-2">
+          <span class="mdl-switch__label">test label</span>
+          <input type="checkbox" id="switch-2" class="mdl-switch__input">
+        </label>
+        <br><br>
+        <p id="clickme"> RED </p>
+        <p id="setoff"> OFF </p>
+        <p id="default"> DEFAULT </p>
+        <br>
+        <p id="grey"> GREY </p>
+    </div>
+    <script>
+        $('#clickme').click(function(){
+            $('.mdl-switch__thumb').css('background', '#f00');
+        });
+        $('#setoff').click(function(){
+            //$('.mdl-switch').removeClass('is-checked');
+            $('.mdl-switch__input').trigger('click');
+            setTimeout(function(){$('.mdl-switch__input').trigger('click');}, 300);
+        });
+        $('#grey').click(function(){
+            $('.mdl-switch__thumb').css('background', '#aaa');
+        });
+        $('#default').click(function(){
+            $('.mdl-switch__thumb').css('background', '');
+        });
+        $('.mdl-switch__input').click(function(e){
+            console.log('clicked!');
+            $('.mdl-switch__thumb').addClass('running')
+        });
+        $
+    </script-->
 
 
 </body>
