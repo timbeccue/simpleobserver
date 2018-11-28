@@ -1,9 +1,16 @@
 <!DOCTYPE html>
 <head>
+    <!-- mdl style -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.amber-red.min.css" />
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link type="text/css" rel="stylesheet" href="static/css/home.css">
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"> </script>
+
+    <style> h3{font-size: 1.17em;} h1{font-size: 1.5em;}</style>
 
     <div id="static-state" data-lat={{state.lat}} data-lon={{state.lon}}></div>
 </head>
@@ -118,12 +125,40 @@
                     </div>
                     <div id="viewtab5" class="tabs-content views-content current">
                         <div id="dome-cam"></div>
+                        <script type="text/javascript" src="static/livefeed.js"></script>
+
+                        <!--label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-2">
+                          <span class="mdl-switch__label">Lamp: </span>
+                          <input type="checkbox" id="switch-2" class="mdl-switch__input">
+                        </label>
+                        <div></div>
+                        <div></div>
+
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="ir-lamp">
+                          <span class="mdl-switch__label">IR Lamp: </span>
+                          <input type="checkbox" id="ir-lamp" class="mdl-switch__input">
+                        </label>
+                        <div></div>
+                        <div></div>
+
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="roof">
+                          <span class="mdl-switch__label">Roof: </span>
+                          <input type="checkbox" id="roof" class="mdl-switch__input">
+                        </label>
+                        <div></div>
+                        <div></div>
+
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="park">
+                          <span class="mdl-switch__label">Park: </span>
+                          <input type="checkbox" id="park" class="mdl-switch__input">
+                        </label>
+                        <div></div>
+                        <div></div-->
+
                         <h3>Lamp: </h3>
+                            <!--div data-msg="lamp" class="status-box">Off</div-->
                             <button value="off" data-msg="lamp" class="btn btn-inverse btn-small button-command">Off</button>
                             <button value="on" data-msg="lamp" class="btn btn-small button-command">On</button>
-                        <h3>Lamp2: </h3>
-                            <div data-msg="lamp" class="status-box">Off</div>
-                            <button data-msg="lamp" class="btn btn-small button-command">On</button>
                         <h3>IR Lamp: </h3>
                             <button value="off" data-msg="ir-lamp" class="btn btn-inverse btn-small button-command">Off</button>
                             <button value="on" data-msg="ir-lamp" class="btn btn-small button-command">On</button>
@@ -552,11 +587,12 @@
         let width = $('#view-size-helper').width();
         let height = $('#view-size-helper').height() - 60;
         JS9.ResizeDisplay(width, height, {display: display });
-    }
-    */
+    }*/
+
 </script>
 
 <!-- Other CSS -->
+
 <link type="text/css" rel="stylesheet" href="static/css/obvious-buttons.css">
 <link rel="stylesheet" href="https://ofrohn.github.io/celestial.css">
 <link rel="stylesheet" type="text/css" href="static/css/datatables.css">
@@ -584,7 +620,6 @@
 
 <script type="text/javascript" src="static/userinterface.js"></script>
 <script type="text/javascript" src="static/table.js"></script>
-<script type="text/javascript" src="static/livefeed.js"></script>
 <script type="text/javascript" src="static/ajax_submit.js"></script>
 <script type="text/javascript" src="static/receive_state.js"></script>
 </body>

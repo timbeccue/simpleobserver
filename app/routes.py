@@ -95,6 +95,7 @@ def send(cmd):
         print(send_command)
     else:
         print("Commands are offline right now.")
+
 def event_stream(state_key, refresh_frequency):
     while True:
         state_dict = core1_redis.get(state_key)
