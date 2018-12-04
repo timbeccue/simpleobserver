@@ -31,7 +31,9 @@
                     {# loginform.remember_me() #}
                     {# loginform.remember_me.label #}
                     {{ loginform.submit() }}
-                    <a href="{{ url_for('register') }}"><button id="login-register-button" type="button">Create New Account</button></a>
+                    <a href="{{ url_for('register') }}">
+                        <button id="login-register-button" type="button">Create New Account</button>
+                    </a>
                 </form>
                 {% else %}
                 <ul class='loggedin'>
@@ -345,21 +347,27 @@
                         <div id="camera-tab-content" class="tabs-content camerasettings-content current">
                             {{ cameraform.count.label }}
                             {{ cameraform.delay.label }}
-                            {{ cameraform.count() }}
-                            {{ cameraform.delay() }}
+                            {{ cameraform.count(form="camerasettings") }}
+                            {{ cameraform.delay(form="camerasettings") }}
                         <div></div><div></div>
                             {{ cameraform.bin.label }}
                             {{ cameraform.dither.label }}
-                            {{ cameraform.bin() }}
-                            {{ cameraform.dither() }}
+                            {{ cameraform.bin(form="camerasettings") }}
+                            {{ cameraform.dither(form="camerasettings") }}
                         </div>
                         <div id="focus-tab-content" class="tabs-content camerasettings-content">
                             {{ cameraform.autofocus.label }}
-                            {{ cameraform.auutofocus() }}
+                            {{ cameraform.autofocus(form="camerasettings") }}
+                            {% for error in cameraform.autofocus.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
                         </div>
                         <div id="rotate-tab-content" class="tabs-content camerasettings-content">
                             {{ cameraform.position_angle.label }}
-                            {{ cameraform.position_angle.() }}
+                            {{ cameraform.position_angle(form="camerasettings") }}
+                            {% for error in cameraform.position_angle.errors %}
+                            <!--p style="color: red;">[{{ error }}]</p-->
+                            {% endfor %}
                         </div>
                     </div>
                 </div>

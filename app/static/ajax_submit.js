@@ -11,6 +11,7 @@
                 url: form.attr('action'),
                 data: form.serialize()
             }).done(function(data) {
+                $('.validation_error').remove()
                 if (data.requested) {
                     form.find('input:text').val('');
                     var log = $('#cmd-log');
@@ -22,6 +23,14 @@
                         is_command_live = '<span style="color: #83ff33;"> online </span>';
                     }
                     log.find('tbody').prepend( '<tr><td>'+sent_cmd+'</td><td>'+processed_cmd+'</td><td>'+is_command_live+'</td></tr>');
+                }
+                if (data.errors) {
+                    var error_value;
+                    for (var error_name in data.errors) {
+                        error_value = data.errors[error_name];
+                        $('#'+error_name).after('<p class="validation_error" style="color: red;">'+error_value);
+                        console.log(error_name, error_value);
+                    }
                 }
             }).fail(function(data) {
                 console.log("failure");

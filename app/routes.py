@@ -14,7 +14,7 @@ from datatables import ColumnDT, DataTables
 from app.models import User, Dso, Hygdatum
 
 expire_time = 120 #seconds
-live_commands = True
+live_commands = False
 
 ####################################################################################
 
@@ -47,13 +47,15 @@ class CameraForm(FlaskForm):
     delay = FloatField('Delay', default=0)
     dither = SelectField('Dithering', default='off', choices=[('off','off'), ('on','on'), ('random','random')])
     bin = SelectField('Binning', default='1', choices=[('1','1'), ('2','2'), ('4','4')])
-    filter_choices = [('PL', 'Clear'), ('PR', 'Red'), ('PG', 'Green'), ('PB', 'Blue'), ('S2', 'S2'), ('HA', 'H\u03B1'), ('O3', 'O3'), ('N2', 'N2')]
+    filter_choices = [('PL', 'Clear'), ('PR', 'Red'), ('PG', 'Green'), ('PB', 'Blue'), ('S2', 'S2'), ('HA', 'H\u03B1'),
+                      ('O3', 'O3'), ('N2', 'N2')]
     filter = SelectField('Filter', default='c', choices=filter_choices)
     capture = SubmitField(' Capture')
 
     autofocus = BooleanField('Autofocus', default=1)
 
-    position_angle = FloatField('Position Angle', default=0, validators=[NumberRange(min=0, max=360)])
+    position_angle = FloatField('Position Angle', default=0, validators=[DataRequired(),
+                                NumberRange(min=0, max=360, message="Please enter a value between 0 and 360.")])
 
 ####################################################################################
 
@@ -189,24 +191,6 @@ def command():
     cmd = ['','']
     logtext = ''
 
-    #if category == 'enclosure':
-        #device = request.form['command']
-        #checked = request.form['checked']
-        #on_off = 'on' if checked=='true' else 'off'
-        #open_close = 'open' if checked=='true' else 'close'
-        #if device == 'lamp':
-            #cmd = cmd_lamp(on_off)
-            #logtext = f"Light {on_off}"
-            #send(cmd)
-        #if device == 'ir-lamp':
-            #cmd = cmd_ir(on_off)
-            #logtext = f"IR Lamp {on_off}"
-            #send(cmd)
-        #if device == 'roof':
-            #cmd = cmd_roof(open_close)
-            #logtext = f"{open_close} roof"
-            #send(cmd)
-
     if category == 'goto':
         text = request.form['goto-box']
         logtext = 'goto: ' + text
@@ -216,28 +200,6 @@ def command():
         print(cmd)
         send(cmd)
 
-    ##TODO: finish camera command
-    #if category == 'camerasettings':
-        ## initialize with default values
-        #number_images = 1
-        #between_images = 0
-        #start_delay = 0
-        #bin = 1
-        ## get form values
-        #time = request.form['exposure-time']
-        #filter = request.form['filter']
-        #number_images = request.form['number-of-images']
-        #between_images = request.form['time-between-images']
-        #start_delay = request.form['start-delay']
-        #bin = request.form['camera-binning']
-#
-        #cmd = cmd_expose(time, number_images, bin, start_delay, between_images, filter)
-        #logtext = f"Exposure: {time}s, {filter} filter, {number_images}x."
-        #send(cmd)
-
-
-
-
     requested = str(datetime.datetime.now()).split('.')[0]+": . . . . . \t"+logtext
     processed = cmd[1] if (len(cmd)>0) else ''
     return jsonify(requested=requested, processed=processed, live=live_commands)
@@ -246,23 +208,29 @@ def command():
 def command1(msg):
     if msg == 'camera':
         form = CameraForm()
+
         if form.validate_on_submit():
             time = form.time.data
             count = form.count.data
             delay = form.delay.data
             dither = form.dither.data
+            autofocus = form.autofocus.data
+            position_angle = form.position_angle.data
             bin = form.bin.data
             filter = form.filter.data
-            cmd = cmd_expose(time,count,bin,dither,delay,filter)
+            cmd = cmd_expose(time, count, bin, dither, autofocus, position_angle, delay, filter)
             send(cmd)
             print(cmd)
+            return jsonify(requested="requested", processed=cmd[1], live=live_commands)
+        return jsonify(errors=form.errors)
 
     if msg == 'lamp': send(cmd_parking(request.form['command']))
     if msg == 'ir-lamp': send(cmd_ir(request.form['command']))
     if msg == 'roof': send(cmd_roof(request.form['command']))
     if msg == 'parking': send(cmd_parking(request.form['command']))
 
-    return jsonify(requested="requested")
+    processed = cmd[1] if (len(cmd)>0) else ''
+    return jsonify(requested="requested", processed=processed, live=live_commands, errors=form.errors)
 
 @app.route('/tablelookup')
 def tablelookup():
