@@ -51,6 +51,10 @@ class CameraForm(FlaskForm):
     filter = SelectField('Filter', default='c', choices=filter_choices)
     capture = SubmitField(' Capture')
 
+    autofocus = BooleanField('Autofocus', default=1)
+
+    position_angle = FloatField('Position Angle', default=0, validators=[NumberRange(min=0, max=360)])
+
 ####################################################################################
 
 @app.route('/login', methods=['GET', 'POST'])

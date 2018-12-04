@@ -125,7 +125,7 @@
                     </div>
                     <div id="viewtab5" class="tabs-content views-content current">
                         <div id="dome-cam"></div>
-                        <script type="text/javascript" src="static/livefeed.js"></script>
+                        <!--script type="text/javascript" src="static/livefeed.js"></script-->
 
                         <!--label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-2">
                           <span class="mdl-switch__label">Lamp: </span>
@@ -343,21 +343,23 @@
                             <li class="tab camerasettings-tab" data-tabtype="camerasettings" data-tab="rotate-tab-content">Rotate</li>
                         </ul>
                         <div id="camera-tab-content" class="tabs-content camerasettings-content current">
-                                {{ cameraform.count.label }}
-                                {{ cameraform.delay.label }}
-                                {{ cameraform.count() }}
-                                {{ cameraform.delay() }}
-                            <div></div><div></div>
-                                {{cameraform.bin.label }}
-                                {{ cameraform.dither.label }}
-                                {{ cameraform.bin() }}
-                                {{ cameraform.dither() }}
+                            {{ cameraform.count.label }}
+                            {{ cameraform.delay.label }}
+                            {{ cameraform.count() }}
+                            {{ cameraform.delay() }}
+                        <div></div><div></div>
+                            {{ cameraform.bin.label }}
+                            {{ cameraform.dither.label }}
+                            {{ cameraform.bin() }}
+                            {{ cameraform.dither() }}
                         </div>
                         <div id="focus-tab-content" class="tabs-content camerasettings-content">
-                            <p>Focus tab</p>
+                            {{ cameraform.autofocus.label }}
+                            {{ cameraform.auutofocus() }}
                         </div>
                         <div id="rotate-tab-content" class="tabs-content camerasettings-content">
-                            <p>Rotate tab</p>
+                            {{ cameraform.position_angle.label }}
+                            {{ cameraform.position_angle.() }}
                         </div>
                     </div>
                 </div>
