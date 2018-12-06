@@ -94,7 +94,6 @@ def register():
         return redirect(url_for('home'))
     return render_template('register.html', form=form, loginform = loginform)
 
-
 def send(cmd):
     if live_commands==True:
         send_command = core1_redis.set(cmd[0], json.dumps(cmd[1]), ex=expire_time)
@@ -116,6 +115,11 @@ def stream(device,id):
 
     sse = event_stream(state_key, refresh_frequency)
     return Response(sse, mimetype="text/event-stream")
+
+@app.route('/testpage')
+@login_required
+def testpage():
+    return render_template('testpage.html')
 
 @app.route('/', methods=['GET', 'POST'])
 def home():

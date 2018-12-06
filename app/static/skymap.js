@@ -101,7 +101,7 @@ function newSkyMap() {
         datapath: "static/mapdata",  // Path/URL to data files, empty = subfolder 'data'
         stars: {
             show: true,    // Show stars
-            limit: 5,      // Show only stars brighter than limit magnitude
+            limit: 3,      // Show only stars brighter than limit magnitude
             colors: true,  // Show stars in spectral colors, if not use "color"
             style: { fill: "#ffffff", opacity: 1 }, // Default style for stars
             names: false,   // Show star names (Bayer, Flamsteed, Variable star, Gliese, whichever applies first)
@@ -113,18 +113,18 @@ function newSkyMap() {
             propernamelimit: 1.5,  // Show proper names for stars brighter than propernamelimit
             size: 7,       // Maximum size (radius) of star circle in pixels
             exponent: -0.28, // Scale exponent for star size, larger = more linear
-            data: 'stars.6.reduced.json' // Data source for stellar data
+            data: 'stars.6.json' // Data source for stellar data
             //data: 'stars.8.json' // Alternative deeper data source for stellar data
         },
         dsos: {
             show: true,    // Show Deep Space Objects
-            limit: 6,      // Show only DSOs brighter than limit magnitude
+            limit: 9,      // Show only DSOs brighter than limit magnitude
             names: true,   // Show DSO names
             desig: false,   // Show short DSO names
-            namelimit: 4,  // Show only names for DSOs brighter than namelimit
+            namelimit: 10,  // Show only names for DSOs brighter than namelimit
             namestyle: { fill: "#cccccc", font: "9px Helvetica, Arial, serif", align: "left", baseline: "top" },
-            size: 9,    // Optional seperate scale size for DSOs, null = stars.size
-            exponent: 1.7, // Scale exponent for DSO size, larger = more non-linear
+            size:   6,    // Optional seperate scale size for DSOs, null = stars.size
+            exponent: 2, // Scale exponent for DSO size, larger = more non-linear
             data: 'messier.json',  // Data source for DSOs
             //data: 'dsos.6.json'  // Alternative broader data source for DSOs
             //data: 'dsos.14.json' // Alternative deeper data source for DSOs
@@ -285,7 +285,7 @@ function newSkyMap() {
     });
 
     // Periodically update map rotation.
-    setInterval(function() { Celestial.rotate({center: [Utilities.hour2degree(state_mnt1.tel_sid_time), lat, 0]}); }, 5000);
+    //setInterval(function() { Celestial.rotate({center: [Utilities.hour2degree(state_mnt1.tel_sid_time), lat, 0]}); }, 5000);
 
     data.bestMatch = bestMatch;
     data.update_pointer = update_pointer;

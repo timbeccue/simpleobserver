@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"> </script>
+</head>
+
+<body>
+    <style>
+        body{
+            background-color: #222;
+            color: #aaa;
+         }
+     </style>
+    <div style="display: flex; width: auto;">
+
+        <div class="container" style="flex-basis: 800px; position: relative; border: solid #333 3px;">
+            <div id="static-state" data-lat=34 data-lon=-119></div>
+            <div class="container" id="celestial-map"></div>
+            <div class="container" id="celestial-form" style="display:none;"></div>
+        </div>
+
+
+        <div style="width: auto; grid-column: 2/3; border: solid #333 3px;">
+            <div id="go-table">
+                <table id="targets-table">
+                    <thead>
+                        <tr>
+                            <th>Cat</th>
+                            <th>ID</th>
+                            <th>Mag</th>
+                            <th>RA</th>
+                            <th>DE</th>
+                            <!--th>Size</th-->
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+                <div id="go-filters" class="container hidden">
+                    <div>
+                        <input type="checkbox" name="stars" id="stars-check">
+                        <label for="stars-check">Stars</label><br>
+                        <input type="checkbox" name="open-clusters" id="open-clusters-check">
+                        <label for="open-clusters-check">Open Clusters</label><br>
+                        <input type="checkbox" name="globular-clusters" id="globular-clusters-check">
+                        <label for="globular-clusters-check">Globular Clusters</label><br>
+                        <input type="checkbox" name="galaxies" id="galaxies-check">
+                        <label for="galaxies-check">Galaxies</label><br>
+                        <input type="checkbox" name="nebula" id="nebula-check">
+                        <label for="nebula-check">Nebulae</label><br>
+                    </div>
+                    <div>
+                        <input type="checkbox" name="ngc" id="ngc-check">
+                        <label for="ngc-check">NGC</label><br>
+                        <input type="checkbox" name="messier" id="messier-check">
+                        <label for="messier-check">Messier</label><br>
+                        <input type="checkbox" name="caldwell" id="caldwell-check">
+                        <label for="caldwell-check">Caldwell</label><br>
+                    </div>
+
+                    <div>
+                        <button class="btn btn-small">Variable Stars</button>
+                        <button class="btn btn-small">Landolt Stars</button>
+                        <button class="btn btn-small">Near Zenith</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="width: auto; padding: 1em; border: #999 3px solid;">
+        <form action="/addtodatabase" method="POST">
+            <table>
+                <tr>
+                    <td> Name </td>
+                    <td> ID </td>
+                    <td> Mag </td>
+                </tr>
+                <tr>
+                    <td> <input type=text></input> </td>
+                    <td> <input type=text></input> </td>
+                    <td> <input type=text></input> </td>
+                </tr>
+            </table>
+            <button type=submit>add to database</button>
+        </form>
+    </div>
+
+
+
+
+
+
+
+
+
+    <link rel="stylesheet" href="https://ofrohn.github.io/celestial.css">
+    <link rel="stylesheet" type="text/css" href="static/css/datatables.css">
+
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.18/b-1.5.2/b-colvis-1.5.2/b-html5-1.5.2/cr-1.5.0/kt-2.4.0/r-2.2.2/rg-1.0.3/sc-1.5.0/sl-1.2.6/datatables.min.js"></script>
+    <script type="text/javascript" src="static/utilities.js"></script>
+
+    <script type="text/javascript" src="static/d3.js"></script>
+    <script type="text/javascript" src="static/d3.geo.projection.min.js"></script>
+    <script type="text/javascript" src="static/celestial.js"></script>
+    <script type="text/javascript" src="static/skymap.js"></script>
+    <script src="https://d3js.org/d3-drag.v1.min.js"></script>
+
+    <script type="text/javascript" src="static/userinterface.js"></script>
+    <script type="text/javascript" src="static/table.js"></script>
+    <script type="text/javascript" src="static/ajax_submit.js"></script>
+    <script type="text/javascript" src="static/receive_state.js"></script>
+</body>
