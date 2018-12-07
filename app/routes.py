@@ -119,10 +119,50 @@ def stream(device,id):
 
 
 #############################################
+object_types = [
+    ('As', 'Asterism'),
+    ('Ds', 'Double Star'),
+    ('MW', 'Milky Way Patch'),
+    ('Oc', 'Open Cluster'),
+    ('Gc', 'Globular Cluster'),
+    ('Pl', 'Planetary Nebula'),
+    ('Di', 'Diffuse nebula'),
+    ('Bn', 'Bright Nebula'),
+    ('Dn', 'Dark Nebula'),
+    ('Sn', 'Supernova Remnant'),
+    ('Cg', 'Clustered Galaxies'),
+    ('Sp', 'Spiral Galaxy'),
+    ('Ba', 'Barred Galaxy'),
+    ('Ir', 'Irregular Galaxy'),
+    ('El', 'Elliptical Galaxy'),
+    ('Ln', 'Lenticular Galaxy'),
+    ('Px', 'Perculiar Galaxy'),
+    ('Sx', 'Seyfert Galaxy')
+    ]
+
+seasons = [
+    ('summer', 'Summer'),
+    ('autumn', 'Autumn'),
+    ('winter', 'Winter'),
+    ('spring', 'Spring')
+    ]
+
+constellations = [
+    ('And', 'Andromeda'),
+    ('Ant', 'Antlia'),
+    ('Aps', 'Apus'),
+    ]
+
 class TestAddForm(FlaskForm):
-    name = StringField('name', validators=[DataRequired()])
-    id = StringField('id', validators=[DataRequired()])
-    mag = StringField('mag')
+    type = SelectField('Type', choices=object_types)
+    magnitude = FloatField('Magnitude', validators=[NumberRange(min=-30, max=100), DataRequired()])
+    size_large = FloatField('Size-Large')
+    size_small = FloatField('Size-Small')
+    distance_ly = FloatField('Distance [ly]')
+    ra_decimal = FloatField('Right Ascension', validators=[NumberRange(min=0, max=24), DataRequired()])
+    de_decimal = FloatField('Declination', validators=[NumberRange(min=0, max=90), DataRequired()])
+    season = SelectField('Season', choices=seasons)
+    constellation = SelectField('Constellation', choices=constellations)
     submit = SubmitField('add to db')
 
 @app.route('/testpage')
@@ -148,9 +188,12 @@ def addtodatabase():
 def tablelookup1():
     """Return server side data for object table"""
     columns = [
-        ColumnDT(testDB.id),
-        ColumnDT(testDB.name),
-        ColumnDT(testDB.mag)
+        ColumnDT(testDB.messier),
+        ColumnDT(testDB.type),
+        ColumnDT(testDB.mag),
+        ColumnDT(testDB.ra_decimal),
+        ColumnDT(testDB.de_decimal),
+        ColumnDT(testDB.constellation),
     ]
     # define the initial query
     query = db.session.query().filter(testDB.id > 0)

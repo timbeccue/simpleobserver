@@ -21,10 +21,19 @@ class testDB(db.Model):
     __bind_key__ = 'bindkey_testDB'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64))
-    mag = db.Column(db.Float)
-    #m = db.Column(db.Integer)
-    #ngc = db.Column(db.Text)
+    messier = db.Column(db.Integer, unique=True)
+    ngc = db.Column(db.String, unique=True)
+    type = db.Column(db.String, nullable=False)
+    mag = db.Column(db.Float, nullable=False)
+    size_large = db.Column(db.Float)
+    size_small = db.Column(db.Float)
+    distance_ly = db.Column(db.Integer)
+    ra_decimal = db.Column(db.Float, nullable=False)
+    de_decimal = db.Column(db.Float, nullable=False)
+    season = db.Column(db.String)
+    constellation = db.Column(db.String)
+    names = db.Column(db.String)
+
 
     def __init__(self, id, name, mag):
         self.id = id

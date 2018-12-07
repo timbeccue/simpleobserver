@@ -26,9 +26,12 @@
                 <table id="targets-table1">
                     <thead>
                         <tr>
-                            <th>id</th>
-                            <th>name</th>
-                            <th>mag</th>
+                            <th>M</th>
+                            <th>Type</th>
+                            <th>Mag</th>
+                            <th>Ra</th>
+                            <th>De</th>
+                            <th>Constellation</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -70,19 +73,19 @@
         <form action="/addtodatabase" method="POST">
             <table>
                 <tr>
-                    <td> Name </td>
-                    <td> ID </td>
-                    <td> Mag </td>
+                    {% for field in dbform %}
+                    <td> {{ field.label() }} </td>
+                    {% endfor %}
                 </tr>
                 <tr>
-                    <td> {{ dbform.name() }}</td>
-                    <td> {{ dbform.id() }} </td>
-                    <td> {{ dbform.mag() }} </td>
+                    {% for field in dbform %}
+                    <td> {{ field(style="width: 125px;") }} </td>
+                    {% endfor %}
                 </tr>
             </table>
             <button type=submit>add to database</button>
         </form>
-        <div>
+        <!--div>
             <table>
                 <tr>
                     <td> ID </td>
@@ -97,7 +100,7 @@
                 </tr>
             {% endfor %}
             </table>
-        </div>
+        </div-->
     </div>
 
 
