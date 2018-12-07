@@ -144,6 +144,28 @@ def addtodatabase():
         db.session.add(object_to_add)
         db.session.commit()
         return redirect(url_for('testpage'))
+@app.route('/tablelookup1')
+def tablelookup1():
+    """Return server side data for object table"""
+    columns = [
+        ColumnDT(testDB.id),
+        ColumnDT(testDB.name),
+        ColumnDT(testDB.mag)
+    ]
+    # define the initial query
+    query = db.session.query().filter(testDB.id > 0)
+
+    # GET parameters
+    params = request.args.to_dict()
+
+    # instantiating a DataTable for the query and table
+    rowTable = DataTables(params, query, columns)
+
+    # returns data to DataTable
+    forTable = jsonify(rowTable.output_result())
+    print("FOR TABLE:::::::::::::::::::")
+    print(forTable)
+    return(forTable)
 
 #############################################
 

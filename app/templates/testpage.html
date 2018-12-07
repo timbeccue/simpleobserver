@@ -23,16 +23,12 @@
 
         <div style="width: auto; border: solid #333 3px;">
             <div id="go-table">
-                <table id="targets-table">
+                <table id="targets-table1">
                     <thead>
                         <tr>
-                            <th>Cat</th>
-                            <th>ID</th>
-                            <th>Mag</th>
-                            <th>RA</th>
-                            <th>DE</th>
-                            <!--th>Size</th-->
-                            <th>Type</th>
+                            <th>id</th>
+                            <th>name</th>
+                            <th>mag</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -61,7 +57,7 @@
                     </div>
 
                     <div>
-                        <button class="btn btn-small">Variable Stars</button>
+                        <button class="btn btn-small" id="mag<6filter">Mag < 6</button>
                         <button class="btn btn-small">Landolt Stars</button>
                         <button class="btn btn-small">Near Zenith</button>
                     </div>
@@ -89,14 +85,14 @@
         <div>
             <table>
                 <tr>
-                    <td> Name </td>
                     <td> ID </td>
-                    <td> Mag </td>
+                    <td> Name </td>
+                    <td> Magnitude </td>
                 </tr>
             {% for entry in database %}
                 <tr>
-                    <td> {{ entry.name }} </td>
                     <td> {{ entry.id }} </td>
+                    <td> {{ entry.name }} </td>
                     <td> {{ entry.mag }} </td>
                 </tr>
             {% endfor %}
@@ -105,6 +101,37 @@
     </div>
 
 
+    <script>
+        $(document).ready(function(){
+
+
+            var table1 = $('#targets-table1').DataTable({
+                processing: true,
+                serverSide: true,
+                deferRender: false,
+                //paging: false,
+                compact: true,
+                responsive: true,
+                scrollY: "calc(75vh - 300px)",
+                //scroller: true,
+                scroller: { loadingIndicator: true},
+                select: true,
+                stateSave: false,
+                ajax: "/tablelookup1",
+                //oSearch: { "sSearch": "M" },
+            });
+
+
+            /* Respond to row click
+            $('#targets-table').on("click", 'tr', function() {
+                var ra = table.row(this).data()[3];
+                var de = table.row(this).data()[4];
+                SkyMap.update_pointer(ra, de);
+                UI.target_clicked(ra, de);
+            } );*/
+            table1.draw();
+        });
+    </script>
 
 
 
@@ -125,7 +152,6 @@
     <script src="https://d3js.org/d3-drag.v1.min.js"></script>
 
     <script type="text/javascript" src="static/userinterface.js"></script>
-    <script type="text/javascript" src="static/table.js"></script>
     <script type="text/javascript" src="static/ajax_submit.js"></script>
     <script type="text/javascript" src="static/receive_state.js"></script>
 </body>
