@@ -11,10 +11,10 @@ from flask_login import current_user, login_user, logout_user, login_required
 
 # from sqlalchemy-datatables example
 from datatables import ColumnDT, DataTables
-from app.models import User, Dso, Hygdatum
+from app.models import User, Dso, testDB
 
 expire_time = 120 #seconds
-live_commands = True
+live_commands = False
 
 ####################################################################################
 
@@ -47,9 +47,15 @@ class CameraForm(FlaskForm):
     delay = FloatField('Delay', default=0)
     dither = SelectField('Dithering', default='off', choices=[('off','off'), ('on','on'), ('random','random')])
     bin = SelectField('Binning', default='1', choices=[('1','1'), ('2','2'), ('4','4')])
-    filter_choices = [('PL', 'Clear'), ('PR', 'Red'), ('PG', 'Green'), ('PB', 'Blue'), ('S2', 'S2'), ('HA', 'H\u03B1'), ('O3', 'O3'), ('N2', 'N2')]
+    filter_choices = [('PL', 'Clear'), ('PR', 'Red'), ('PG', 'Green'), ('PB', 'Blue'), ('S2', 'S2'), ('HA', 'H\u03B1'),
+                      ('O3', 'O3'), ('N2', 'N2')]
     filter = SelectField('Filter', default='c', choices=filter_choices)
     capture = SubmitField(' Capture')
+
+    autofocus = BooleanField('Autofocus', default=1)
+
+    position_angle = FloatField('Position Angle', default=0, validators=[DataRequired(),
+                                NumberRange(min=0, max=360, message="Please enter a value between 0 and 360.")])
 
 ####################################################################################
 
@@ -88,7 +94,6 @@ def register():
         return redirect(url_for('home'))
     return render_template('register.html', form=form, loginform = loginform)
 
-
 def send(cmd):
     if live_commands==True:
         send_command = core1_redis.set(cmd[0], json.dumps(cmd[1]), ex=expire_time)
@@ -110,6 +115,105 @@ def stream(device,id):
 
     sse = event_stream(state_key, refresh_frequency)
     return Response(sse, mimetype="text/event-stream")
+
+
+
+#############################################
+object_types = [
+    ('As', 'Asterism'),
+    ('Ds', 'Double Star'),
+    ('MW', 'Milky Way Patch'),
+    ('Oc', 'Open Cluster'),
+    ('Gc', 'Globular Cluster'),
+    ('Pl', 'Planetary Nebula'),
+    ('Di', 'Diffuse nebula'),
+    ('Bn', 'Bright Nebula'),
+    ('Dn', 'Dark Nebula'),
+    ('Sn', 'Supernova Remnant'),
+    ('Cg', 'Clustered Galaxies'),
+    ('Sp', 'Spiral Galaxy'),
+    ('Ba', 'Barred Galaxy'),
+    ('Ir', 'Irregular Galaxy'),
+    ('El', 'Elliptical Galaxy'),
+    ('Ln', 'Lenticular Galaxy'),
+    ('Px', 'Perculiar Galaxy'),
+    ('Sx', 'Seyfert Galaxy')
+    ]
+
+seasons = [
+    ('summer', 'Summer'),
+    ('autumn', 'Autumn'),
+    ('winter', 'Winter'),
+    ('spring', 'Spring')
+    ]
+
+constellations = [
+    ('And', 'Andromeda'),
+    ('Ant', 'Antlia'),
+    ('Aps', 'Apus'),
+    ]
+
+class TestAddForm(FlaskForm):
+    type = SelectField('Type', choices=object_types)
+    magnitude = FloatField('Magnitude', validators=[NumberRange(min=-30, max=100), DataRequired()])
+    size_large = FloatField('Size-Large')
+    size_small = FloatField('Size-Small')
+    distance_ly = FloatField('Distance [ly]')
+    ra_decimal = FloatField('Right Ascension', validators=[NumberRange(min=0, max=24), DataRequired()])
+    de_decimal = FloatField('Declination', validators=[NumberRange(min=0, max=90), DataRequired()])
+    season = SelectField('Season', choices=seasons)
+    constellation = SelectField('Constellation', choices=constellations)
+    submit = SubmitField('add to db')
+
+@app.route('/testpage')
+@login_required
+def testpage():
+    database = db.session.query(testDB).all()
+    return render_template('testpage.html', dbform=TestAddForm(), database=database)
+
+@app.route('/addtodatabase', methods=['POST', 'GET'])
+@login_required
+def addtodatabase():
+    dbform = TestAddForm()
+    if request.method == 'POST':
+        name = dbform.name.data  # or request.dbform['name']
+        id = dbform.id.data
+        mag = dbform.mag.data
+
+        object_to_add = testDB(id, name, mag)
+        db.session.add(object_to_add)
+        db.session.commit()
+        return redirect(url_for('testpage'))
+@app.route('/tablelookup1')
+def tablelookup1():
+    """Return server side data for object table"""
+    columns = [
+        ColumnDT(testDB.messier),
+        ColumnDT(testDB.type),
+        ColumnDT(testDB.mag),
+        ColumnDT(testDB.ra_decimal),
+        ColumnDT(testDB.de_decimal),
+        ColumnDT(testDB.constellation),
+    ]
+    # define the initial query
+    query = db.session.query().filter(testDB.id > 0)
+
+    # GET parameters
+    params = request.args.to_dict()
+
+    # instantiating a DataTable for the query and table
+    rowTable = DataTables(params, query, columns)
+
+    # returns data to DataTable
+    forTable = jsonify(rowTable.output_result())
+    print("FOR TABLE:::::::::::::::::::")
+    print(forTable)
+    return(forTable)
+
+#############################################
+
+
+
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -185,24 +289,6 @@ def command():
     cmd = ['','']
     logtext = ''
 
-    #if category == 'enclosure':
-        #device = request.form['command']
-        #checked = request.form['checked']
-        #on_off = 'on' if checked=='true' else 'off'
-        #open_close = 'open' if checked=='true' else 'close'
-        #if device == 'lamp':
-            #cmd = cmd_lamp(on_off)
-            #logtext = f"Light {on_off}"
-            #send(cmd)
-        #if device == 'ir-lamp':
-            #cmd = cmd_ir(on_off)
-            #logtext = f"IR Lamp {on_off}"
-            #send(cmd)
-        #if device == 'roof':
-            #cmd = cmd_roof(open_close)
-            #logtext = f"{open_close} roof"
-            #send(cmd)
-
     if category == 'goto':
         text = request.form['goto-box']
         logtext = 'goto: ' + text
@@ -212,28 +298,6 @@ def command():
         print(cmd)
         send(cmd)
 
-    ##TODO: finish camera command
-    #if category == 'camerasettings':
-        ## initialize with default values
-        #number_images = 1
-        #between_images = 0
-        #start_delay = 0
-        #bin = 1
-        ## get form values
-        #time = request.form['exposure-time']
-        #filter = request.form['filter']
-        #number_images = request.form['number-of-images']
-        #between_images = request.form['time-between-images']
-        #start_delay = request.form['start-delay']
-        #bin = request.form['camera-binning']
-#
-        #cmd = cmd_expose(time, number_images, bin, start_delay, between_images, filter)
-        #logtext = f"Exposure: {time}s, {filter} filter, {number_images}x."
-        #send(cmd)
-
-
-
-
     requested = str(datetime.datetime.now()).split('.')[0]+": . . . . . \t"+logtext
     processed = cmd[1] if (len(cmd)>0) else ''
     return jsonify(requested=requested, processed=processed, live=live_commands)
@@ -242,23 +306,29 @@ def command():
 def command1(msg):
     if msg == 'camera':
         form = CameraForm()
+
         if form.validate_on_submit():
             time = form.time.data
             count = form.count.data
             delay = form.delay.data
             dither = form.dither.data
+            autofocus = form.autofocus.data
+            position_angle = form.position_angle.data
             bin = form.bin.data
             filter = form.filter.data
-            cmd = cmd_expose(time,count,bin,dither,delay,filter)
+            cmd = cmd_expose(time, count, bin, dither, autofocus, position_angle, delay, filter)
             send(cmd)
             print(cmd)
+            return jsonify(requested="requested", processed=cmd[1], live=live_commands)
+        return jsonify(errors=form.errors)
 
     if msg == 'lamp': send(cmd_parking(request.form['command']))
     if msg == 'ir-lamp': send(cmd_ir(request.form['command']))
     if msg == 'roof': send(cmd_roof(request.form['command']))
     if msg == 'parking': send(cmd_parking(request.form['command']))
 
-    return jsonify(requested="requested")
+    processed = cmd[1] if (len(cmd)>0) else ''
+    return jsonify(requested="requested", processed=processed, live=live_commands, errors=form.errors)
 
 @app.route('/tablelookup')
 def tablelookup():

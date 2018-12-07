@@ -1,12 +1,13 @@
 
 // Create a global state variable recieved from flask server
 
+var state = {};
+var state_mnt1 = {};
+var state_foc1 = {};
+var state_rot1 = {};
+var state_wx = {};
+
 $(document).ready( function() {
-    var state = {};
-    var state_mnt1 = {};
-    var state_foc1 = {};
-    var state_rot1 = {};
-    var state_wx = {};
 
     var old_source = new EventSource('/status/old/1');
     var mnt1_source = new EventSource('/status/mnt/1');

@@ -16,6 +16,34 @@ from app import login
 def load_user(id):
     return User.query.get(int(id))
 
+
+class testDB(db.Model):
+    __bind_key__ = 'bindkey_testDB'
+
+    id = db.Column(db.Integer, primary_key=True)
+    messier = db.Column(db.Integer, unique=True)
+    ngc = db.Column(db.String, unique=True)
+    type = db.Column(db.String, nullable=False)
+    mag = db.Column(db.Float, nullable=False)
+    size_large = db.Column(db.Float)
+    size_small = db.Column(db.Float)
+    distance_ly = db.Column(db.Integer)
+    ra_decimal = db.Column(db.Float, nullable=False)
+    de_decimal = db.Column(db.Float, nullable=False)
+    season = db.Column(db.String)
+    constellation = db.Column(db.String)
+    names = db.Column(db.String)
+
+
+    def __init__(self, id, name, mag):
+        self.id = id
+        self.name = name
+        self.mag = mag
+
+    def __repr__(self):
+        return f'<testDB {self.name}, {self.id}, {self.mag}>'
+
+
 class User(UserMixin, db.Model):
     __bind_key__ = 'users'
 
@@ -25,15 +53,14 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
 
     def __repr__(self):
-        return '<User {}>'.format(self.username)    
+        return f'<User {self.username}>'
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
-    
-    def check_password(self, password): 
+
+    def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    
 class Dso(db.Model):
     __bind_key__ = 'astro'
     __tablename__ = 'dso'
@@ -106,28 +133,3 @@ class Constellation(db.Model):
 
     Code = db.Column(Text, primary_key=True)
     FullName = db.Column(Text)
-#
-#t_ngc = Table(
-#    'ngc', metadata,
-#    db.Column('Abbrev', Text),
-#    db.Column('Description', Text)
-#)
-#
-#
-#t_sqlite_stat1 = Table(
-#    'sqlite_stat1', metadata,
-#    db.Column('tbl', NullType),
-#    db.Column('idx', NullType),
-#    db.Column('stat', NullType)
-#)
-#
-#
-#t_sqlite_stat4 = Table(
-#    'sqlite_stat4', metadata,
-#    db.Column('tbl', NullType),
-#    db.Column('idx', NullType),
-#    db.Column('neq', NullType),
-#    db.Column('nlt', NullType),
-#    db.Column('ndlt', NullType),
-#    db.Column('sample', NullType)
-#)

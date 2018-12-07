@@ -56,7 +56,7 @@ body {
         "controls";
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 1200px) {
     .wrapper {
         grid-template-columns: 1fr 1fr 40px;
         grid-template-rows: 100px calc(100vh - 100px - 1em);

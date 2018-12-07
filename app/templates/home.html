@@ -31,7 +31,9 @@
                     {# loginform.remember_me() #}
                     {# loginform.remember_me.label #}
                     {{ loginform.submit() }}
-                    <a href="{{ url_for('register') }}"><button id="login-register-button" type="button">Create New Account</button></a>
+                    <a href="{{ url_for('register') }}">
+                        <button id="login-register-button" type="button">Create New Account</button>
+                    </a>
                 </form>
                 {% else %}
                 <ul class='loggedin'>
@@ -85,11 +87,11 @@
                 <div class="views-menu">
                     <ul class="js-tabs">
                         <li class="tab views-tab" data-tabtype="views" data-tab="viewtab1">weather</li>
-                        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab2">log</li>
-                        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab3">sky chart</li>
-                        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab4">sky cam</li>
-                        <li class="tab views-tab current" data-tabtype="views" data-tab="viewtab5">enclosure</li>
-                        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab6">mountings</li>
+                        <li class="hidden tab views-tab" data-tabtype="views" data-tab="viewtab2">log</li>
+                        <li class="tab views-tab current" data-tabtype="views" data-tab="viewtab3">sky chart</li>
+                        <li class="hidden tab views-tab" data-tabtype="views" data-tab="viewtab4">sky cam</li>
+                        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab5">enclosure</li>
+                        <li class="hidden tab views-tab" data-tabtype="views" data-tab="viewtab6">mountings</li>
                         <li class="tab views-tab" data-tabtype="views" data-tab="viewtab7" id="js9-tab">instruments</li>
                         <li class="tab views-tab" data-tabtype="views" data-tab="viewtab8">_dev</li>
                     </ul>
@@ -114,7 +116,7 @@
                     <div id="viewtab2" class="tabs-content views-content">
                         schedule log here
                     </div>
-                    <div id="viewtab3" class="tabs-content views-content">
+                    <div id="viewtab3" class="tabs-content views-content current">
                         <div class="container">
                             <div class="container" id="celestial-map"></div>
                             <div class="container" id="celestial-form" style="display:none;"></div>
@@ -123,9 +125,9 @@
                     <div id="viewtab4" class="tabs-content views-content">
                         all sky camera here
                     </div>
-                    <div id="viewtab5" class="tabs-content views-content current">
+                    <div id="viewtab5" class="tabs-content views-content">
                         <div id="dome-cam"></div>
-                        <script type="text/javascript" src="static/livefeed.js"></script>
+                        <!--script type="text/javascript" src="static/livefeed.js"></script-->
 
                         <!--label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-2">
                           <span class="mdl-switch__label">Lamp: </span>
@@ -343,21 +345,29 @@
                             <li class="tab camerasettings-tab" data-tabtype="camerasettings" data-tab="rotate-tab-content">Rotate</li>
                         </ul>
                         <div id="camera-tab-content" class="tabs-content camerasettings-content current">
-                                {{ cameraform.count.label }}
-                                {{ cameraform.delay.label }}
-                                {{ cameraform.count() }}
-                                {{ cameraform.delay() }}
-                            <div></div><div></div>
-                                {{cameraform.bin.label }}
-                                {{ cameraform.dither.label }}
-                                {{ cameraform.bin() }}
-                                {{ cameraform.dither() }}
+                            {{ cameraform.count.label }}
+                            {{ cameraform.delay.label }}
+                            {{ cameraform.count(form="camerasettings") }}
+                            {{ cameraform.delay(form="camerasettings") }}
+                        <div></div><div></div>
+                            {{ cameraform.bin.label }}
+                            {{ cameraform.dither.label }}
+                            {{ cameraform.bin(form="camerasettings") }}
+                            {{ cameraform.dither(form="camerasettings") }}
                         </div>
                         <div id="focus-tab-content" class="tabs-content camerasettings-content">
-                            <p>Focus tab</p>
+                            {{ cameraform.autofocus.label }}
+                            {{ cameraform.autofocus(form="camerasettings") }}
+                            {% for error in cameraform.autofocus.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
                         </div>
                         <div id="rotate-tab-content" class="tabs-content camerasettings-content">
-                            <p>Rotate tab</p>
+                            {{ cameraform.position_angle.label }}
+                            {{ cameraform.position_angle(form="camerasettings") }}
+                            {% for error in cameraform.position_angle.errors %}
+                            <!--p style="color: red;">[{{ error }}]</p-->
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
@@ -457,73 +467,6 @@
                             <p>rotate tab</p>
                         </div>
 
-                        <script>
-                            /*global $*/
-
-                            // a temp value to cache *what* we're about to show
-                            var target = null;
-
-                            // collect all the tabs
-                            var tabs = $('.getimage-tab').on('click', function () {
-                            target = $(this.hash).removeAttr('id');
-
-                            // if the URL isn't going to change, then hashchange
-                            // event doesn't fire, so we trigger the update manually
-                            if (location.hash === this.hash) {
-                            // but this has to happen after the DOM update has
-                            // completed, so we wrap it in a setTimeout 0
-                            setTimeout(update, 0);
-                            }
-                            });
-
-                            // get an array of the panel ids (from the anchor hash)
-                            var targets = tabs.map(function () {
-                            return this.hash;
-                            }).get();
-
-                            // use those ids to get a jQuery collection of panels
-                            var panels = $(targets.join(',')).each(function () {
-                            // keep a copy of what the original el.id was
-                            $(this).data('old-id', this.id);
-                            });
-
-                            function update() {
-                            if (target) {
-                            target.attr('id', target.data('old-id'));
-                            target = null;
-                            }
-
-                            var hash = window.location.hash;
-                            if (targets.indexOf(hash) !== -1) {
-                            show(hash);
-                            }
-                            }
-
-                            function show(id) {
-                            // if no value was given, let's take the first panel
-                            if (!id) {
-                            id = targets[0];
-                            }
-                            // remove the selected class from the tabs,
-                            // and add it back to the one the user selected
-                            tabs.removeClass('selected').filter(function () {
-                            return (this.hash === id);
-                            }).addClass('selected');
-
-                            // now hide all the panels, then filter to
-                            // the one we're interested in, and show it
-                            panels.hide().filter(id).show();
-                            }
-
-                            $(window).on('hashchange', update);
-
-                            // initialise
-                            if (targets.indexOf(window.location.hash) !== -1) {
-                            update();
-                            } else {
-                            show();
-                            }
-                        </script>
                     </div>
                 </div>
             </div>
