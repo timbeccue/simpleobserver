@@ -11,7 +11,8 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_BINDS = {
         'astro': 'sqlite:///'+os.path.join(basedir, 'hygdata.db'),
-        'users': 'sqlite:///'+os.path.join(basedir, 'users.db')
+        'users': 'sqlite:///'+os.path.join(basedir, 'users.db'),
+        'bindkey_testDB': 'sqlite:///'+os.path.join(basedir, 'testDB.db')
     }
 
 class Site:

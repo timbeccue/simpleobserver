@@ -11,7 +11,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 
 # from sqlalchemy-datatables example
 from datatables import ColumnDT, DataTables
-from app.models import User, Dso, Hygdatum
+from app.models import User, Dso, testDB
 
 expire_time = 120 #seconds
 live_commands = False
@@ -116,10 +116,39 @@ def stream(device,id):
     sse = event_stream(state_key, refresh_frequency)
     return Response(sse, mimetype="text/event-stream")
 
+
+
+#############################################
+class TestAddForm(FlaskForm):
+    name = StringField('name', validators=[DataRequired()])
+    id = StringField('id', validators=[DataRequired()])
+    mag = StringField('mag')
+    submit = SubmitField('add to db')
+
 @app.route('/testpage')
 @login_required
 def testpage():
-    return render_template('testpage.html')
+    database = db.session.query(testDB).all()
+    return render_template('testpage.html', dbform=TestAddForm(), database=database)
+
+@app.route('/addtodatabase', methods=['POST', 'GET'])
+@login_required
+def addtodatabase():
+    dbform = TestAddForm()
+    if request.method == 'POST':
+        name = dbform.name.data  # or request.dbform['name']
+        id = dbform.id.data
+        mag = dbform.mag.data
+
+        object_to_add = testDB(id, name, mag)
+        db.session.add(object_to_add)
+        db.session.commit()
+        return redirect(url_for('testpage'))
+
+#############################################
+
+
+
 
 @app.route('/', methods=['GET', 'POST'])
 def home():

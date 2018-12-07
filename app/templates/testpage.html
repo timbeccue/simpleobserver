@@ -21,7 +21,7 @@
         </div>
 
 
-        <div style="width: auto; grid-column: 2/3; border: solid #333 3px;">
+        <div style="width: auto; border: solid #333 3px;">
             <div id="go-table">
                 <table id="targets-table">
                     <thead>
@@ -70,7 +70,7 @@
         </div>
     </div>
 
-    <div style="width: auto; padding: 1em; border: #999 3px solid;">
+    <div style="width: auto; padding: 1em; border: #999 3px solid; display: flex;">
         <form action="/addtodatabase" method="POST">
             <table>
                 <tr>
@@ -79,13 +79,29 @@
                     <td> Mag </td>
                 </tr>
                 <tr>
-                    <td> <input type=text></input> </td>
-                    <td> <input type=text></input> </td>
-                    <td> <input type=text></input> </td>
+                    <td> {{ dbform.name() }}</td>
+                    <td> {{ dbform.id() }} </td>
+                    <td> {{ dbform.mag() }} </td>
                 </tr>
             </table>
             <button type=submit>add to database</button>
         </form>
+        <div>
+            <table>
+                <tr>
+                    <td> Name </td>
+                    <td> ID </td>
+                    <td> Mag </td>
+                </tr>
+            {% for entry in database %}
+                <tr>
+                    <td> {{ entry.name }} </td>
+                    <td> {{ entry.id }} </td>
+                    <td> {{ entry.mag }} </td>
+                </tr>
+            {% endfor %}
+            </table>
+        </div>
     </div>
 
 
