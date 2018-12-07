@@ -10,9 +10,9 @@ class Config(object):
     #    'sqlite:///' + os.path.join(basedir, 'hygdata.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_BINDS = {
-        'astro': 'sqlite:///'+os.path.join(basedir, 'hygdata.db'),
-        'users': 'sqlite:///'+os.path.join(basedir, 'users.db'),
-        'bindkey_testDB': 'sqlite:///'+os.path.join(basedir, 'testDB.db')
+        'astro': 'sqlite:///'+os.path.join(basedir, 'databases/hygdata.db'),
+        'users': 'sqlite:///'+os.path.join(basedir, 'databases/users.db'),
+        'bindkey_testDB': 'sqlite:///'+os.path.join(basedir, 'databases/testDB.db')
     }
 
 class Site:

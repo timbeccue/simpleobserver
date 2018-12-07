@@ -21,17 +21,17 @@
         </div>
 
 
-        <div style="width: auto; border: solid #333 3px;">
+        <div style="flex-grow: 1; width: auto; border: solid #333 3px;">
             <div id="go-table">
                 <table id="targets-table1">
                     <thead>
                         <tr>
-                            <th>M</th>
-                            <th>Type</th>
-                            <th>Mag</th>
-                            <th>Ra</th>
-                            <th>De</th>
-                            <th>Constellation</th>
+                            <td>M</td>
+                            <td>Type</td>
+                            <td>Mag</td>
+                            <td>Ra</td>
+                            <td>De</td>
+                            <td>Constellation</td>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -117,7 +117,7 @@
                 responsive: true,
                 scrollY: "calc(75vh - 300px)",
                 //scroller: true,
-                scroller: { loadingIndicator: true},
+                scroller: { loadingIndicator: true },
                 select: true,
                 stateSave: false,
                 ajax: "/tablelookup1",

@@ -163,6 +163,7 @@ class TestAddForm(FlaskForm):
     de_decimal = FloatField('Declination', validators=[NumberRange(min=0, max=90), DataRequired()])
     season = SelectField('Season', choices=seasons)
     constellation = SelectField('Constellation', choices=constellations)
+    names = StringField('Object Name(s)')
     submit = SubmitField('add to db')
 
 @app.route('/testpage')
@@ -176,11 +177,20 @@ def testpage():
 def addtodatabase():
     dbform = TestAddForm()
     if request.method == 'POST':
-        name = dbform.name.data  # or request.dbform['name']
-        id = dbform.id.data
-        mag = dbform.mag.data
+        obj_data = {
+            'type': dbform.type.data,  # or request.dbform['name']
+            'magnitude': dbform.magnitude.data,
+            'size_large': dbform.size_large.data,
+            'size_small': dbform.size_small.data,
+            'distance_ly': dbform.distance_ly.data,
+            'ra_decimal': dbform.ra_decimal.data,
+            'de_decimal': dbform.de_decimal.data,
+            'season': dbform.season.data,
+            'constellation': dbform.constellation.data,
+            'names': dbform.names.data
+        }
 
-        object_to_add = testDB(id, name, mag)
+        object_to_add = testDB(**obj_data)
         db.session.add(object_to_add)
         db.session.commit()
         return redirect(url_for('testpage'))
@@ -190,7 +200,7 @@ def tablelookup1():
     columns = [
         ColumnDT(testDB.messier),
         ColumnDT(testDB.type),
-        ColumnDT(testDB.mag),
+        ColumnDT(testDB.magnitude),
         ColumnDT(testDB.ra_decimal),
         ColumnDT(testDB.de_decimal),
         ColumnDT(testDB.constellation),
@@ -206,8 +216,6 @@ def tablelookup1():
 
     # returns data to DataTable
     forTable = jsonify(rowTable.output_result())
-    print("FOR TABLE:::::::::::::::::::")
-    print(forTable)
     return(forTable)
 
 #############################################

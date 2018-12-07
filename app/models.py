@@ -24,7 +24,7 @@ class testDB(db.Model):
     messier = db.Column(db.Integer, unique=True)
     ngc = db.Column(db.String, unique=True)
     type = db.Column(db.String, nullable=False)
-    mag = db.Column(db.Float, nullable=False)
+    magnitude = db.Column(db.Float)
     size_large = db.Column(db.Float)
     size_small = db.Column(db.Float)
     distance_ly = db.Column(db.Integer)
@@ -35,10 +35,10 @@ class testDB(db.Model):
     names = db.Column(db.String)
 
 
-    def __init__(self, id, name, mag):
-        self.id = id
-        self.name = name
-        self.mag = mag
+    def __init__(self, **kwargs):
+        for attr in ('messier', 'ngc', 'type', 'magnitude', 'size_large', 'size_small', 'distance_ly', 'ra_decimal',
+                     'de_decimal', 'season', 'constellation', 'names'):
+            setattr(self, attr, kwargs.get(attr))
 
     def __repr__(self):
         return f'<testDB {self.name}, {self.id}, {self.mag}>'
