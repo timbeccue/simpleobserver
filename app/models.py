@@ -17,12 +17,12 @@ def load_user(id):
     return User.query.get(int(id))
 
 
-class testDB(db.Model):
-    __bind_key__ = 'bindkey_testDB'
+class ThingsInSpace(db.Model):
+    __bind_key__ = 'things_in_space'
 
     id = db.Column(db.Integer, primary_key=True)
     messier = db.Column(db.Integer, unique=True)
-    ngc = db.Column(db.String, unique=True)
+    ngc = db.Column(db.String)
     type = db.Column(db.String, nullable=False)
     magnitude = db.Column(db.Float)
     size_large = db.Column(db.Float)
@@ -41,7 +41,7 @@ class testDB(db.Model):
             setattr(self, attr, kwargs.get(attr))
 
     def __repr__(self):
-        return f'<testDB {self.name}, {self.id}, {self.mag}>'
+        return f'<testDB {self.messier}, {self.type}, {self.magnitude}>'
 
 
 class User(UserMixin, db.Model):

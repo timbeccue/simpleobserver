@@ -12,7 +12,7 @@ class Config(object):
     SQLALCHEMY_BINDS = {
         'astro': 'sqlite:///'+os.path.join(basedir, 'databases/hygdata.db'),
         'users': 'sqlite:///'+os.path.join(basedir, 'databases/users.db'),
-        'bindkey_testDB': 'sqlite:///'+os.path.join(basedir, 'databases/testDB.db')
+        'things_in_space': 'sqlite:///'+os.path.join(basedir, 'databases/things_in_space.db')
     }
 
 class Site:
