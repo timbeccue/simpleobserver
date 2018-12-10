@@ -14,7 +14,7 @@ from datatables import ColumnDT, DataTables
 from app.models import User, Dso, ThingsInSpace
 
 expire_time = 120 #seconds
-live_commands = False
+live_commands = True
 
 ####################################################################################
 

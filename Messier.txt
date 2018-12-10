@@ -134,7 +134,7 @@ C21	4449	Ir	9.4	5x3	1E07	12 28.2	+44 06	CVn	spring
 C22	7662	Pl	9.2	0.3/2.2	3200	23 25.9	+42 33	And	autumn	Blue Snowball
 C23	891	Sb	9.9	14x2	31E06	02 22.6	+42 21	And	autumn
 C24	1275	Sx	11.6	2.6x1	23E07	03 19.8	+41 31	Per	winter	Perseus A Radio Region
-C25	2419	Gc	10.4	4.1	275000	07 38.1	+38 53	Lyn	winter NGC 2419
+C25	2419	Gc	10.4	4.1	275000	07 38.1	+38 53	Lyn	winter  
 C26	4244	Sp	10.6	16x2.5	10E06	12 17.5	+37 49	CVn	spring
 C27	6888	Bn	7.5	20x10	4700	20 12.0	+38 21	Cyg	summer	Crescent Nebula
 C28	752	Oc	5.7	50	1200	01 57.8	+37 41	And	autumn
@@ -219,6 +219,8 @@ C106	104	Gc	4.0	31	14700	00 24.1	-72 05	Tuc	autumn	47 Tucanae
 C107	6101	Gc	9.3	11	49900	16 25.8	-72 12	Aps	summer
 C108	4372	Gc	7.8	19	18900	12 25.8	-72 40	Mus	spring
 C109	3195	Pl	11.6	40x35	5400	10 09.5	-80 52	Cha	spring
+
+
 StQ 7318 Cg 13.9  10  200E06     22 36 33 57.6 Peg autumn Stephan's Quintet
 SyS 6027 Cg 14.7  10 19E07 15 59.2 20 45.5 Ser summer Seyfert's Sextet
 C2619 2619 Sp 12.	2x1 20E07 08 37.5 28 42.3 Cnc spring N2619-AGN

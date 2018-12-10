@@ -49,7 +49,7 @@ def MessierToDatabase():
 
     return ready
 
-#    Make sure db doesn't contain the objects about to add 
+#    Make sure db doesn't contain the objects about to add
 #
 #    in flask shell with database = TIS and m2d = MessierToDatabase:
 #    messiers = m2d()
