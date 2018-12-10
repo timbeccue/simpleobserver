@@ -119,6 +119,9 @@ def stream(device,id):
 
 
 #############################################
+# TESTPAGE STUFF ############################
+#############################################
+
 from flask import session
 
 object_types = [
@@ -173,7 +176,9 @@ class ObjectFilter(FlaskForm):
     open_clusters = BooleanField('open clusters', default=1)
     globular_clusters = BooleanField('globular clusters', default=1)
     galaxies = BooleanField('galaxies', default=1)
-    nebula = BooleanField('nebula')
+    nebula = BooleanField('nebula', default=1)
+    double_stars = BooleanField('double stars', default=1)
+    everything_else = BooleanField('everything else', default=1)
     hidden = HiddenField('filter')
     apply = SubmitField('Apply Filters', id='apply_filter')
 
@@ -211,10 +216,12 @@ all_objects = {'As','Ds','MW','Oc','Gc','Pl','Di','Bn','Dn','Sn','Cg','Sp','Ba',
 
 @app.route('/apply_table_filters', methods=['POST', 'GET'])
 def apply_table_filters():
-    nebula = {'Pl','Di','Bn','Dn'}
+    nebula = {'Pl','Di','Bn','Dn','Sn'}
     galaxies = {'Cg','Sp','Ba','Ir','El','Ln','Px','Sx'}
     globular_clusters = {'Gc'}
     open_clusters = {'Oc'}
+    double_stars = {'Ds'}
+    everything_else = {'As','MW'}
 
     filter = ObjectFilter()
 
@@ -230,6 +237,10 @@ def apply_table_filters():
             show_these_objects |= open_clusters
         if filter.globular_clusters.data is True:
             show_these_objects |= globular_clusters
+        if filter.double_stars is True:
+            show_these_objects |= double_stars
+        if filter.everything_else is True:
+            show_these_objects |= everything_else
 
 
         session['object_type_filter'] = list(show_these_objects)
@@ -248,7 +259,7 @@ def tablelookup1():
         ColumnDT(ThingsInSpace.magnitude),
         ColumnDT(ThingsInSpace.ra_decimal),
         ColumnDT(ThingsInSpace.de_decimal),
-        ColumnDT(ThingsInSpace.constellation),
+        ColumnDT(ThingsInSpace.names),
     ]
 
     object_types = all_objects
