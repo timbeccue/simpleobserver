@@ -216,12 +216,11 @@ all_objects = {'As','Ds','MW','Oc','Gc','Pl','Di','Bn','Dn','Sn','Cg','Sp','Ba',
 
 @app.route('/apply_table_filters', methods=['POST', 'GET'])
 def apply_table_filters():
-    nebula = {'Pl','Di','Bn','Dn','Sn'}
+    nebula = {'Pl','Di','Bn','Dn'}
     galaxies = {'Cg','Sp','Ba','Ir','El','Ln','Px','Sx'}
     globular_clusters = {'Gc'}
     open_clusters = {'Oc'}
-    double_stars = {'Ds'}
-    everything_else = {'As','MW'}
+    everything_else = {'As','Ds','**','MW','Sn'}
 
     filter = ObjectFilter()
 
@@ -230,6 +229,7 @@ def apply_table_filters():
         # Reset to show everything, then add selected objects with set union: (a | b).
         show_these_objects = set([])
         if filter.nebula.data is True:
+            print("NEBULA")
             show_these_objects |= nebula
         if filter.galaxies.data is True:
             show_these_objects |= galaxies
@@ -237,9 +237,8 @@ def apply_table_filters():
             show_these_objects |= open_clusters
         if filter.globular_clusters.data is True:
             show_these_objects |= globular_clusters
-        if filter.double_stars is True:
-            show_these_objects |= double_stars
-        if filter.everything_else is True:
+        if filter.everything_else.data is True:
+            print("EVERYTHING ELSE")
             show_these_objects |= everything_else
 
 

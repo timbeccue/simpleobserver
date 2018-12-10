@@ -74,7 +74,7 @@
                               <span class="mdl-switch__label">Everything Else</span>
                               {{ filter.everything_else(class_="mdl-switch__input") }}
                             </label>
-                            
+
                         </form>
                     </div>
                     <!--div>
@@ -148,6 +148,7 @@
 
             var table1 = $('#targets-table1').DataTable({
                 processing: true,
+                searching: false,
                 serverSide: true,
                 deferRender: false,
                 //paging: false,
