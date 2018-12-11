@@ -10,38 +10,11 @@ function newSkyMap() {
 
     // p is for selected location, t is for telescope location.
     function initializePointer(pointers) {
-        Celestial.clear();
-        Celestial.add({type:"Point", callback: function(error, json) {
-            if (error) return console.warn(error);
-            var pointer_data = Celestial.getData(pointers, config.transform);
-            Celestial.container.selectAll(".pointers")
-                .data(pointer_data.features)
-                .enter().append("path")
-                .attr("class", "point")
-            Celestial.redraw();
-        }, redraw: function() {
-            Celestial.container.selectAll(".point").each(function(d) {
-                Celestial.setStyle(d.style);
-                var p_coords = ([Utilities.hour2degree(state.ra_selected), state.de_selected]);
-                var t_coords = ([Utilities.hour2degree(state_mnt1.ra), state_mnt1.dec]);
-                // Limit selectable regions to coordinates on the map with Celestial.clip().
-                if (Celestial.clip(p_coords)) {
-                    Celestial.Canvas.symbol()
-                    .type("marker")
-                    .size(220)
-                    .position(Celestial.mapProjection(p_coords))(Celestial.context);
-                }
-                Celestial.Canvas.symbol()
-                    .type("cross-circle")
-                    .size(220)
-                    .position(Celestial.mapProjection(t_coords))(Celestial.context);
-                Celestial.context.stroke();
-            });
-        } });
-    }
-
-    function makePointer() {
-        return {
+        crosshair_style = {
+            width: 1,
+            stroke:"#e74c3c"
+        }
+        var pointers = {
             "type":"FeatureCollection",
             "features":[
                 {"type":"Feature",
@@ -56,6 +29,106 @@ function newSkyMap() {
                 }}
             ]
         };
+        //Celestial.clear();
+        Celestial.add({type:"Point", callback: function(error, json) {
+            if (error) return console.warn(error);
+            var pointer_data = Celestial.getData(pointers, config.transform);
+            Celestial.container.selectAll(".pointers")
+                .data(pointer_data.features)
+                .enter().append("path")
+                .attr("class", "point")
+            Celestial.redraw();
+        }, redraw: function() {
+            Celestial.container.selectAll(".point").each(function(d) {
+                Celestial.setStyle(crosshair_style);
+                var p_coords = ([Utilities.hour2degree(state.ra_selected), state.de_selected]);
+                var t_coords = ([Utilities.hour2degree(state_mnt1.ra), state_mnt1.dec]);
+                // Limit selectable regions to coordinates on the map with Celestial.clip().
+                if (Celestial.clip(p_coords)) {
+                    Celestial.Canvas.symbol()
+                    .type("marker")
+                    .size(420)
+                    .position(Celestial.mapProjection(p_coords))(Celestial.context);
+                }
+                Celestial.Canvas.symbol()
+                    .type("cross-circle")
+                    .size(220)
+                    .position(Celestial.mapProjection(t_coords))(Celestial.context);
+                Celestial.context.stroke();
+            });
+        } });
+    }
+
+    function filterChart() {
+        return true;
+    }
+
+    function updateChart(sky_object_data) {
+        var pointStyle = {
+            stroke: "rgba(255,0,204, 1)",
+            fill: "rgba(255,0,204,0.5)",
+            width: 3,
+            stroke:"#ff00cc",
+            fill:"#fff"
+        }
+        crosshair_style = {
+            width: 1,
+            stroke:"#e74c3c"
+        }
+        var custom_obj = {
+               "type":"FeatureCollection",
+               "features":[
+                  {"type": "Feature",
+                   "id":"item1",
+                   "properties": {
+                       "name":"obj1",
+                       "mag": 2,
+                       "dim": 30
+                   }, "geometry":{
+                       "type":"Point",
+                       "coordinates": [150, 85]
+                   }               },
+                  {"type": "Feature",
+                   "id":"item2",
+                   "properties": {
+                       "name":"obj2",
+                       "mag": 1,
+                       "dim": 40
+                   }, "geometry":{
+                       "type": "Point",
+                       "coordinates": [50, 75]
+               }
+            }
+            ]
+        }
+        //Celestial.clear();
+        Celestial.add({type:"json", file:"/static/mapdata/custom_objects.json", callback: function(error,json) {
+            if (error) {return console.warn(error);}
+
+            var sky_objects = Celestial.getData(json, config.transform);
+
+            Celestial.container.selectAll(".custom_objects")
+                .data(sky_objects.features)
+                .enter().append("path")
+                .attr("class", "custom_obj")
+            Celestial.redraw();
+        }, redraw: function() {
+            Celestial.container.selectAll(".custom_obj").each(function (d) {
+                if (Celestial.clip(d.geometry.coordinates) && filterChart()) {
+                //if (true) {
+                    var pt = Celestial.mapProjection(d.geometry.coordinates),
+                        type = d.properties.type;
+                    //Celestial.context.fillStyle = "#fff";
+                    Celestial.setStyle(pointStyle);
+                    Celestial.map(d)
+                    Celestial.context.beginPath();
+                    Celestial.context.arc(pt[0], pt[1], 5, 0, 2 * Math.PI);
+                    Celestial.context.closePath();
+                    //Celestial.context.fill();
+                    Celestial.context.stroke();
+                }
+            });
+        }});
     }
 
     function mapresize() {
@@ -79,8 +152,8 @@ function newSkyMap() {
     var lon = -119;//$('#static-state').data('lon');
 
     var config = {
-            width: 0,     // Default width, 0 = full parent width; height is determined by projection
-            projection: "stereographic",  // Map projection used: airy, aitoff, armadillo, august, azimuthalEqualArea, azimuthalEquidistant, baker, berghaus, boggs, bonne, bromley, collignon, craig, craster, cylindricalEqualArea, cylindricalStereographic, eckert1, eckert2, eckert3, eckert4, eckert5, eckert6, eisenlohr, equirectangular, fahey, foucaut, ginzburg4, ginzburg5, ginzburg6, ginzburg8, ginzburg9, gringorten, hammer, hatano, healpix, hill, homolosine, kavrayskiy7, lagrange, larrivee, laskowski, loximuthal, mercator, miller, mollweide, mtFlatPolarParabolic, mtFlatPolarQuartic, mtFlatPolarSinusoidal, naturalEarth, nellHammer, orthographic, patterson, polyconic, rectangularPolyconic, robinson, sinusoidal, stereographic, times, twoPointEquidistant, vanDerGrinten, vanDerGrinten2, vanDerGrinten3, vanDerGrinten4, wagner4, wagner6, wagner7, wiechel, winkel3
+        width: 0,     // Default width, 0 = full parent width; height is determined by projection
+        projection: "stereographic",  // Map projection used: airy, aitoff, armadillo, august, azimuthalEqualArea, azimuthalEquidistant, baker, berghaus, boggs, bonne, bromley, collignon, craig, craster, cylindricalEqualArea, cylindricalStereographic, eckert1, eckert2, eckert3, eckert4, eckert5, eckert6, eisenlohr, equirectangular, fahey, foucaut, ginzburg4, ginzburg5, ginzburg6, ginzburg8, ginzburg9, gringorten, hammer, hatano, healpix, hill, homolosine, kavrayskiy7, lagrange, larrivee, laskowski, loximuthal, mercator, miller, mollweide, mtFlatPolarParabolic, mtFlatPolarQuartic, mtFlatPolarSinusoidal, naturalEarth, nellHammer, orthographic, patterson, polyconic, rectangularPolyconic, robinson, sinusoidal, stereographic, times, twoPointEquidistant, vanDerGrinten, vanDerGrinten2, vanDerGrinten3, vanDerGrinten4, wagner4, wagner6, wagner7, wiechel, winkel3
         transform: "equatorial", // Coordinate transformation: equatorial (default), ecliptic, galactic, supergalactic
         center: [Utilities.hour2degree(Utilities.siderealTime()), lat, 0],       // Initial center coordinates in equatorial transformation [hours, degrees, degrees],
                             // otherwise [degrees, degrees, degrees], 3rd parameter is orientation, null = default center
@@ -89,7 +162,7 @@ function newSkyMap() {
         orientationfixed: true,  // Keep orientation angle the same as center[2]
         geopos: [lat, lon],    // optional initial geographic position [lat,lon] in degrees, overrides center
 
-        background: { fill: "#090909", stroke: " #090909", opacity: 1 }, // Background style
+        background: { fill: "#090909", stroke: " #090909", opacity: .5 }, // Background style
         adaptable: true,    // Sizes are increased with higher zoom-levels
         interactive: false, // Enable zooming and rotation with mousewheel and dragging
         form: false,        // Display settings form
@@ -113,7 +186,7 @@ function newSkyMap() {
             propernamelimit: 1.5,  // Show proper names for stars brighter than propernamelimit
             size: 7,       // Maximum size (radius) of star circle in pixels
             exponent: -0.28, // Scale exponent for star size, larger = more linear
-            data: 'stars.6.json' // Data source for stellar data
+            data: 'stars.6.reduced.json' // Data source for stellar data
             //data: 'stars.8.json' // Alternative deeper data source for stellar data
         },
         dsos: {
@@ -215,7 +288,12 @@ function newSkyMap() {
         };
 
     function update_pointer(ra, de) {
-        initializePointer(makePointer());
+        initializePointer();
+        Celestial.redraw();
+    }
+
+    function draw_custom_stuff() {
+        updateChart();
         Celestial.redraw();
     }
 
@@ -236,11 +314,11 @@ function newSkyMap() {
         }
 
         if (leftorright == 'right') {
+            draw_custom_stuff();
             // get broad list of targets near click
             // get narrower list of targets near click
             // create list of close objects with xy coordinates
         }
-
     }
 
 
@@ -276,7 +354,8 @@ function newSkyMap() {
 
     /* Initialize the map */
     $('#views').ready( function() {
-        initializePointer(makePointer());
+        initializePointer();
+        updateChart();
         Celestial.display(config);
         mapresize();
         $(window).resize(function(){
@@ -291,6 +370,7 @@ function newSkyMap() {
     data.update_pointer = update_pointer;
     data.map_click = map_click;
     data.config = config;
+    data.updateChart = updateChart;
     return data;
 }
 

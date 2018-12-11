@@ -44,11 +44,6 @@
                 <div id="go-filters" class="container">
                     <div>
                         <form id='filter_form' method="POST" action="/apply_table_filters">
-                            <!--div>
-                            {% for field in filter %}
-                            {{ field.label() }} {{ field(class_="mdl-switch__input") }} <br>
-                            {% endfor %}
-                            </div-->
 
                             <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="galaxies">
                               <span class="mdl-switch__label">Galaxies</span>
@@ -207,8 +202,7 @@
 
 
 
-
-
+    <script type="text/javascript" src="static/mapdata/custom_objects.json"></script>
 
     <link rel="stylesheet" href="https://ofrohn.github.io/celestial.css">
     <link rel="stylesheet" type="text/css" href="static/css/datatables.css">
@@ -219,8 +213,8 @@
     <script type="text/javascript" src="static/d3.js"></script>
     <script type="text/javascript" src="static/d3.geo.projection.min.js"></script>
     <script type="text/javascript" src="static/celestial.js"></script>
-    <script type="text/javascript" src="static/skymap.js"></script>
     <script src="https://d3js.org/d3-drag.v1.min.js"></script>
+    <script type="text/javascript" src="static/skymap.js"></script>
 
     <script type="text/javascript" src="static/userinterface.js"></script>
     <script type="text/javascript" src="static/ajax_submit.js"></script>
