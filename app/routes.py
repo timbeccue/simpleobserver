@@ -176,6 +176,10 @@ class ObjectFilter(FlaskForm):
     globular_clusters = BooleanField('globular clusters', default=1)
     galaxies = BooleanField('galaxies', default=1)
     nebula = BooleanField('nebula', default=1)
+
+    dso_magnitude_min = FloatField('DSOs no brighter than: ')
+    dso_magnitude_max = FloatField('DSOs no fainter than: ')
+
     double_stars = BooleanField('double stars', default=1)
     everything_else = BooleanField('everything else', default=1)
 
@@ -236,10 +240,21 @@ def apply_table_filters():
         if filter.everything_else.data is True:
             show_these_objects |= everything_else
 
-        hidden_objects = list(show_these_objects);
-        session['object_type_filter'] = hidden_objects;
-        
-    return jsonify(hidden_objects)
+        visible_objects = list(show_these_objects);
+        session['object_type_filter'] = visible_objects;
+
+        dso_magnitudes = [-50,50]
+        if filter.dso_magnitude_min.data is not None:
+            dso_magnitudes[0] = filter.dso_magnitude_min.data
+        if filter.dso_magnitude_max.data is not None:
+            dso_magnitudes[1] = filter.dso_magnitude_max.data
+
+        session['dso_magnitudes'] = dso_magnitudes
+
+
+    return jsonify(
+            visible_objects=visible_objects,
+            dso_magnitudes=dso_magnitudes)
 
 @app.route('/tablelookup1')
 def tablelookup1():
@@ -255,11 +270,19 @@ def tablelookup1():
     ]
 
     object_types = all_objects
+    dso_magnitudes = [-50,50]
     if session['object_type_filter'] is not None:
         object_types = session['object_type_filter']
+    if session['dso_magnitudes'] is not None:
+        dso_magnitudes = session['dso_magnitudes']
 
     # define the initial query
-    query = db.session.query().filter(ThingsInSpace.type.in_(object_types))
+    query = db.session.query().filter(
+            ThingsInSpace.type.in_(object_types),
+            ThingsInSpace.magnitude >= dso_magnitudes[0],
+            ThingsInSpace.magnitude <= dso_magnitudes[1])
+
+
     # GET parameters
     params = request.args.to_dict()
 

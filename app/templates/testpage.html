@@ -70,6 +70,9 @@
                               {{ filter.everything_else(class_="mdl-switch__input") }}
                             </label>
 
+                            {{ filter.dso_magnitude_min.label }} {{ filter.dso_magnitude_min() }} <br>
+                            {{ filter.dso_magnitude_max.label }} {{ filter.dso_magnitude_max() }} <br>
+
                         </form>
                     </div>
                     <!--div>
@@ -118,22 +121,6 @@
             </table>
             <button type=submit>add to database</button>
         </form>
-        <!--div>
-            <table>
-                <tr>
-                    <td> ID </td>
-                    <td> Name </td>
-                    <td> Magnitude </td>
-                </tr>
-            {% for entry in database %}
-                <tr>
-                    <td> {{ entry.id }} </td>
-                    <td> {{ entry.name }} </td>
-                    <td> {{ entry.mag }} </td>
-                </tr>
-            {% endfor %}
-            </table>
-        </div-->
     </div>
 
 
@@ -190,7 +177,8 @@
                 success: function(data) {
 
                     var filter = Object.assign({}, SkyMap.default_filter); // deep clone of default blank filter
-                    filter.types = data;
+                    filter.types = data.visible_objects;
+                    filter.dso_magnitudes = data.dso_magnitudes;
 
                     SkyMap.update_chart(filter)
                     Celestial.redraw();

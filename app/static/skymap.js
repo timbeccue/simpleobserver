@@ -91,16 +91,16 @@ function newSkyMap() {
         }
         var nebula_style = {
             shape: "diamond",
-            fill: "#00cccc",
-            stroke: "#00cccc",
+            fill: "rgba(243,156,18,1)",
             width: 2,
             opacity: 0.8,
-            namestyle: { fill: "#00cccc", font: "9px Helvetica, Arial, serif", align: "left", baseline: "top" }
+            namestyle: { fill: "rgba(245,176,65,1)", font: "9px Helvetica, Arial, serif", align: "left", baseline: "top" }
         }
         var globular_style = {
-            stroke: "rgba(243,156,18,1)",
+            opacity: 1,
+            stroke: "rgba(72,201,176,1)",
             width: 1,
-            namestyle: { fill: "rgb(243,156,18)", font: "9px Helvetica, Arial, serif", align: "left", baseline: "top" }
+            namestyle: { fill: "rgba(72,201,176,1)", font: "9px Helvetica, Arial, serif", align: "left", baseline: "top" }
         }
         var open_cluster_style = {
             stroke: "rgba(142,68,173)",
@@ -138,9 +138,9 @@ function newSkyMap() {
 
                     //Celestial.context.fillStyle = "#fff";
                     if (galaxies.indexOf(type) !== -1) {
-                        galaxy_style.opacity = Math.pow((5.5/mag),2);
+                        galaxy_style.opacity = Math.pow((3.0/mag),1.5)/2 + 0.5;
                         Celestial.setStyle(galaxy_style);
-                        var s = 8,
+                        var s = 9,
                           r = s / Math.sqrt(3);
                         Celestial.context.beginPath()
                         Celestial.context.moveTo(pt[0], pt[1] - r);
@@ -173,25 +173,30 @@ function newSkyMap() {
                     }
                     else if (type == 'Gc') {
                         globular_style.opacity = Math.pow((5.5/mag),6);
+                        var s = 8,
+                          r = s / 1.5;
                         Celestial.setStyle(globular_style);
                         Celestial.map(d)
                         Celestial.context.beginPath();
                         Celestial.context.arc(pt[0], pt[1], 3, 0, 2 * Math.PI);
                         Celestial.context.closePath();
                         Celestial.context.stroke();
-                        if (mag < 8) {
+                        if (mag < 6) {
                             Celestial.setTextStyle(globular_style.namestyle);
                             Celestial.context.fillText('M'+m, pt[0]+r, pt[1]-r);
                         }
                     }
                     else if (type == 'Oc') {
+                        open_cluster_style.opacity = Math.pow((4.5/mag),2)/2 + 0.7;
                         Celestial.setStyle(open_cluster_style);
+                        var s = 8,
+                          r = s / 1.5;
                         Celestial.map(d)
                         Celestial.context.beginPath();
                         Celestial.context.arc(pt[0], pt[1], 3, 0, 2 * Math.PI);
                         Celestial.context.closePath();
                         Celestial.context.stroke();
-                        if (mag < 8) {
+                        if (mag < 5) {
                             Celestial.setTextStyle(open_cluster_style.namestyle);
                             Celestial.context.fillText('M'+m, pt[0]+r, pt[1]-r);
                         }
@@ -240,7 +245,7 @@ function newSkyMap() {
         orientationfixed: true,  // Keep orientation angle the same as center[2]
         geopos: [lat, lon],    // optional initial geographic position [lat,lon] in degrees, overrides center
 
-        background: { fill: "#17202a", stroke: " #090909", opacity: .5 }, // Background style
+        background: { fill: "#080f17", stroke: " #17202a", opacity: 1 }, // Background style
         adaptable: true,    // Sizes are increased with higher zoom-levels
         interactive: false, // Enable zooming and rotation with mousewheel and dragging
         form: false,        // Display settings form
@@ -337,7 +342,7 @@ function newSkyMap() {
         },
         mw: {
             show: true,    // Show Milky Way as filled polygons
-            style: { fill: "#ffffff", opacity: "0.05" }
+            style: { fill: "#fef9e7", opacity:0.10}
         },
         lines: {
             graticule: { show: true, stroke: "#cccccc", width: 0.3, opacity: 0.3,      // Show graticule lines
