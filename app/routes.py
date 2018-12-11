@@ -208,8 +208,9 @@ def addtodatabase():
         db.session.commit()
         return redirect(url_for('testpage'))
 
+# Filter the display of objects by type.
+# This route takes users selection and saves it in a session, to be read by tablelookup when the table is redrawn.
 all_objects = {'As','Ds','**','MW','Oc','Gc','Pl','Di','Bn','Dn','Sn','Cg','Sp','Ba','Ir','El','Ln','Px','Sx'}
-
 @app.route('/apply_table_filters', methods=['POST', 'GET'])
 def apply_table_filters():
     nebula = {'Pl','Di','Bn','Dn', 'Sn'}
@@ -222,7 +223,7 @@ def apply_table_filters():
 
     if request.method == 'POST':
 
-        # Reset to show everything, then add selected objects with set union: (a | b).
+        # Reset to show nothing, then add selected objects with set union: (a | b).
         show_these_objects = set([])
         if filter.nebula.data is True:
             show_these_objects |= nebula
@@ -269,13 +270,16 @@ def tablelookup1():
     forTable = jsonify(rowTable.output_result())
     return(forTable)
 
+# Dumps all data into a json file (geojson format) for use in the d3celestial sky chart.
 @app.route('/database_to_json')
 def database_to_json():
 
+    # d3celestial sky chart expects coordinate data in degrees from -180 to +180, so this formats RA values.
     def hour2degree(ra):
         if ra > 12: return 15 * (ra - 24)
         return ra * 15
 
+    # Create the json file as a list of strings. Later, we will write these strings to a single file.
     json_strings = []
     json_strings.append('{"type":"FeatureCollection","features":[')
 
@@ -283,7 +287,7 @@ def database_to_json():
         ra = hour2degree(object.ra_decimal)
         obj = f'{{"type": "Feature","id":"{object.id}",'
         obj += f'"properties": {{"messier":"{object.messier}","mag":"{object.magnitude}","type":"{object.type}"}}, '
-        obj += f'"geometry":{{"type":"Point","coordinates": [{ra},{object.de_decimal}]}}}},'
+        obj += f'"geometry":{{"type":"Point","coordinates": [{ra},{object.de_decimal}]}}},'
         json_strings.append(obj)
 
     # remove trailing comma from last object in json list.

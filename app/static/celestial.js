@@ -90,11 +90,11 @@
 
     // Functions below have been added (not default in d3-celestial) //
 
-    // Left-clicks on the map should return exact coordinates. 
+    // Left-clicks on the map should return exact coordinates.
     d3.select("canvas").on('click', function () {
       SkyMap.map_click(d3.mouse(this), 'left');
     });
-   
+
     // Right-clicks on the map should auto-select a nearby target. If no nearby objects, do nothing.
     d3.select("canvas").on('contextmenu', function() {
       d3.event.preventDefault();
@@ -103,12 +103,12 @@
       //var close_objects = []
       //var mousexy = d3.mouse(this);
       //var mouseeq = mouse_to_eq(mousexy);
-      
-      //// Determine nearby targets 
+
+      //// Determine nearby targets
       //for (var i = 0; i < tabledata.length; i++) {
       //  var td = tabledata;
-      //  // First pass through catalog looks for nearby ra and dec with fast calculation. 
-      //  if (((td[i][5] == "star" && document.getElementById('star_mag').value > td[i][1]) || (td[i][5] != "star" && document.getElementById('dso_mag').value > td[i][1])) && 
+      //  // First pass through catalog looks for nearby ra and dec with fast calculation.
+      //  if (((td[i][5] == "star" && document.getElementById('star_mag').value > td[i][1]) || (td[i][5] != "star" && document.getElementById('dso_mag').value > td[i][1])) &&
       //      (Math.abs(mouseeq[0]-td[i][2])) < 3 && (Math.abs(mouseeq[1] - td[i][3]) < 20))  {
       //    var objxy = prjMap([hour2degree(td[i][2]), td[i][3]]);
       //    // Second pass through catalog checks if radius is within radius_nearby (defined in global.js).
@@ -119,7 +119,7 @@
       //    };
       //  };
       //};
-      //if (close_objects) { 
+      //if (close_objects) {
       //  show_close_objects(close_objects,mousexy);
       //};
 
@@ -129,7 +129,7 @@
     //  var eq = prjMap.invert(mouse);
     //  eq[0] = eq[0] * 24 / 360;
     //  if (eq[0] < 0) { eq[0] += 24 };
-    //  return eq;   
+    //  return eq;
     //};
 
     // Functions above have been added (not default in d3-celestial) //
@@ -302,7 +302,7 @@
       }
     }
 
-    // Zoom by factor; >1 larger <1 smaller 
+    // Zoom by factor; >1 larger <1 smaller
     function zoomBy(factor) {
       if (!factor || factor === 1) return;
       var sc0 = prjMap.scale(),
@@ -781,7 +781,7 @@
     function getProjection(p) {
       if (!has(projections, p)) return;
       var res = projections[p];
-      if (!has(res, "ratio")) res.ratio = 2;  // Default w/h ratio 2:1    
+      if (!has(res, "ratio")) res.ratio = 2;  // Default w/h ratio 2:1
       return res;
     }
 
@@ -1033,7 +1033,7 @@
 
 
   var horizontal = function (dt, pos, loc) {
-    //dt: datetime, pos: celestial coordinates [lat,lng], loc: location [lat,lng]  
+    //dt: datetime, pos: celestial coordinates [lat,lng], loc: location [lat,lng]
     var ha = getMST(dt, loc[1]) - pos[0];
     if (ha < 0) ha = ha + 360;
 
@@ -1109,9 +1109,9 @@
 
   Celestial.add = function (dat) {
     var res = {};
-    //dat: {file: path, type:'json|raw', callback: func(), redraw: func()} 
+    //dat: {file: path, type:'json|raw', callback: func(), redraw: func()}
     //or {file:file, size:null, shape:null, color:null}  TBI
-    //  with size,shape,color: "prop=val:result;.." || function(prop) { .. return res; } 
+    //  with size,shape,color: "prop=val:result;.." || function(prop) { .. return res; }
     if (!has(dat, "type")) return console.log("Missing type");
 
     if ((dat.type === "dso" || dat.type === "json") && (!has(dat, "file") || !has(dat, "callback"))) return console.log("Can't add data file");
@@ -1309,7 +1309,7 @@
     width: 0,     // Default width; height is determined by projection
     projection: "aitoff",  // Map projection used: airy, aitoff, armadillo, august, azimuthalEqualArea, azimuthalEquidistant, baker, berghaus, boggs, bonne, bromley, collignon, craig, craster, cylindricalEqualArea, cylindricalStereographic, eckert1, eckert2, eckert3, eckert4, eckert5, eckert6, eisenlohr, equirectangular, fahey, foucaut, ginzburg4, ginzburg5, ginzburg6, ginzburg8, ginzburg9, gringorten, hammer, hatano, healpix, hill, homolosine, kavrayskiy7, lagrange, larrivee, laskowski, loximuthal, mercator, miller, mollweide, mtFlatPolarParabolic, mtFlatPolarQuartic, mtFlatPolarSinusoidal, naturalEarth, nellHammer, orthographic, patterson, polyconic, rectangularPolyconic, robinson, sinusoidal, stereographic, times, twoPointEquidistant, vanDerGrinten, vanDerGrinten2, vanDerGrinten3, vanDerGrinten4, wagner4, wagner6, wagner7, wiechel, winkel3
     transform: "equatorial", // Coordinate transformation: equatorial (default), ecliptic, galactic, supergalactic
-    center: null,       // Initial center coordinates in equatorial transformation [hours, degrees, degrees], 
+    center: null,       // Initial center coordinates in equatorial transformation [hours, degrees, degrees],
     // otherwise [degrees, degrees, degrees], 3rd parameter is orientation, null = default center
     geopos: null,       // optional initial geographic position [lat,lon] in degrees, overrides center
     follow: "zenith",   // on which coordinates to center the map, default: zenith, if location enabled, otherwise center
@@ -1318,7 +1318,7 @@
     interactive: true,  // Enable zooming and rotation with mousewheel and dragging
     form: false,        // Display settings form
     location: false,    // Display location settings
-    daterange: [],      // Calender date range; null: displaydate-+10; [n<100]: displaydate-+n; [yr]: yr-+10; 
+    daterange: [],      // Calender date range; null: displaydate-+10; [n<100]: displaydate-+n; [yr]: yr-+10;
     // [yr, n<100]: [yr-n, yr+n]; [yr0, yr1]
     controls: true,     // Display zoom controls
     lang: "",           // Language for names, so far only for constellations: de: german, es: spanish
@@ -1342,7 +1342,7 @@
       data: "stars.6.json" // Data source for stellar data
     },
     dsos: {
-      show: true,    // Show Deep Space Objects 
+      show: true,    // Show Deep Space Objects
       limit: 6,      // Show only DSOs brighter than limit magnitude
       names: true,   // Show DSO names
       desig: true,   // Show short DSO names
@@ -1365,15 +1365,15 @@
         bn: { shape: "square", fill: "#ff00cc" },                                 // Generic bright nebula
         sfr: { shape: "square", fill: "#cc00ff" },                                 // Star forming region
         rn: { shape: "square", fill: "#0000ff" },                                 // Reflection nebula
-        pn: { shape: "diamond", fill: "#00cccc" },                                // Planetary nebula 
+        pn: { shape: "diamond", fill: "#00cccc" },                                // Planetary nebula
         snr: { shape: "diamond", fill: "#ff00cc" },                                // Supernova remnant
-        dn: { shape: "square", fill: "#999999", stroke: "#999999", width: 2 },    // Dark nebula 
+        dn: { shape: "square", fill: "#999999", stroke: "#999999", width: 2 },    // Dark nebula
         pos: { shape: "marker", fill: "#cccccc", stroke: "#cccccc", width: 1.5 }   // Generic marker
       }
     },
     constellations: {
-      show: true,    // Show constellations 
-      names: true,   // Show constellation names 
+      show: true,    // Show constellations
+      names: true,   // Show constellation names
       desig: true,   // Show short constellation names (3 letter designations)
       namestyle: {
         fill: "#cccc99", align: "center", baseline: "middle", opacity: 0.8,
@@ -1381,27 +1381,27 @@
           "12px 'Lucida Sans Unicode', Helvetica, Arial, sans-serif",  // sdarker constellations
           "11px 'Lucida Sans Unicode', Helvetica, Arial, sans-serif"]
       },
-      lines: true,   // Show constellation lines 
+      lines: true,   // Show constellation lines
       linestyle: { stroke: "#cccccc", width: 1.5, opacity: 0.6 },
-      bounds: false,  // Show constellation boundaries 
+      bounds: false,  // Show constellation boundaries
       boundstyle: { stroke: "#ccff00", width: 1, opacity: 0.8, dash: [2, 4] }
     },
     mw: {
-      show: true,    // Show Milky Way as filled polygons 
+      show: true,    // Show Milky Way as filled polygons
       style: { fill: "#ffffff", opacity: "0.15" } // style for each MW-layer (5 on top of each other)
     },
     lines: {
       graticule: {
-        show: true, stroke: "#cccccc", width: 0.6, opacity: 0.8,      // Show graticule lines 
+        show: true, stroke: "#cccccc", width: 0.6, opacity: 0.8,      // Show graticule lines
         // grid values: "outline", "center", or [lat,...] specific position
         lon: { pos: [""], fill: "#eee", font: "10px 'Lucida Sans Unicode', Helvetica, Arial, sans-serif" },
         // grid values: "outline", "center", or [lon,...] specific position
         lat: { pos: [""], fill: "#eee", font: "10px 'Lucida Sans Unicode', Helvetica, Arial, sans-serif" }
       },
-      equatorial: { show: true, stroke: "#aaaaaa", width: 1.3, opacity: 0.7 },    // Show equatorial plane 
-      ecliptic: { show: true, stroke: "#66cc66", width: 1.3, opacity: 0.7 },      // Show ecliptic plane 
-      galactic: { show: false, stroke: "#cc6666", width: 1.3, opacity: 0.7 },     // Show galactic plane 
-      supergalactic: { show: false, stroke: "#cc66cc", width: 1.3, opacity: 0.7 } // Show supergalactic plane 
+      equatorial: { show: true, stroke: "#aaaaaa", width: 1.3, opacity: 0.7 },    // Show equatorial plane
+      ecliptic: { show: true, stroke: "#66cc66", width: 1.3, opacity: 0.7 },      // Show ecliptic plane
+      galactic: { show: false, stroke: "#cc6666", width: 1.3, opacity: 0.7 },     // Show galactic plane
+      supergalactic: { show: false, stroke: "#cc66cc", width: 1.3, opacity: 0.7 } // Show supergalactic plane
       //mars: { show: false, stroke:"#cc0000", width:1.3, opacity:.7 }
     }, // Background style
     background: {
@@ -1448,7 +1448,7 @@
       if (!cfg) return this;
       for (prop in this) {
         if (!has(this, prop)) continue;
-        //if (typeof(this[prop]) === 'function'); 
+        //if (typeof(this[prop]) === 'function');
         if (!has(cfg, prop) || cfg[prop] === null) {
           res[prop] = this[prop];
         } else if (this[prop] === null || this[prop].constructor != Object) {
@@ -1477,7 +1477,7 @@
       .range(['#ff4700', '#ff4b00', '#ff4f00', '#ff5300', '#ff5600', '#ff5900', '#ff5b00', '#ff5d00', '#ff6000', '#ff6300', '#ff6500', '#ff6700', '#ff6900', '#ff6b00', '#ff6d00', '#ff7000', '#ff7300', '#ff7500', '#ff7800', '#ff7a00', '#ff7c00', '#ff7e00', '#ff8100', '#ff8300', '#ff8506', '#ff870a', '#ff8912', '#ff8b1a', '#ff8e21', '#ff9127', '#ff932c', '#ff9631', '#ff9836', '#ff9a3c', '#ff9d3f', '#ffa148', '#ffa34b', '#ffa54f', '#ffa753', '#ffa957', '#ffab5a', '#ffad5e', '#ffb165', '#ffb269', '#ffb46b', '#ffb872', '#ffb975', '#ffbb78', '#ffbe7e', '#ffc184', '#ffc489', '#ffc78f', '#ffc892', '#ffc994', '#ffcc99', '#ffce9f', '#ffd1a3', '#ffd3a8', '#ffd5ad', '#ffd7b1', '#ffd9b6', '#ffdbba', '#ffddbe', '#ffdfc2', '#ffe1c6', '#ffe3ca', '#ffe4ce', '#ffe8d5', '#ffe9d9', '#ffebdc', '#ffece0', '#ffefe6', '#fff0e9', '#fff2ec', '#fff4f2', '#fff5f5', '#fff6f8', '#fff9fd', '#fef9ff', '#f9f6ff', '#f6f4ff', '#f3f2ff', '#eff0ff', '#ebeeff', '#e9edff', '#e6ebff', '#e3e9ff', '#e0e7ff', '#dee6ff', '#dce5ff', '#d9e3ff', '#d7e2ff', '#d3e0ff', '#c9d9ff', '#bfd3ff', '#b7ceff', '#afc9ff', '#a9c5ff', '#a4c2ff', '#9fbfff', '#9bbcff']);
 
   /* Default parameters for each supported projection
-       arg: constructor argument, if any 
+       arg: constructor argument, if any
        scale: scale parameter so that they all have ~equal width, normalized to 1024 pixels
        ratio: width/height ratio, 2.0 if none
        clip: projection clipped to 90 degrees from center, otherwise to antimeridian
@@ -1723,35 +1723,35 @@
 
 
   /*var color = "#fff", angle = 0, align = "center", baseline = "middle", font = "10px sans-serif", padding = [0,0], aPos, sText;
-  
+
   canvas.text = function () {
-  
+
     function txt(ctx){
       ctx.fillStyle = color;
       ctx.textAlign = align;
       ctx.textBaseline = baseline;
-      
+
       //var pt = projection(d.geometry.coordinates);
       if (angle) {
-        canvas.save();     
+        canvas.save();
         canvas.translate(aPos[0], aPos[1]);
-        canvas.rotate(angle); 
+        canvas.rotate(angle);
         canvas.fillText(sText, 0, 0);
-        canvas.restore();     
+        canvas.restore();
       } else
         canvas.fillText(sText, aPos[0], aPos[1]);
     }
-    
+
     txt.angle = function(x) {
       if (!arguments.length) return angle * 180 / Math.PI;
       color = x  * Math.PI / 180;
       return txt;
-    };  
+    };
     txt.color = function(s) {
       if (!arguments.length) return color;
       color = s;
       return txt;
-    };  
+    };
     txt.align = function(s) {
       if (!arguments.length) return align;
       align = s;
@@ -1782,10 +1782,10 @@
       if (o.fill) color = o.fill;
       if (o.font) font = o.font;
       return txt;
-    }; 
-    
+    };
+
   }
-  
+
     function ctxPath(d) {
       var pt;
       //d.map( function(axe, i) {
@@ -1799,21 +1799,21 @@
       }
       context.fill();
     }
-    
-  
+
+
     function ctxText(d, ang) {
       var pt = projection(d.geometry.coordinates);
       if (ang) {
-        canvas.save();     
+        canvas.save();
         canvas.translate(pt[0], pt[1]);
-        canvas.rotate(Math.PI/2); 
+        canvas.rotate(Math.PI/2);
         canvas.fillText(txt, 0, 0);
-        canvas.restore();     
+        canvas.restore();
       } else
         canvas.fillText(d.properties.txt, pt[0], pt[1]);
     }
-    
-  
+
+
   */
 
   function $(id) { return document.getElementById(id); }
@@ -1928,7 +1928,7 @@
     var ctrl = d3.select("#celestial-form").append("div").attr("class", "ctrl");
     var frm = ctrl.append("form").attr("id", "params").attr("name", "params").attr("method", "get").attr("action", "#");
 
-    //Map parameters    
+    //Map parameters
     var col = frm.append("div").attr("class", "col").attr("id", "general");
 
     col.append("label").attr("title", "Map width in pixel, 0 indicates full width").attr("for", "width").html("Width ");
@@ -1981,7 +1981,7 @@
 
     setCenter(config.center, config.transform);
 
-    // Stars 
+    // Stars
     col = frm.append("div").attr("class", "col").attr("id", "stars");
 
     col.append("label").attr("class", "header").attr("for", "stars-show").html("Stars");
@@ -2022,7 +2022,7 @@
 
     enable($("stars-show"));
 
-    // DSOs 
+    // DSOs
     col = frm.append("div").attr("class", "col").attr("id", "dsos");
 
     col.append("label").attr("class", "header").attr("title", "Deep Space Objects").attr("for", "dsos-show").html("DSOs");
@@ -2049,7 +2049,7 @@
 
     enable($("dsos-show"));
 
-    // Constellations 
+    // Constellations
     col = frm.append("div").attr("class", "col").attr("id", "constellations");
     col.append("label").attr("class", "header").html("Constellations");
     //col.append("input").attr("type", "checkbox").attr("id", "constellations-show").property("checked", config.constellations.show).on("change", apply);
@@ -2068,7 +2068,7 @@
 
     enable($("constellations-names"));
 
-    // graticules & planes 
+    // graticules & planes
     col = frm.append("div").attr("class", "col").attr("id", "lines");
     col.append("label").attr("class", "header").html("Lines");
 
@@ -2340,7 +2340,7 @@
 
     if (ctr === null) ctr = [0, 0, 0];
     if (ctr.length <= 2) ctr[2] = 0;
-    //config.center = ctr; 
+    //config.center = ctr;
     if (trans !== "equatorial") cx.value = ctr[0].toFixed(1);
     else cx.value = ctr[0] < 0 ? (ctr[0] / 15 + 24).toFixed(1) : (ctr[0] / 15).toFixed(1);
 
@@ -2433,7 +2433,7 @@
       $("datetime").value = dateFormat(date, zone);
       go();
     });
-    //Now -button sets current time & date of device  
+    //Now -button sets current time & date of device
     col.append("input").attr("type", "button").attr("value", "Now").attr("id", "now").on("click", now);
     //Horizon marker
     col.append("br");
@@ -2554,13 +2554,13 @@
   /*
       ep = epoch (iso-date)
       N = longitude of the ascending node (deg) Ω
-      i = inclination to the refrence plane, default:ecliptic (deg) 
+      i = inclination to the refrence plane, default:ecliptic (deg)
       w = argument of periapsis (deg)  ω
       a = semi-major axis, or mean distance from parent body (AU,km)
       e = eccentricity (0=circle, 0-1=ellipse, 1=parabola, >1=hyperbola ) (-)
       M = mean anomaly (0 at periapsis; increases uniformly with time) (deg)
       n = mean daily motion = 360/P (deg/day)
-      
+
       W = N + w  = longitude of periapsis ϖ
       L = M + W  = mean longitude
       q = a*(1-e) = periapsis distance
@@ -2569,9 +2569,9 @@
       T = Epoch_of_M - (M(deg)/360_deg) / P  = time of periapsis
       v = true anomaly (angle between position and periapsis) ν
       E = eccentric anomaly
-      
+
       Mandatory: a, e, i, N, w|W, M|L, dM|n
-      
+
   */
 
   var Kepler = function () {
@@ -3473,7 +3473,7 @@
     corr: function (dat, sol) {
       var M = Trig.normalize(sol.M + Math.PI),
         w = Trig.normalize(sol.w + Math.PI),
-        L = dat.M + dat.w,     // Argument of latitude 
+        L = dat.M + dat.w,     // Argument of latitude
         E = L + dat.N - M - w; // Mean elongation
 
       var lon =
@@ -3983,8 +3983,3 @@
   })();
   this.Celestial = Celestial;
 })();
-
-
-
-
-
