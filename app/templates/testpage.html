@@ -188,7 +188,12 @@
                 url: form.attr('action'),
                 data: form.serialize(),
                 success: function(data) {
-                    console.log(data);
+
+                    var filter = Object.assign({}, SkyMap.default_filter); // deep clone of default blank filter
+                    filter.types = data;
+
+                    SkyMap.update_chart(filter)
+                    Celestial.redraw();
                     table1.draw();
                 },
                 error: function(data) {

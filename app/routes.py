@@ -236,10 +236,10 @@ def apply_table_filters():
         if filter.everything_else.data is True:
             show_these_objects |= everything_else
 
-
-        session['object_type_filter'] = list(show_these_objects)
-
-    return 'success'
+        hidden_objects = list(show_these_objects);
+        session['object_type_filter'] = hidden_objects;
+        
+    return jsonify(hidden_objects)
 
 @app.route('/tablelookup1')
 def tablelookup1():
@@ -287,7 +287,7 @@ def database_to_json():
         ra = hour2degree(object.ra_decimal)
         obj = f'{{"type": "Feature","id":"{object.id}",'
         obj += f'"properties": {{"messier":"{object.messier}","mag":"{object.magnitude}","type":"{object.type}"}}, '
-        obj += f'"geometry":{{"type":"Point","coordinates": [{ra},{object.de_decimal}]}}},'
+        obj += f'"geometry":{{"type":"Point","coordinates": [{ra},{object.de_decimal}]}}}},'
         json_strings.append(obj)
 
     # remove trailing comma from last object in json list.
