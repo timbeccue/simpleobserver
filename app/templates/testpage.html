@@ -35,7 +35,7 @@
                             <td>Mag</td>
                             <td>Ra</td>
                             <td>De</td>
-                            <td>Constellation</td>
+                            <td>Names</td>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -44,14 +44,32 @@
                 <div id="go-filters" class="container">
                     <div>
                         <form id='filter_form' method="POST" action="/apply_table_filters">
-                            {% for field in filter %}
-                            {{ field.label() }} {{ field(class_="mdl-switch__input") }} <br>
-                            {% endfor %}
-                            <input type="checkbox" class="mdl-switch__input"></input>
-                            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-2">
-                              <span class="mdl-switch__label">test label</span>
-                              <input type="checkbox" id="switch-2" class="mdl-switch__input">
+
+                            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="galaxies">
+                              <span class="mdl-switch__label">Galaxies</span>
+                              {{ filter.galaxies(class_="mdl-switch__input") }}
                             </label>
+
+                            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="nebula">
+                              <span class="mdl-switch__label">Nebula</span>
+                              {{ filter.nebula(class_="mdl-switch__input") }}
+                            </label>
+
+                            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="globular_clusters">
+                              <span class="mdl-switch__label">Globular Clusters</span>
+                              {{ filter.globular_clusters(class_="mdl-switch__input") }}
+                            </label>
+
+                            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="open_clusters">
+                              <span class="mdl-switch__label">Open Clusters</span>
+                              {{ filter.open_clusters(class_="mdl-switch__input") }}
+                            </label>
+
+                            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="everything_else">
+                              <span class="mdl-switch__label">Everything Else</span>
+                              {{ filter.everything_else(class_="mdl-switch__input") }}
+                            </label>
+
                         </form>
                     </div>
                     <!--div>
@@ -125,6 +143,7 @@
 
             var table1 = $('#targets-table1').DataTable({
                 processing: true,
+                searching: false,
                 serverSide: true,
                 deferRender: false,
                 //paging: false,
@@ -136,6 +155,13 @@
                 select: true,
                 stateSave: false,
                 ajax: "/tablelookup1",
+                columnDefs: [{
+                    targets: [3, 4],
+                    render: $.fn.dataTable.render.number(',', '.', 2)
+                },{
+                    targets: [5],
+                    width: "130px"
+                }]
                 //oSearch: { "sSearch": "M" },
             });
 
@@ -176,8 +202,7 @@
 
 
 
-
-
+    <script type="text/javascript" src="static/mapdata/custom_objects.json"></script>
 
     <link rel="stylesheet" href="https://ofrohn.github.io/celestial.css">
     <link rel="stylesheet" type="text/css" href="static/css/datatables.css">
@@ -188,8 +213,8 @@
     <script type="text/javascript" src="static/d3.js"></script>
     <script type="text/javascript" src="static/d3.geo.projection.min.js"></script>
     <script type="text/javascript" src="static/celestial.js"></script>
-    <script type="text/javascript" src="static/skymap.js"></script>
     <script src="https://d3js.org/d3-drag.v1.min.js"></script>
+    <script type="text/javascript" src="static/skymap.js"></script>
 
     <script type="text/javascript" src="static/userinterface.js"></script>
     <script type="text/javascript" src="static/ajax_submit.js"></script>

@@ -41,7 +41,7 @@ class ThingsInSpace(db.Model):
             setattr(self, attr, kwargs.get(attr))
 
     def __repr__(self):
-        return f'<testDB {self.messier}, {self.type}, {self.magnitude}>'
+        return f'<ID:{self.id}, M{self.messier}, {self.type}, {self.magnitude}>'
 
 
 class User(UserMixin, db.Model):

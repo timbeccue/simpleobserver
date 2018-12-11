@@ -119,6 +119,9 @@ def stream(device,id):
 
 
 #############################################
+# TESTPAGE STUFF ############################
+#############################################
+
 from flask import session
 
 object_types = [
@@ -166,17 +169,15 @@ class TestAddForm(FlaskForm):
     season = SelectField('Season', choices=seasons)
     constellation = SelectField('Constellation', choices=constellations)
     names = StringField('Object Name(s)')
-    submit = SubmitField('add to db')
 
 class ObjectFilter(FlaskForm):
     #stars = BooleanField('stars', default=1)
     open_clusters = BooleanField('open clusters', default=1)
     globular_clusters = BooleanField('globular clusters', default=1)
     galaxies = BooleanField('galaxies', default=1)
-    nebula = BooleanField('nebula')
-    hidden = HiddenField('filter')
-    apply = SubmitField('Apply Filters', id='apply_filter')
-
+    nebula = BooleanField('nebula', default=1)
+    double_stars = BooleanField('double stars', default=1)
+    everything_else = BooleanField('everything else', default=1)
 
 @app.route('/testpage')
 @login_required
@@ -207,20 +208,22 @@ def addtodatabase():
         db.session.commit()
         return redirect(url_for('testpage'))
 
-all_objects = {'As','Ds','MW','Oc','Gc','Pl','Di','Bn','Dn','Sn','Cg','Sp','Ba','Ir','El','Ln','Px','Sx'}
-
+# Filter the display of objects by type.
+# This route takes users selection and saves it in a session, to be read by tablelookup when the table is redrawn.
+all_objects = {'As','Ds','**','MW','Oc','Gc','Pl','Di','Bn','Dn','Sn','Cg','Sp','Ba','Ir','El','Ln','Px','Sx'}
 @app.route('/apply_table_filters', methods=['POST', 'GET'])
 def apply_table_filters():
-    nebula = {'Pl','Di','Bn','Dn'}
+    nebula = {'Pl','Di','Bn','Dn', 'Sn'}
     galaxies = {'Cg','Sp','Ba','Ir','El','Ln','Px','Sx'}
     globular_clusters = {'Gc'}
     open_clusters = {'Oc'}
+    everything_else = {'As','Ds','**','MW'} # Asterisms, Double Stars, Milky Way
 
     filter = ObjectFilter()
 
     if request.method == 'POST':
 
-        # Reset to show everything, then add selected objects with set union: (a | b).
+        # Reset to show nothing, then add selected objects with set union: (a | b).
         show_these_objects = set([])
         if filter.nebula.data is True:
             show_these_objects |= nebula
@@ -230,13 +233,13 @@ def apply_table_filters():
             show_these_objects |= open_clusters
         if filter.globular_clusters.data is True:
             show_these_objects |= globular_clusters
+        if filter.everything_else.data is True:
+            show_these_objects |= everything_else
 
 
         session['object_type_filter'] = list(show_these_objects)
 
     return 'success'
-
-
 
 @app.route('/tablelookup1')
 def tablelookup1():
@@ -248,14 +251,13 @@ def tablelookup1():
         ColumnDT(ThingsInSpace.magnitude),
         ColumnDT(ThingsInSpace.ra_decimal),
         ColumnDT(ThingsInSpace.de_decimal),
-        ColumnDT(ThingsInSpace.constellation),
+        ColumnDT(ThingsInSpace.names),
     ]
 
     object_types = all_objects
     if session['object_type_filter'] is not None:
         object_types = session['object_type_filter']
 
-    print(f'SHOW OBJECT TYPES THAT ARE ALLOWED: {object_types}.')
     # define the initial query
     query = db.session.query().filter(ThingsInSpace.type.in_(object_types))
     # GET parameters
@@ -268,6 +270,43 @@ def tablelookup1():
     forTable = jsonify(rowTable.output_result())
     return(forTable)
 
+# Dumps all data into a json file (geojson format) for use in the d3celestial sky chart.
+@app.route('/database_to_json')
+def database_to_json():
+
+    # d3celestial sky chart expects coordinate data in degrees from -180 to +180, so this formats RA values.
+    def hour2degree(ra):
+        if ra > 12: return 15 * (ra - 24)
+        return ra * 15
+
+    # Create the json file as a list of strings. Later, we will write these strings to a single file.
+    json_strings = []
+    json_strings.append('{"type":"FeatureCollection","features":[')
+
+    for object in db.session.query(ThingsInSpace).all():
+        ra = hour2degree(object.ra_decimal)
+        obj = f'{{"type": "Feature","id":"{object.id}",'
+        obj += f'"properties": {{"messier":"{object.messier}","mag":"{object.magnitude}","type":"{object.type}"}}, '
+        obj += f'"geometry":{{"type":"Point","coordinates": [{ra},{object.de_decimal}]}}},'
+        json_strings.append(obj)
+
+    # remove trailing comma from last object in json list.
+    last_json_object = json_strings.pop(-1)
+    json_strings.append(last_json_object[:-1])
+
+    json_strings.append('}]}\n')
+
+    filename = 'custom_objects.json'
+
+    with open(filename, 'w') as f:
+        for string in json_strings:
+            f.write(string)
+
+    return 'success'
+
+
+#############################################
+#############################################
 #############################################
 
 
