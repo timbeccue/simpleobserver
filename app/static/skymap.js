@@ -8,18 +8,58 @@ function newSkyMap() {
 
     var data = [];
 
-    // p is for selected location, t is for telescope location.
-    function initializePointer(pointers) {
-        crosshair_style = {
+    var styles = {
+
+        point: {
+            stroke: "rgba(243,156,18,1)",
+            width: 1,
+        },
+        galaxy: {
+            fill: "rgba(231,76,60,0.8)",
+            width: 1,
+            opacity: 0.5,
+            namestyle: { fill: "rgb(231,76,60)", font: "9px Helvetica, Arial, serif", align: "left", baseline: "top" }
+        },
+        nebula: {
+            shape: "diamond",
+            fill: "rgba(243,156,18,1)",
+            width: 2,
+            opacity: 0.8,
+            namestyle: { fill: "rgba(245,176,65,1)", font: "9px Helvetica, Arial, serif", align: "left", baseline: "top" }
+        },
+        globular_cluster: {
+            opacity: 1,
+            stroke: "rgba(72,201,176,1)",
+            width: 1,
+            namestyle: { fill: "rgba(72,201,176,1)", font: "9px Helvetica, Arial, serif", align: "left", baseline: "top" }
+        },
+        open_cluster: {
+            stroke: "rgba(142,68,173)",
+            width: 1,
+            namestyle: { fill: "rgb(142,68,173)", font: "9px Helvetica, Arial, serif", align: "left", baseline: "top" }
+        },
+        crosshair: {
             width: 1,
             stroke:"#e74c3c"
         }
+    }
+
+    var nebula = ['Pl','Di','Bn','Dn', 'Sn'];
+    var galaxies = ['Cg','Sp','Ba','Ir','El','Ln','Px','Sx'];
+
+    var default_filter = {
+        types: ['As','Ds','**','MW','Oc','Gc','Pl','Di','Bn','Dn','Sn','Cg','Sp','Ba','Ir','El','Ln','Px','Sx'],
+        magnitudes: [-50, 50]
+    };
+
+    // p is for selected location, t is for telescope location.
+    function initializePointer() {
+
         var pointers = {
             "type":"FeatureCollection",
             "features":[
                 {"type":"Feature",
                 "id":"pointers",
-                "properties": {},
                 "geometry": {
                     "type":"Point"
                 },
@@ -29,6 +69,7 @@ function newSkyMap() {
                 }}
             ]
         };
+
         //Celestial.clear();
         Celestial.add({type:"Point", callback: function(error, json) {
             if (error) return console.warn(error);
@@ -40,7 +81,7 @@ function newSkyMap() {
             Celestial.redraw();
         }, redraw: function() {
             Celestial.container.selectAll(".point").each(function(d) {
-                Celestial.setStyle(crosshair_style);
+                Celestial.setStyle(style.crosshair_style);
                 var p_coords = ([Utilities.hour2degree(state.ra_selected), state.de_selected]);
                 var t_coords = ([Utilities.hour2degree(state_mnt1.ra), state_mnt1.dec]);
                 // Limit selectable regions to coordinates on the map with Celestial.clip().
@@ -59,14 +100,8 @@ function newSkyMap() {
         } });
     }
 
-    var default_filter = {
-        types: ['As','Ds','**','MW','Oc','Gc','Pl','Di','Bn','Dn','Sn','Cg','Sp','Ba','Ir','El','Ln','Px','Sx'],
-        magnitudes: [-50, 50]
-    };
 
     function update_chart(filter = default_filter) {
-
-        console.log('allowed types: ' + filter.types);
 
         // Returns false if an object should not be displayed; otherwise returns true.
         function filterChart(object) {
@@ -79,41 +114,6 @@ function newSkyMap() {
             return true;
         }
 
-        var pointStyle = {
-            stroke: "rgba(243,156,18,1)",
-            width: 1,
-        }
-        var galaxy_style = {
-            fill: "rgba(231,76,60,0.8)",
-            width: 1,
-            opacity: 0.5,
-            namestyle: { fill: "rgb(231,76,60)", font: "9px Helvetica, Arial, serif", align: "left", baseline: "top" }
-        }
-        var nebula_style = {
-            shape: "diamond",
-            fill: "rgba(243,156,18,1)",
-            width: 2,
-            opacity: 0.8,
-            namestyle: { fill: "rgba(245,176,65,1)", font: "9px Helvetica, Arial, serif", align: "left", baseline: "top" }
-        }
-        var globular_style = {
-            opacity: 1,
-            stroke: "rgba(72,201,176,1)",
-            width: 1,
-            namestyle: { fill: "rgba(72,201,176,1)", font: "9px Helvetica, Arial, serif", align: "left", baseline: "top" }
-        }
-        var open_cluster_style = {
-            stroke: "rgba(142,68,173)",
-            width: 1,
-            namestyle: { fill: "rgb(142,68,173)", font: "9px Helvetica, Arial, serif", align: "left", baseline: "top" }
-        }
-        crosshair_style = {
-            width: 1,
-            stroke:"#e74c3c"
-        }
-
-        var nebula = ['Pl','Di','Bn','Dn', 'Sn'];
-        var galaxies = ['Cg','Sp','Ba','Ir','El','Ln','Px','Sx'];
 
         Celestial.clear();
         Celestial.add({type:"json", file:"/static/mapdata/custom_objects.json", callback: function(error,json) {
@@ -138,8 +138,8 @@ function newSkyMap() {
 
                     //Celestial.context.fillStyle = "#fff";
                     if (galaxies.indexOf(type) !== -1) {
-                        galaxy_style.opacity = Math.pow((3.0/mag),1.5)/2 + 0.5;
-                        Celestial.setStyle(galaxy_style);
+                        styles.galaxy.opacity = Math.pow((3.0/mag),1.5)/2 + 0.5;
+                        Celestial.setStyle(styles.galaxy);
                         var s = 9,
                           r = s / Math.sqrt(3);
                         Celestial.context.beginPath()
@@ -150,13 +150,13 @@ function newSkyMap() {
                         Celestial.context.fill();
 
                         if (mag < 8) {
-                            Celestial.setTextStyle(galaxy_style.namestyle);
+                            Celestial.setTextStyle(styles.galaxy.namestyle);
                             Celestial.context.fillText('M'+m, pt[0]+r, pt[1]-r);
                         }
                     }
                     else if (nebula.indexOf(type) !== -1) {
-                        nebula_style.opacity = Math.pow((5.5/mag),2);
-                        Celestial.setStyle(nebula_style);
+                        styles.nebula.opacity = Math.pow((5.5/mag),2);
+                        Celestial.setStyle(styles.nebula);
                         var s = 8,
                           r = s / 1.5;
                         Celestial.context.beginPath();
@@ -167,28 +167,28 @@ function newSkyMap() {
                         Celestial.context.closePath();
                         Celestial.context.fill();
                         if (mag < 8) {
-                            Celestial.setTextStyle(nebula_style.namestyle);
+                            Celestial.setTextStyle(styles.nebula.namestyle);
                             Celestial.context.fillText('M'+m, pt[0]+r, pt[1]-r);
                         }
                     }
                     else if (type == 'Gc') {
-                        globular_style.opacity = Math.pow((5.5/mag),6);
+                        styles.globular_cluster.opacity = Math.pow((5.5/mag),6);
                         var s = 8,
                           r = s / 1.5;
-                        Celestial.setStyle(globular_style);
+                        Celestial.setStyle(styles.globular_cluster);
                         Celestial.map(d)
                         Celestial.context.beginPath();
                         Celestial.context.arc(pt[0], pt[1], 3, 0, 2 * Math.PI);
                         Celestial.context.closePath();
                         Celestial.context.stroke();
                         if (mag < 6) {
-                            Celestial.setTextStyle(globular_style.namestyle);
+                            Celestial.setTextStyle(styles.globular_cluster.namestyle);
                             Celestial.context.fillText('M'+m, pt[0]+r, pt[1]-r);
                         }
                     }
                     else if (type == 'Oc') {
-                        open_cluster_style.opacity = Math.pow((4.5/mag),2)/2 + 0.7;
-                        Celestial.setStyle(open_cluster_style);
+                        styles.open_cluster.opacity = Math.pow((4.5/mag),2)/2 + 0.7;
+                        Celestial.setStyle(styles.open_cluster);
                         var s = 8,
                           r = s / 1.5;
                         Celestial.map(d)
@@ -197,12 +197,12 @@ function newSkyMap() {
                         Celestial.context.closePath();
                         Celestial.context.stroke();
                         if (mag < 5) {
-                            Celestial.setTextStyle(open_cluster_style.namestyle);
+                            Celestial.setTextStyle(styles.open_cluster.namestyle);
                             Celestial.context.fillText('M'+m, pt[0]+r, pt[1]-r);
                         }
                     }
                     else {
-                        Celestial.setStyle(pointStyle);
+                        Celestial.setStyle(styles.point);
                         Celestial.map(d)
                         Celestial.context.beginPath();
                         Celestial.context.arc(pt[0], pt[1], 5, 0, 2 * Math.PI);
@@ -211,6 +211,23 @@ function newSkyMap() {
                     }
                 }
             });
+                // This retains the crosshairs when redrawing with different filters.
+                // However, crosshairs are updated by themselves so an entire repaint is avoided.
+                Celestial.setStyle(styles.crosshair);
+                var p_coords = ([Utilities.hour2degree(state.ra_selected), state.de_selected]);
+                var t_coords = ([Utilities.hour2degree(state_mnt1.ra), state_mnt1.dec]);
+                // Limit selectable regions to coordinates on the map with Celestial.clip().
+                if (Celestial.clip(p_coords)) {
+                    Celestial.Canvas.symbol()
+                    .type("marker")
+                    .size(420)
+                    .position(Celestial.mapProjection(p_coords))(Celestial.context);
+                }
+                Celestial.Canvas.symbol()
+                    .type("cross-circle")
+                    .size(220)
+                    .position(Celestial.mapProjection(t_coords))(Celestial.context);
+                Celestial.context.stroke();
         }});
     }
 
@@ -372,6 +389,7 @@ function newSkyMap() {
 
     function update_pointer(ra, de) {
         initializePointer();
+        //update_chart();
         Celestial.redraw();
     }
 
@@ -397,10 +415,7 @@ function newSkyMap() {
         }
 
         if (leftorright == 'right') {
-            var newfilter = Object.assign({}, default_filter);
-            newfilter.types = ['Pl','Di','Bn','Dn', 'Sn'];
-            update_chart(newfilter);
-            Celestial.redraw();
+            //var newfilter = Object.assign({}, default_filter);
             // get broad list of targets near click
             // get narrower list of targets near click
             // create list of close objects with xy coordinates
@@ -438,9 +453,12 @@ function newSkyMap() {
         }
     }
 
+
+
+
     /* Initialize the map */
     $('#views').ready( function() {
-        initializePointer();
+        //initializePointer();
         update_chart();
         Celestial.display(config);
         mapresize();

@@ -295,6 +295,7 @@ def tablelookup1():
 
 # Dumps all data into a json file (geojson format) for use in the d3celestial sky chart.
 @app.route('/database_to_json')
+@login_required
 def database_to_json():
 
     # d3celestial sky chart expects coordinate data in degrees from -180 to +180, so this formats RA values.

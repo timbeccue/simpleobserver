@@ -89,7 +89,6 @@ function newUI() {
     function target_clicked(ra, de) {
         state.ra_selected = ra;
         state.de_selected = de;
-
         $('#target-search').val(ra.toFixed(2)+', '+de.toFixed(2));
     }
 

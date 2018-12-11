@@ -91,9 +91,29 @@
     // Functions below have been added (not default in d3-celestial) //
 
     // Left-clicks on the map should return exact coordinates.
-    d3.select("canvas").on('click', function () {
-      SkyMap.map_click(d3.mouse(this), 'left');
+
+    d3.selectAll("canvas").on("mousedown", function() {
+        SkyMap.map_click(d3.mouse(this), 'left');
+        var div = d3.select(this);
+        var w = d3.select("#celestial-map")
+            .on("mousemove", mousemove)
+            .on("mouseup", mouseup);
+
+        //d3.event.preventDefault();
+
+        function mousemove() {
+            SkyMap.map_click(d3.mouse(this), 'left');
+        }
+
+        function mouseup() {
+            w.on("mousemove", null).on("mouseup", null);
+        }
     });
+
+    //d3.select("canvas").on('click', function () {
+    //  SkyMap.map_click(d3.mouse(this), 'left');
+    //});
+
 
     // Right-clicks on the map should auto-select a nearby target. If no nearby objects, do nothing.
     d3.select("canvas").on('contextmenu', function() {
