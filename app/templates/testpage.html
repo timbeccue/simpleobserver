@@ -45,6 +45,16 @@
                     <div>
                         <form id='filter_form' method="POST" action="/apply_table_filters">
 
+                            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="stars">
+                              <span class="mdl-switch__label">Stars</span>
+                              {{ filter.galaxies(class_="mdl-switch__input") }}
+                            </label>
+
+                            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="double_stars">
+                              <span class="mdl-switch__label">Double Stars</span>
+                              {{ filter.galaxies(class_="mdl-switch__input") }}
+                            </label>
+
                             <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="galaxies">
                               <span class="mdl-switch__label">Galaxies</span>
                               {{ filter.galaxies(class_="mdl-switch__input") }}
@@ -72,6 +82,9 @@
 
                             {{ filter.dso_magnitude_min.label }} {{ filter.dso_magnitude_min() }} <br>
                             {{ filter.dso_magnitude_max.label }} {{ filter.dso_magnitude_max() }} <br>
+                            <br>
+                            {{ filter.star_magnitude_min.label }} {{ filter.star_magnitude_min() }} <br>
+                            {{ filter.star_magnitude_max.label }} {{ filter.star_magnitude_max() }} <br>
 
                         </form>
                     </div>
@@ -138,7 +151,7 @@
                 responsive: true,
                 scrollY: "calc(75vh - 300px)",
                 //scroller: true,
-                //scroller: { loadingIndicator: true },
+                scroller: { loadingIndicator: true },
                 select: true,
                 stateSave: false, // gets out of sync with filters
                 ajax: "/tablelookup1",

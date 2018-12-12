@@ -23,21 +23,28 @@ class ThingsInSpace(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     messier = db.Column(db.Integer, unique=True)
     ngc = db.Column(db.String)
+    bayer = db.Column(db.String)
     type = db.Column(db.String, nullable=False)
     magnitude = db.Column(db.Float)
+    magnitude2 = db.Column(db.Float)
     size_large = db.Column(db.Float)
     size_small = db.Column(db.Float)
     distance_ly = db.Column(db.Integer)
     ra_decimal = db.Column(db.Float, nullable=False)
     de_decimal = db.Column(db.Float, nullable=False)
+    position_anble = db.Column(db.Float)
+    separation_angle = db.Column(db.Float)
+    spectral_class = db.Column(db.String)
     season = db.Column(db.String)
     constellation = db.Column(db.String)
     names = db.Column(db.String)
+    data_origin = db.Column(db.String)
+
 
 
     def __init__(self, **kwargs):
-        for attr in ('messier', 'ngc', 'type', 'magnitude', 'size_large', 'size_small', 'distance_ly', 'ra_decimal',
-                     'de_decimal', 'season', 'constellation', 'names'):
+        for attr in ('messier', 'ngc', 'bayer', 'type', 'magnitude', 'magnitude2', 'size_large', 'size_small', 'distance_ly', 'ra_decimal',
+                     'de_decimal', 'position_angle', 'separation_angle', 'spectral_class', 'season', 'constellation', 'names', 'data_origin'):
             setattr(self, attr, kwargs.get(attr))
 
     def __repr__(self):
