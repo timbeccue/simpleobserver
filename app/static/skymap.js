@@ -41,6 +41,7 @@ function newSkyMap() {
         crosshair: {
             width: 1,
             stroke:"#e74c3c"
+            //stroke: "#48c9b0"
         }
     }
 

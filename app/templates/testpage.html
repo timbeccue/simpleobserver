@@ -129,18 +129,18 @@
 
 
             var table1 = $('#targets-table1').DataTable({
-                processing: true,
+                processing: false,
                 searching: false,
                 serverSide: true,
-                deferRender: false,
+                deferRender: true,
                 //paging: false,
                 compact: true,
                 responsive: true,
                 scrollY: "calc(75vh - 300px)",
                 //scroller: true,
-                scroller: { loadingIndicator: true },
+                //scroller: { loadingIndicator: true },
                 select: true,
-                stateSave: false,
+                stateSave: false, // gets out of sync with filters
                 ajax: "/tablelookup1",
                 columnDefs: [{
                     targets: [3, 4],
@@ -153,14 +153,16 @@
             });
 
 
-            /* Respond to row click
-            $('#targets-table').on("click", 'tr', function() {
-                var ra = table.row(this).data()[3];
-                var de = table.row(this).data()[4];
-                SkyMap.update_pointer(ra, de);
+            // Respond to row click
+            $('#targets-table1 tbody').on("click", 'tr', function() {
+                var ra = table1.row(this).data()[3];
+                var de = table1.row(this).data()[4];
                 UI.target_clicked(ra, de);
-            } );*/
+                SkyMap.update_pointer(ra, de);
+            } );
+
             table1.draw();
+
 
             $(function() {
                 $('#filter_form').children().on('change', submit_filter);
