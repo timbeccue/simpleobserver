@@ -24,7 +24,7 @@ $(document).ready( function() {
     };
     mnt1_source.onmessage = function(event){
         var sse_contents = tryParseJSON(event.data);
-        console.log('sse contents: '+sse_contents);
+        //console.log('sse contents: '+sse_contents);
         if (sse_contents) {
             $.extend(state_mnt1, sse_contents);
             var telescope_action = 'unknown';

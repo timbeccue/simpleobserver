@@ -30,12 +30,6 @@
                 <table id="targets-table1">
                     <thead>
                         <tr>
-                            <td>M</td>
-                            <td>Type</td>
-                            <td>Mag</td>
-                            <td>Ra</td>
-                            <td>De</td>
-                            <td>Names</td>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -44,6 +38,16 @@
                 <div id="go-filters" class="container">
                     <div>
                         <form id='filter_form' method="POST" action="/apply_table_filters">
+
+                            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="stars">
+                              <span class="mdl-switch__label">Stars</span>
+                              {{ filter.stars(class_="mdl-switch__input") }}
+                            </label>
+
+                            <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="double_stars">
+                              <span class="mdl-switch__label">Double Stars</span>
+                              {{ filter.double_stars(class_="mdl-switch__input") }}
+                            </label>
 
                             <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="galaxies">
                               <span class="mdl-switch__label">Galaxies</span>
@@ -69,6 +73,12 @@
                               <span class="mdl-switch__label">Everything Else</span>
                               {{ filter.everything_else(class_="mdl-switch__input") }}
                             </label>
+
+                            {{ filter.dso_magnitude_min.label }} {{ filter.dso_magnitude_min() }} <br>
+                            {{ filter.dso_magnitude_max.label }} {{ filter.dso_magnitude_max() }} <br>
+                            <br>
+                            {{ filter.star_magnitude_min.label }} {{ filter.star_magnitude_min() }} <br>
+                            {{ filter.star_magnitude_max.label }} {{ filter.star_magnitude_max() }} <br>
 
                         </form>
                     </div>
@@ -118,22 +128,6 @@
             </table>
             <button type=submit>add to database</button>
         </form>
-        <!--div>
-            <table>
-                <tr>
-                    <td> ID </td>
-                    <td> Name </td>
-                    <td> Magnitude </td>
-                </tr>
-            {% for entry in database %}
-                <tr>
-                    <td> {{ entry.id }} </td>
-                    <td> {{ entry.name }} </td>
-                    <td> {{ entry.mag }} </td>
-                </tr>
-            {% endfor %}
-            </table>
-        </div-->
     </div>
 
 
@@ -142,10 +136,10 @@
 
 
             var table1 = $('#targets-table1').DataTable({
-                processing: true,
+                processing: false,
                 searching: false,
                 serverSide: true,
-                deferRender: false,
+                deferRender: true,
                 //paging: false,
                 compact: true,
                 responsive: true,
@@ -153,7 +147,7 @@
                 //scroller: true,
                 scroller: { loadingIndicator: true },
                 select: true,
-                stateSave: false,
+                stateSave: false, // gets out of sync with filters
                 ajax: "/tablelookup1",
                 columnDefs: [{
                     targets: [3, 4],
@@ -166,14 +160,16 @@
             });
 
 
-            /* Respond to row click
-            $('#targets-table').on("click", 'tr', function() {
-                var ra = table.row(this).data()[3];
-                var de = table.row(this).data()[4];
-                SkyMap.update_pointer(ra, de);
+            // Respond to row click
+            $('#targets-table1 tbody').on("click", 'tr', function() {
+                var ra = table1.row(this).data()[3];
+                var de = table1.row(this).data()[4];
                 UI.target_clicked(ra, de);
-            } );*/
+                SkyMap.update_pointer(ra, de);
+            } );
+
             table1.draw();
+
 
             $(function() {
                 $('#filter_form').children().on('change', submit_filter);
@@ -188,7 +184,15 @@
                 url: form.attr('action'),
                 data: form.serialize(),
                 success: function(data) {
-                    console.log(data);
+
+                    var filter = Object.assign({}, SkyMap.default_filter); // deep clone of default blank filter
+                    filter.dso_types = data.visible_dsos;
+                    filter.star_types = data.visible_stars;
+                    filter.dso_magnitudes = data.dso_magnitudes;
+                    filter.stellar_magnitudes = data.stellar_magnitudes;
+
+                    SkyMap.update_chart(filter)
+                    Celestial.redraw();
                     table1.draw();
                 },
                 error: function(data) {

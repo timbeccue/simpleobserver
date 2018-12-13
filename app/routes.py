@@ -22,11 +22,13 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, FloatField, SelectField, HiddenField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired, EqualTo, Email, ValidationError, NumberRange
+
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
+
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     email = EmailField('Email', validators=[DataRequired(), ])
@@ -41,6 +43,7 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
             raise ValidationError('Please use a different email address.')
+
 class CameraForm(FlaskForm):
     time = FloatField('Exposure Time', validators=[DataRequired()])
     count = IntegerField('Count', default=1, validators=[DataRequired(), NumberRange(min=1)])
@@ -56,6 +59,22 @@ class CameraForm(FlaskForm):
 
     position_angle = FloatField('Position Angle', default=0, validators=[DataRequired(),
                                 NumberRange(min=0, max=360, message="Please enter a value between 0 and 360.")])
+
+class ObjectFilter(FlaskForm):
+    open_clusters = BooleanField('open clusters', default=1)
+    globular_clusters = BooleanField('globular clusters', default=1)
+    galaxies = BooleanField('galaxies', default=1)
+    nebula = BooleanField('nebula', default=1)
+
+    stars = BooleanField('stars', default=0)
+    double_stars = BooleanField('double stars', default=0)
+
+    dso_magnitude_min = FloatField('DSOs no brighter than: ')
+    dso_magnitude_max = FloatField('DSOs no fainter than: ')
+    star_magnitude_min = FloatField('Stars no brighter than: ')
+    star_magnitude_max = FloatField('Stars no fainter than: ')
+
+    everything_else = BooleanField('everything else', default=1)
 
 ####################################################################################
 
@@ -170,14 +189,6 @@ class TestAddForm(FlaskForm):
     constellation = SelectField('Constellation', choices=constellations)
     names = StringField('Object Name(s)')
 
-class ObjectFilter(FlaskForm):
-    #stars = BooleanField('stars', default=1)
-    open_clusters = BooleanField('open clusters', default=1)
-    globular_clusters = BooleanField('globular clusters', default=1)
-    galaxies = BooleanField('galaxies', default=1)
-    nebula = BooleanField('nebula', default=1)
-    double_stars = BooleanField('double stars', default=1)
-    everything_else = BooleanField('everything else', default=1)
 
 @app.route('/testpage')
 @login_required
@@ -208,41 +219,73 @@ def addtodatabase():
         db.session.commit()
         return redirect(url_for('testpage'))
 
+all_dsos = {'As','MW','Oc','Gc','Pl','Di','Bn','Dn','Sn','Cg','Sp','Ba','Ir','El','Ln','Px','Sx'}
+all_stars = {'star', '**', 'Ds'}
+double_stars = {'Ds', '**'}
+nebula = {'Pl','Di','Bn','Dn', 'Sn'}
+galaxies = {'Cg','Sp','Ba','Ir','El','Ln','Px','Sx'}
+globular_clusters = {'Gc'}
+open_clusters = {'Oc'}
+everything_else = {'As','MW'} # Asterisms, Milky Way
+
 # Filter the display of objects by type.
 # This route takes users selection and saves it in a session, to be read by tablelookup when the table is redrawn.
-all_objects = {'As','Ds','**','MW','Oc','Gc','Pl','Di','Bn','Dn','Sn','Cg','Sp','Ba','Ir','El','Ln','Px','Sx'}
 @app.route('/apply_table_filters', methods=['POST', 'GET'])
 def apply_table_filters():
-    nebula = {'Pl','Di','Bn','Dn', 'Sn'}
-    galaxies = {'Cg','Sp','Ba','Ir','El','Ln','Px','Sx'}
-    globular_clusters = {'Gc'}
-    open_clusters = {'Oc'}
-    everything_else = {'As','Ds','**','MW'} # Asterisms, Double Stars, Milky Way
 
     filter = ObjectFilter()
 
     if request.method == 'POST':
 
         # Reset to show nothing, then add selected objects with set union: (a | b).
-        show_these_objects = set([])
+        show_these_stars = set([])
+        if filter.stars.data is True:
+            show_these_stars |= {'star'}
+        if filter.double_stars.data is True:
+            show_these_stars |= double_stars
+        visible_stars = list(show_these_stars)
+        session['star_type_filter'] = visible_stars
+
+        stellar_magnitudes = [-50,50]
+        if filter.star_magnitude_min.data is not None:
+            stellar_magnitudes[0] = filter.star_magnitude_min.data
+        if filter.star_magnitude_max.data is not None:
+            stellar_magnitudes[1] = filter.star_magnitude_max.data
+        session['stellar_magnitudes'] = stellar_magnitudes
+
+        # DSOs
+        show_these_dsos = set([])
         if filter.nebula.data is True:
-            show_these_objects |= nebula
+            show_these_dsos |= nebula
         if filter.galaxies.data is True:
-            show_these_objects |= galaxies
+            show_these_dsos |= galaxies
         if filter.open_clusters.data is True:
-            show_these_objects |= open_clusters
+            show_these_dsos |= open_clusters
         if filter.globular_clusters.data is True:
-            show_these_objects |= globular_clusters
+            show_these_dsos |= globular_clusters
         if filter.everything_else.data is True:
-            show_these_objects |= everything_else
+            show_these_dsos |= everything_else
+        visible_dsos = list(show_these_dsos)
+        session['dso_type_filter'] = visible_dsos;
+
+        dso_magnitudes = [-50,50]
+        if filter.dso_magnitude_min.data is not None:
+            dso_magnitudes[0] = filter.dso_magnitude_min.data
+        if filter.dso_magnitude_max.data is not None:
+            dso_magnitudes[1] = filter.dso_magnitude_max.data
+        session['dso_magnitudes'] = dso_magnitudes
 
 
-        session['object_type_filter'] = list(show_these_objects)
+    return jsonify(
+            visible_stars=visible_stars,
+            stellar_magnitudes=stellar_magnitudes,
+            visible_dsos=visible_dsos,
+            dso_magnitudes=dso_magnitudes)
 
-    return 'success'
 
-@app.route('/tablelookup1')
-def tablelookup1():
+from sqlalchemy import and_, or_
+@app.route('/tablelookup')
+def tablelookup():
     """Return server side data for object table"""
 
     columns = [
@@ -254,12 +297,44 @@ def tablelookup1():
         ColumnDT(ThingsInSpace.names),
     ]
 
-    object_types = all_objects
-    if session['object_type_filter'] is not None:
-        object_types = session['object_type_filter']
+    star_types = {} # hide stars by default
+    try:
+        star_types = session['star_type_filter']
+        print(star_types)
+    except: pass
+
+    stellar_magnitudes = [-50,50] # defualt
+    try:
+        stellar_magnitudes = session['stellar_magnitudes']
+        print(stellar_magnitudes)
+    except: pass
+
+    dso_types = all_dsos # default
+    try:
+        dso_types = session['dso_type_filter']
+        print(dso_types)
+    except: pass
+
+    dso_magnitudes = [-50,50] # default
+    try:
+        dso_magnitudes = session['dso_magnitudes']
+        print(dso_magnitudes)
+    except: pass
+
 
     # define the initial query
-    query = db.session.query().filter(ThingsInSpace.type.in_(object_types))
+    star_query = and_(ThingsInSpace.type.in_(list(star_types)),
+                     ThingsInSpace.magnitude >= stellar_magnitudes[0],
+                     ThingsInSpace.magnitude <= stellar_magnitudes[1]).self_group()
+    dso_query = and_(ThingsInSpace.type.in_(list(dso_types)),
+                     ThingsInSpace.magnitude >= dso_magnitudes[0],
+                     ThingsInSpace.magnitude <= dso_magnitudes[1]).self_group()
+    clause_args = [star_query, dso_query]
+    or_clauses = or_(*clause_args).self_group()
+
+    query = db.session.query().filter(or_clauses)
+
+
     # GET parameters
     params = request.args.to_dict()
 
@@ -272,6 +347,7 @@ def tablelookup1():
 
 # Dumps all data into a json file (geojson format) for use in the d3celestial sky chart.
 @app.route('/database_to_json')
+@login_required
 def database_to_json():
 
     # d3celestial sky chart expects coordinate data in degrees from -180 to +180, so this formats RA values.
@@ -279,30 +355,105 @@ def database_to_json():
         if ra > 12: return 15 * (ra - 24)
         return ra * 15
 
-    # Create the json file as a list of strings. Later, we will write these strings to a single file.
-    json_strings = []
-    json_strings.append('{"type":"FeatureCollection","features":[')
+    def db_to_json():
+        features = []
+        for object in db.session.query(ThingsInSpace).all():
+            obj = {}
+            properties = {}
+            geometry = {}
 
-    for object in db.session.query(ThingsInSpace).all():
-        ra = hour2degree(object.ra_decimal)
-        obj = f'{{"type": "Feature","id":"{object.id}",'
-        obj += f'"properties": {{"messier":"{object.messier}","mag":"{object.magnitude}","type":"{object.type}"}}, '
-        obj += f'"geometry":{{"type":"Point","coordinates": [{ra},{object.de_decimal}]}}},'
-        json_strings.append(obj)
+            properties["messier"] = object.messier
+            properties["mag"] = object.magnitude
+            properties["type"] = object.type
 
-    # remove trailing comma from last object in json list.
-    last_json_object = json_strings.pop(-1)
-    json_strings.append(last_json_object[:-1])
+            geometry["type"] = "Point"
+            geometry["coordinates"] = [hour2degree(object.ra_decimal), object.de_decimal]
 
-    json_strings.append('}]}\n')
+            obj["type"] = "Feature"
+            obj["id"] = object.id
+            obj["properties"] = properties
+            obj["geometry"] = geometry
 
-    filename = 'custom_objects.json'
+            features.append(obj)
 
-    with open(filename, 'w') as f:
-        for string in json_strings:
-            f.write(string)
+        geojson = {
+            "type": "FeatureCollection",
+            "features": features
+        }
 
+        filename = 'custom_objects.json'
+
+        with open(filename, 'w') as f:
+            json.dump(geojson, f)
+
+    #db_to_json()
     return 'success'
+
+
+@app.route('/recreate_database')
+@login_required
+def recreate_database():
+
+    StatusOn = False
+
+    if StatusOn is False: return "failure"
+
+    print(f'Size of database: {db.session.query(ThingsInSpace).count()}')
+    if StatusOn: db.session.query(ThingsInSpace).delete()
+    if StatusOn: db.create_all()
+    print(f'Size of database: {db.session.query(ThingsInSpace).count()}')
+
+    def degree2hour(ra):
+        return ra/15 if ra>0 else ra/15+24
+
+    geojson_list = ['doublesGEO.json', 'threehundredstarsGEO.json', 'messierGEO.json']
+
+    features = []
+
+    for file in geojson_list:
+        with open('app/static/mapdata/'+file, 'r') as f:
+            data = json.load(f)
+            features += data["features"]
+
+
+    for feat in features:
+
+        def prop(attr, location=None):
+            if location is None:
+                return feat.get(attr, None)
+            return feat[location].get(attr, None)
+        p = 'properties'
+        g = 'geometry'
+
+        obj = {
+            "messier": prop('messier', p),
+            "ngc": prop('ngc',p),
+            "bayer": prop('bayer',p),
+            'type': prop('type', p),
+            'magnitude': prop('mag',p),
+            'magnitude2': prop('mag2',p),
+            'size_large': prop('size',p),
+            'distance_ly': prop('distance',p),
+            'ra_decimal': degree2hour(prop('coordinates',g)[0]),
+            'de_decimal': (prop('coordinates',g))[1],
+            'position_angle': prop('position_angle',g),
+            'separation_angle': prop('separation',g),
+            'spectral_class': prop('spectral',p),
+            'season': prop('season',p),
+            'constellation': prop('con',p),
+            'names': prop('name',p),
+            'data_origin': prop('data_origin')
+        }
+
+        db_obj = ThingsInSpace(**obj)
+        #print(obj)
+        if StatusOn: db.session.add(db_obj)
+        if StatusOn: db.session.commit()
+
+    print(f'Size of database: {db.session.query(ThingsInSpace).count()}')
+    return 'success'
+
+
 
 
 #############################################
@@ -314,7 +465,7 @@ def database_to_json():
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template('home.html', state=ptr_state, loginform=LoginForm(), cameraform=CameraForm())
+    return render_template('home.html', state=ptr_state, loginform=LoginForm(), cameraform=CameraForm(), filter=ObjectFilter())
 
 @app.route('/textcommand', methods=['GET', 'POST'])
 @login_required
@@ -427,8 +578,8 @@ def command1(msg):
     processed = cmd[1] if (len(cmd)>0) else ''
     return jsonify(requested="requested", processed=processed, live=live_commands, errors=form.errors)
 
-@app.route('/tablelookup')
-def tablelookup():
+@app.route('/tablelookup1')
+def tablelookup1():
     """Return server side data for object table"""
     columns = [
         ColumnDT(Dso.PrimaryCatalogName),

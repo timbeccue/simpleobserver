@@ -1,4 +1,19 @@
 
+
+
+
+
+// NO LONGER USED - see skymap.js
+
+
+
+
+
+
+
+
+
+
 /* D3-Celestial sky map
    Copyright 2015 Olaf Frohn https://github.com/ofrohn, see LICENSE
 

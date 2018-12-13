@@ -387,49 +387,73 @@
                 </div>
                 <div class="module-body">
                     <div class="module-body-wrapper" id="module-go">
-                        <div id="go-filters" class="container hidden">
-                            <div>
-                                <input type="checkbox" name="stars" id="stars-check">
-                                <label for="stars-check">Stars</label><br>
-                                <input type="checkbox" name="open-clusters" id="open-clusters-check">
-                                <label for="open-clusters-check">Open Clusters</label><br>
-                                <input type="checkbox" name="globular-clusters" id="globular-clusters-check">
-                                <label for="globular-clusters-check">Globular Clusters</label><br>
-                                <input type="checkbox" name="galaxies" id="galaxies-check">
-                                <label for="galaxies-check">Galaxies</label><br>
-                                <input type="checkbox" name="nebula" id="nebula-check">
-                                <label for="nebula-check">Nebulae</label><br>
-                            </div>
-                            <div>
-                                <input type="checkbox" name="ngc" id="ngc-check">
-                                <label for="ngc-check">NGC</label><br>
-                                <input type="checkbox" name="messier" id="messier-check">
-                                <label for="messier-check">Messier</label><br>
-                                <input type="checkbox" name="caldwell" id="caldwell-check">
-                                <label for="caldwell-check">Caldwell</label><br>
-                            </div>
-
-                            <div>
-                                <button class="btn btn-small">Variable Stars</button>
-                                <button class="btn btn-small">Landolt Stars</button>
-                                <button class="btn btn-small">Near Zenith</button>
-                            </div>
-                        </div>
-                        <div id="go-table">
+                        <div id="object-table">
                             <table id="targets-table">
                                 <thead>
                                     <tr>
-                                        <th>Cat</th>
+                                        <td>M</td>
+                                        <td>Type</td>
+                                        <td>Mag</td>
+                                        <td>Ra</td>
+                                        <td>De</td>
+                                        <td>Names</td>
+                                        <!--th>Cat</th>
                                         <th>ID</th>
                                         <th>Mag</th>
                                         <th>RA</th>
                                         <th>DE</th>
-                                        <!--th>Size</th-->
-                                        <th>Type</th>
+                                        <th>Type</th-->
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
                             </table>
+                        </div>
+                        <div id="object-filters" class="container">
+                            <form id='filter_form' method="POST" action="/apply_table_filters">
+
+                                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="stars">
+                                <span class="mdl-switch__label">Stars</span>
+                                {{ filter.stars(class_="mdl-switch__input") }}
+                                </label>
+
+                                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="double_stars">
+                                <span class="mdl-switch__label">Double Stars</span>
+                                {{ filter.double_stars(class_="mdl-switch__input") }}
+                                </label>
+
+                                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="galaxies">
+                                <span class="mdl-switch__label">Galaxies</span>
+                                {{ filter.galaxies(class_="mdl-switch__input") }}
+                                </label>
+
+                                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="nebula">
+                                <span class="mdl-switch__label">Nebula</span>
+                                {{ filter.nebula(class_="mdl-switch__input") }}
+                                </label>
+
+                                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="globular_clusters">
+                                <span class="mdl-switch__label">Globular Clusters</span>
+                                {{ filter.globular_clusters(class_="mdl-switch__input") }}
+                                </label>
+
+                                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="open_clusters">
+                                <span class="mdl-switch__label">Open Clusters</span>
+                                {{ filter.open_clusters(class_="mdl-switch__input") }}
+                                </label>
+
+                                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="everything_else">
+                                <span class="mdl-switch__label">Everything Else</span>
+                                {{ filter.everything_else(class_="mdl-switch__input") }}
+                                </label>
+
+                                <div>
+                                {{ filter.dso_magnitude_min.label }} {{ filter.dso_magnitude_min() }} 
+                                {{ filter.dso_magnitude_max.label }} {{ filter.dso_magnitude_max() }} 
+                                
+                                {{ filter.star_magnitude_min.label }} {{ filter.star_magnitude_min() }} <br>
+                                {{ filter.star_magnitude_max.label }} {{ filter.star_magnitude_max() }} <br>
+                                </div>
+                            </form>
                         </div>
 
                     </div>
