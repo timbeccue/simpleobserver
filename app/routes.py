@@ -22,11 +22,13 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, FloatField, SelectField, HiddenField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired, EqualTo, Email, ValidationError, NumberRange
+
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
+
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     email = EmailField('Email', validators=[DataRequired(), ])
@@ -41,6 +43,7 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
             raise ValidationError('Please use a different email address.')
+
 class CameraForm(FlaskForm):
     time = FloatField('Exposure Time', validators=[DataRequired()])
     count = IntegerField('Count', default=1, validators=[DataRequired(), NumberRange(min=1)])
@@ -56,6 +59,22 @@ class CameraForm(FlaskForm):
 
     position_angle = FloatField('Position Angle', default=0, validators=[DataRequired(),
                                 NumberRange(min=0, max=360, message="Please enter a value between 0 and 360.")])
+
+class ObjectFilter(FlaskForm):
+    open_clusters = BooleanField('open clusters', default=1)
+    globular_clusters = BooleanField('globular clusters', default=1)
+    galaxies = BooleanField('galaxies', default=1)
+    nebula = BooleanField('nebula', default=1)
+
+    stars = BooleanField('stars', default=0)
+    double_stars = BooleanField('double stars', default=0)
+
+    dso_magnitude_min = FloatField('DSOs no brighter than: ')
+    dso_magnitude_max = FloatField('DSOs no fainter than: ')
+    star_magnitude_min = FloatField('Stars no brighter than: ')
+    star_magnitude_max = FloatField('Stars no fainter than: ')
+
+    everything_else = BooleanField('everything else', default=1)
 
 ####################################################################################
 
@@ -170,21 +189,6 @@ class TestAddForm(FlaskForm):
     constellation = SelectField('Constellation', choices=constellations)
     names = StringField('Object Name(s)')
 
-class ObjectFilter(FlaskForm):
-    open_clusters = BooleanField('open clusters', default=1)
-    globular_clusters = BooleanField('globular clusters', default=1)
-    galaxies = BooleanField('galaxies', default=1)
-    nebula = BooleanField('nebula', default=1)
-
-    stars = BooleanField('stars', default=1)
-    double_stars = BooleanField('double stars', default=1)
-
-    dso_magnitude_min = FloatField('DSOs no brighter than: ')
-    dso_magnitude_max = FloatField('DSOs no fainter than: ')
-    star_magnitude_min = FloatField('Stars no brighter than: ')
-    star_magnitude_max = FloatField('Stars no fainter than: ')
-
-    everything_else = BooleanField('everything else', default=1)
 
 @app.route('/testpage')
 @login_required
@@ -280,8 +284,8 @@ def apply_table_filters():
 
 
 from sqlalchemy import and_, or_
-@app.route('/tablelookup1')
-def tablelookup1():
+@app.route('/tablelookup')
+def tablelookup():
     """Return server side data for object table"""
 
     columns = [
@@ -293,41 +297,30 @@ def tablelookup1():
         ColumnDT(ThingsInSpace.names),
     ]
 
-    #star_types = all_stars
-    #stellar_magnitudes = [-50,50]
-    #if session['star_type_filter'] is not None:
-    #    star_types = session['star_type_filter']
-    #if session['stellar_magnitudes'] is not None:
-    #    stellar_magnitudes = session['stellar_magnitudes']
-    star_types = all_stars
+    star_types = {} # hide stars by default
     try:
         star_types = session['star_type_filter']
         print(star_types)
     except: pass
 
-    stellar_magnitudes = [-50,50]
+    stellar_magnitudes = [-50,50] # defualt
     try:
         stellar_magnitudes = session['stellar_magnitudes']
         print(stellar_magnitudes)
     except: pass
 
-    dso_types = all_dsos
+    dso_types = all_dsos # default
     try:
         dso_types = session['dso_type_filter']
         print(dso_types)
     except: pass
 
-    dso_magnitudes = [-50,50]
+    dso_magnitudes = [-50,50] # default
     try:
         dso_magnitudes = session['dso_magnitudes']
         print(dso_magnitudes)
     except: pass
 
-
-    #print(star_types)
-    #print(stellar_magnitudes)
-    #print(dso_types)
-    #print(dso_magnitudes)
 
     # define the initial query
     star_query = and_(ThingsInSpace.type.in_(list(star_types)),
@@ -472,7 +465,7 @@ def recreate_database():
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template('home.html', state=ptr_state, loginform=LoginForm(), cameraform=CameraForm())
+    return render_template('home.html', state=ptr_state, loginform=LoginForm(), cameraform=CameraForm(), filter=ObjectFilter())
 
 @app.route('/textcommand', methods=['GET', 'POST'])
 @login_required
@@ -585,8 +578,8 @@ def command1(msg):
     processed = cmd[1] if (len(cmd)>0) else ''
     return jsonify(requested="requested", processed=processed, live=live_commands, errors=form.errors)
 
-@app.route('/tablelookup')
-def tablelookup():
+@app.route('/tablelookup1')
+def tablelookup1():
     """Return server side data for object table"""
     columns = [
         ColumnDT(Dso.PrimaryCatalogName),

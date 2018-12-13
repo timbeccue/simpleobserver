@@ -30,12 +30,6 @@
                 <table id="targets-table1">
                     <thead>
                         <tr>
-                            <td>M</td>
-                            <td>Type</td>
-                            <td>Mag</td>
-                            <td>Ra</td>
-                            <td>De</td>
-                            <td>Names</td>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -192,8 +186,10 @@
                 success: function(data) {
 
                     var filter = Object.assign({}, SkyMap.default_filter); // deep clone of default blank filter
-                    filter.types = data.visible_dsos;
+                    filter.dso_types = data.visible_dsos;
+                    filter.star_types = data.visible_stars;
                     filter.dso_magnitudes = data.dso_magnitudes;
+                    filter.stellar_magnitudes = data.stellar_magnitudes;
 
                     SkyMap.update_chart(filter)
                     Celestial.redraw();

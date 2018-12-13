@@ -380,7 +380,7 @@ a {
     margin-bottom: 2em;
     border-bottom: #444 1px solid;
 }
-#go-filters label {
+#go-filters {
     padding: 15px;
 }
 #go-filters input {

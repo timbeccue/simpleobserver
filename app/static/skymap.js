@@ -43,14 +43,16 @@ function newSkyMap() {
             stroke:"#e74c3c"
             //stroke: "#48c9b0"
         }
-    }
+    };
 
     var nebula = ['Pl','Di','Bn','Dn', 'Sn'];
     var galaxies = ['Cg','Sp','Ba','Ir','El','Ln','Px','Sx'];
 
     var default_filter = {
-        types: ['As','Ds','**','MW','Oc','Gc','Pl','Di','Bn','Dn','Sn','Cg','Sp','Ba','Ir','El','Ln','Px','Sx'],
-        magnitudes: [-50, 50]
+        dso_types: ['As','MW','Oc','Gc','Pl','Di','Bn','Dn','Sn','Cg','Sp','Ba','Ir','El','Ln','Px','Sx'],
+        star_types: ['star','Ds','**'],
+        dso_magnitudes: [-50, 50],
+        stellar_magnitudes: [-50,50]
     };
 
     // p is for selected location, t is for telescope location.
@@ -109,8 +111,8 @@ function newSkyMap() {
             type = object.properties.type;
             mag = object.properties.mag;
 
-            if (filter.types.indexOf(type) == -1) { return false; }
-            if (mag < filter.magnitudes[0] || mag > filter.magnitudes[1]) { return false; }
+            if (filter.dso_types.indexOf(type) == -1) { return false; }
+            if (mag < filter.dso_magnitudes[0] || mag > filter.dso_magnitudes[1]) { return false; }
 
             return true;
         }
