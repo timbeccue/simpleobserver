@@ -86,7 +86,7 @@ function submit_filter(e) {
             filter.dso_magnitudes = data.dso_magnitudes;
             filter.stellar_magnitudes = data.stellar_magnitudes;
 
-            SkyMap.update_chart(filter)
+            SkyMap.update_chart(filter);
             Celestial.redraw();
             table.draw();
         },
@@ -94,5 +94,5 @@ function submit_filter(e) {
             console.log('failed to apply filter to table');
         }
     });
-};
+}
 });

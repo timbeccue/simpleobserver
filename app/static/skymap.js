@@ -80,7 +80,7 @@ function newSkyMap() {
             Celestial.container.selectAll(".pointers")
                 .data(pointer_data.features)
                 .enter().append("path")
-                .attr("class", "point")
+                .attr("class", "point");
             Celestial.redraw();
         }, redraw: function() {
             Celestial.container.selectAll(".point").each(function(d) {
@@ -127,7 +127,7 @@ function newSkyMap() {
             Celestial.container.selectAll(".custom_objects")
                 .data(sky_objects.features)
                 .enter().append("path")
-                .attr("class", "custom_obj")
+                .attr("class", "custom_obj");
             Celestial.redraw();
         }, redraw: function() {
             Celestial.container.selectAll(".custom_obj").each(function (d) {
@@ -145,7 +145,7 @@ function newSkyMap() {
                         Celestial.setStyle(styles.galaxy);
                         var s = 9,
                           r = s / Math.sqrt(3);
-                        Celestial.context.beginPath()
+                        Celestial.context.beginPath();
                         Celestial.context.moveTo(pt[0], pt[1] - r);
                         Celestial.context.lineTo(pt[0] + r, pt[1] + r);
                         Celestial.context.lineTo(pt[0] - r, pt[1] + r);

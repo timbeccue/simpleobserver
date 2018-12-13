@@ -362,17 +362,18 @@ a {
     grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
     grid-gap: 5px;
 }
-
 #target-search {
     width: 220px;
 }
+/* goto module */
 #module-go {
     display: flex;
     flex-direction: column;
     margin: 30px;
     height: 70vh;
 }
-#go-filters{
+/* table/filters module */
+#object-filters{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -380,17 +381,17 @@ a {
     margin-bottom: 2em;
     border-bottom: #444 1px solid;
 }
-#go-filters {
+#object-filters {
     padding: 15px;
 }
-#go-filters input {
+#object-filters input {
     margin-bottom: 8px;
 }
-#go-filters button {
+#object-filters button {
     margin-bottom: 6px;
     width: 100%;
 }
-#go-table {
+#object-table {
     height: 50vh;
 }
 #mag-filter-slider .noUi-connect {
