@@ -237,16 +237,16 @@ def apply_table_filters():
         show_these_stars = set([])
         if filter.stars.data is True:
             show_these_stars |= {'star'}
-        if filter.double_stars is True:
+        if filter.double_stars.data is True:
             show_these_stars |= double_stars
         visible_stars = list(show_these_stars)
         session['star_type_filter'] = visible_stars
 
         stellar_magnitudes = [-50,50]
         if filter.star_magnitude_min.data is not None:
-            stellar_magnitudes[0] = filter.star_magnitude_min
+            stellar_magnitudes[0] = filter.star_magnitude_min.data
         if filter.star_magnitude_max.data is not None:
-            stellar_magnitudes[1] = filter.star_magnitude_max
+            stellar_magnitudes[1] = filter.star_magnitude_max.data
         session['stellar_magnitudes'] = stellar_magnitudes
 
         # DSOs
@@ -279,7 +279,7 @@ def apply_table_filters():
             dso_magnitudes=dso_magnitudes)
 
 
-from sqlalchemy import or_, and_
+from sqlalchemy import and_, or_
 @app.route('/tablelookup1')
 def tablelookup1():
     """Return server side data for object table"""
@@ -300,36 +300,47 @@ def tablelookup1():
     #if session['stellar_magnitudes'] is not None:
     #    stellar_magnitudes = session['stellar_magnitudes']
     star_types = all_stars
-    try: star_types = session['star_type_filter']
+    try:
+        star_types = session['star_type_filter']
+        print(star_types)
     except: pass
 
     stellar_magnitudes = [-50,50]
-    try: stellar_magnitudes = session['stellar_magnitudes']
+    try:
+        stellar_magnitudes = session['stellar_magnitudes']
+        print(stellar_magnitudes)
     except: pass
 
     dso_types = all_dsos
-    try: dso_types = session['object_type_filter']
+    try:
+        dso_types = session['dso_type_filter']
+        print(dso_types)
     except: pass
 
     dso_magnitudes = [-50,50]
-    try: dso_magnitudes = session['dso_magnitudes']
+    try:
+        dso_magnitudes = session['dso_magnitudes']
+        print(dso_magnitudes)
     except: pass
 
 
-    print(star_types)
-    print(stellar_magnitudes)
-    print(dso_types)
-    print(dso_magnitudes)
+    #print(star_types)
+    #print(stellar_magnitudes)
+    #print(dso_types)
+    #print(dso_magnitudes)
 
     # define the initial query
-    query = db.session.query().filter(
-            or_(
-                and_(ThingsInSpace.type.in_(list(star_types)),
+    star_query = and_(ThingsInSpace.type.in_(list(star_types)),
                      ThingsInSpace.magnitude >= stellar_magnitudes[0],
-                     ThingsInSpace.magnitude <= stellar_magnitudes[1]),
-                and_(ThingsInSpace.type.in_(list(dso_types)),
+                     ThingsInSpace.magnitude <= stellar_magnitudes[1]).self_group()
+    dso_query = and_(ThingsInSpace.type.in_(list(dso_types)),
                      ThingsInSpace.magnitude >= dso_magnitudes[0],
-                     ThingsInSpace.magnitude <= dso_magnitudes[1])))
+                     ThingsInSpace.magnitude <= dso_magnitudes[1]).self_group()
+    clause_args = [star_query, dso_query]
+    or_clauses = or_(*clause_args).self_group()
+
+    query = db.session.query().filter(or_clauses)
+
 
     # GET parameters
     params = request.args.to_dict()
