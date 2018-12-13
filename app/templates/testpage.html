@@ -47,12 +47,12 @@
 
                             <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="stars">
                               <span class="mdl-switch__label">Stars</span>
-                              {{ filter.galaxies(class_="mdl-switch__input") }}
+                              {{ filter.stars(class_="mdl-switch__input") }}
                             </label>
 
                             <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="double_stars">
                               <span class="mdl-switch__label">Double Stars</span>
-                              {{ filter.galaxies(class_="mdl-switch__input") }}
+                              {{ filter.double_stars(class_="mdl-switch__input") }}
                             </label>
 
                             <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="galaxies">
@@ -192,7 +192,7 @@
                 success: function(data) {
 
                     var filter = Object.assign({}, SkyMap.default_filter); // deep clone of default blank filter
-                    filter.types = data.visible_objects;
+                    filter.types = data.visible_dsos;
                     filter.dso_magnitudes = data.dso_magnitudes;
 
                     SkyMap.update_chart(filter)
