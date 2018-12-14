@@ -372,30 +372,29 @@ a {
     margin: 30px;
     height: 70vh;
 }
-/* table/filters module */
-#object-filters{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+#filter_form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 2em;
     padding-bottom: 2em;
     margin-bottom: 2em;
     border-bottom: #444 1px solid;
 }
-#object-filters {
-    padding: 15px;
+#filter_form div{
+    padding: 1px;
 }
-#object-filters input {
+#filter_form div input[type="checkbox"]{
+    margin-bottom: 10px;
+}
+#filter_form div span{
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+}
+#filter_form input {
     margin-bottom: 8px;
 }
-#object-filters button {
-    margin-bottom: 6px;
-    width: 100%;
-}
 #object-table {
-    height: 50vh;
-}
-#mag-filter-slider .noUi-connect {
-    background: #f00;
+    padding-bottom: 30px;
 }
 
 
