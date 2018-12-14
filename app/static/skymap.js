@@ -6,250 +6,6 @@ var radius_nearby = 10; // for right click on map
 
 function newSkyMap() {
 
-    var data = [];
-
-    var styles = {
-
-        point: {
-            stroke: "rgba(243,156,18,1)",
-            width: 1,
-        },
-        galaxy: {
-            fill: "rgba(231,76,60,0.8)",
-            width: 1,
-            opacity: 0.5,
-            namestyle: { fill: "rgb(231,76,60)", font: "9px Helvetica, Arial, serif", align: "left", baseline: "top" }
-        },
-        nebula: {
-            shape: "diamond",
-            fill: "rgba(243,156,18,1)",
-            width: 2,
-            opacity: 0.8,
-            namestyle: { fill: "rgba(245,176,65,1)", font: "9px Helvetica, Arial, serif", align: "left", baseline: "top" }
-        },
-        globular_cluster: {
-            opacity: 1,
-            stroke: "rgba(72,201,176,1)",
-            width: 1,
-            namestyle: { fill: "rgba(72,201,176,1)", font: "9px Helvetica, Arial, serif", align: "left", baseline: "top" }
-        },
-        open_cluster: {
-            stroke: "rgba(142,68,173)",
-            width: 1,
-            namestyle: { fill: "rgb(142,68,173)", font: "9px Helvetica, Arial, serif", align: "left", baseline: "top" }
-        },
-        crosshair: {
-            width: 1,
-            stroke:"#e74c3c"
-            //stroke: "#48c9b0"
-        }
-    };
-
-    var nebula = ['Pl','Di','Bn','Dn', 'Sn'];
-    var galaxies = ['Cg','Sp','Ba','Ir','El','Ln','Px','Sx'];
-
-    var default_filter = {
-        dso_types: ['As','MW','Oc','Gc','Pl','Di','Bn','Dn','Sn','Cg','Sp','Ba','Ir','El','Ln','Px','Sx'],
-        star_types: ['star','Ds','**'],
-        dso_magnitudes: [-50, 50],
-        stellar_magnitudes: [-50,50]
-    };
-
-    // p is for selected location, t is for telescope location.
-    function initializePointer() {
-
-        var pointers = {
-            "type":"FeatureCollection",
-            "features":[
-                {"type":"Feature",
-                "id":"pointers",
-                "geometry": {
-                    "type":"Point"
-                },
-                "style": {
-                    "stroke-width":"0.5",
-                    "stroke":"#e74c3c"
-                }}
-            ]
-        };
-
-        //Celestial.clear();
-        Celestial.add({type:"Point", callback: function(error, json) {
-            if (error) return console.warn(error);
-            var pointer_data = Celestial.getData(pointers, config.transform);
-            Celestial.container.selectAll(".pointers")
-                .data(pointer_data.features)
-                .enter().append("path")
-                .attr("class", "point");
-            Celestial.redraw();
-        }, redraw: function() {
-            Celestial.container.selectAll(".point").each(function(d) {
-                Celestial.setStyle(style.crosshair_style);
-                var p_coords = ([Utilities.hour2degree(state.ra_selected), state.de_selected]);
-                var t_coords = ([Utilities.hour2degree(state_mnt1.ra), state_mnt1.dec]);
-                // Limit selectable regions to coordinates on the map with Celestial.clip().
-                if (Celestial.clip(p_coords)) {
-                    Celestial.Canvas.symbol()
-                    .type("marker")
-                    .size(420)
-                    .position(Celestial.mapProjection(p_coords))(Celestial.context);
-                }
-                Celestial.Canvas.symbol()
-                    .type("cross-circle")
-                    .size(220)
-                    .position(Celestial.mapProjection(t_coords))(Celestial.context);
-                Celestial.context.stroke();
-            });
-        } });
-    }
-
-
-    function update_chart(filter = default_filter) {
-
-        // Returns false if an object should not be displayed; otherwise returns true.
-        function filterChart(object) {
-            type = object.properties.type;
-            mag = object.properties.mag;
-
-            if (filter.dso_types.indexOf(type) == -1) { return false; }
-            if (mag < filter.dso_magnitudes[0] || mag > filter.dso_magnitudes[1]) { return false; }
-
-            return true;
-        }
-
-
-        Celestial.clear();
-        Celestial.add({type:"json", file:"/static/mapdata/custom_objects.json", callback: function(error,json) {
-            if (error) {return console.warn(error);}
-
-            var sky_objects = Celestial.getData(json, config.transform);
-
-            Celestial.container.selectAll(".custom_objects")
-                .data(sky_objects.features)
-                .enter().append("path")
-                .attr("class", "custom_obj");
-            Celestial.redraw();
-        }, redraw: function() {
-            Celestial.container.selectAll(".custom_obj").each(function (d) {
-                if (Celestial.clip(d.geometry.coordinates) && filterChart(d)) {
-                //if (true) {
-                    var pt = Celestial.mapProjection(d.geometry.coordinates),
-                        type = d.properties.type,
-                        mag = d.properties.mag,
-                        m = d.properties.messier;
-                        //size = d.properties.size;
-
-                    //Celestial.context.fillStyle = "#fff";
-                    if (galaxies.indexOf(type) !== -1) {
-                        styles.galaxy.opacity = Math.pow((3.0/mag),1.5)/2 + 0.5;
-                        Celestial.setStyle(styles.galaxy);
-                        var s = 9,
-                          r = s / Math.sqrt(3);
-                        Celestial.context.beginPath();
-                        Celestial.context.moveTo(pt[0], pt[1] - r);
-                        Celestial.context.lineTo(pt[0] + r, pt[1] + r);
-                        Celestial.context.lineTo(pt[0] - r, pt[1] + r);
-                        Celestial.context.closePath();
-                        Celestial.context.fill();
-
-                        if (mag < 8) {
-                            Celestial.setTextStyle(styles.galaxy.namestyle);
-                            Celestial.context.fillText('M'+m, pt[0]+r, pt[1]-r);
-                        }
-                    }
-                    else if (nebula.indexOf(type) !== -1) {
-                        styles.nebula.opacity = Math.pow((5.5/mag),2);
-                        Celestial.setStyle(styles.nebula);
-                        var s = 8,
-                          r = s / 1.5;
-                        Celestial.context.beginPath();
-                        Celestial.context.moveTo(pt[0], pt[1] - r);
-                        Celestial.context.lineTo(pt[0] + r, pt[1]);
-                        Celestial.context.lineTo(pt[0], pt[1] + r);
-                        Celestial.context.lineTo(pt[0] - r, pt[1]);
-                        Celestial.context.closePath();
-                        Celestial.context.fill();
-                        if (mag < 8) {
-                            Celestial.setTextStyle(styles.nebula.namestyle);
-                            Celestial.context.fillText('M'+m, pt[0]+r, pt[1]-r);
-                        }
-                    }
-                    else if (type == 'Gc') {
-                        styles.globular_cluster.opacity = Math.pow((5.5/mag),6);
-                        var s = 8,
-                          r = s / 1.5;
-                        Celestial.setStyle(styles.globular_cluster);
-                        Celestial.map(d)
-                        Celestial.context.beginPath();
-                        Celestial.context.arc(pt[0], pt[1], 3, 0, 2 * Math.PI);
-                        Celestial.context.closePath();
-                        Celestial.context.stroke();
-                        if (mag < 6) {
-                            Celestial.setTextStyle(styles.globular_cluster.namestyle);
-                            Celestial.context.fillText('M'+m, pt[0]+r, pt[1]-r);
-                        }
-                    }
-                    else if (type == 'Oc') {
-                        styles.open_cluster.opacity = Math.pow((4.5/mag),2)/2 + 0.7;
-                        Celestial.setStyle(styles.open_cluster);
-                        var s = 8,
-                          r = s / 1.5;
-                        Celestial.map(d)
-                        Celestial.context.beginPath();
-                        Celestial.context.arc(pt[0], pt[1], 3, 0, 2 * Math.PI);
-                        Celestial.context.closePath();
-                        Celestial.context.stroke();
-                        if (mag < 5) {
-                            Celestial.setTextStyle(styles.open_cluster.namestyle);
-                            Celestial.context.fillText('M'+m, pt[0]+r, pt[1]-r);
-                        }
-                    }
-                    else {
-                        Celestial.setStyle(styles.point);
-                        Celestial.map(d)
-                        Celestial.context.beginPath();
-                        Celestial.context.arc(pt[0], pt[1], 5, 0, 2 * Math.PI);
-                        Celestial.context.closePath();
-                        Celestial.context.stroke();
-                    }
-                }
-            });
-                // This retains the crosshairs when redrawing with different filters.
-                // However, crosshairs are updated by themselves so an entire repaint is avoided.
-                Celestial.setStyle(styles.crosshair);
-                var p_coords = ([Utilities.hour2degree(state.ra_selected), state.de_selected]);
-                var t_coords = ([Utilities.hour2degree(state_mnt1.ra), state_mnt1.dec]);
-                // Limit selectable regions to coordinates on the map with Celestial.clip().
-                if (Celestial.clip(p_coords)) {
-                    Celestial.Canvas.symbol()
-                    .type("marker")
-                    .size(420)
-                    .position(Celestial.mapProjection(p_coords))(Celestial.context);
-                }
-                Celestial.Canvas.symbol()
-                    .type("cross-circle")
-                    .size(220)
-                    .position(Celestial.mapProjection(t_coords))(Celestial.context);
-                Celestial.context.stroke();
-        }});
-    }
-
-    function mapresize() {
-        let width = $('#view-size-helper').width();
-        let height = $('#view-size-helper').height();
-        let dim = width < height ? width:height;
-        let marginleft = 0, margintop = 0;
-        if (width < height) {
-            margintop = (height - width) / 2;
-        } else {
-            marginleft = (width - height) / 2;
-        }
-        // map resize takes a single dimention (width) and creates a square canvas
-        $('#celestial-map').css({"margin-left": ""+marginleft.toString() + "px"});
-        $('#celestial-map').css({"margin-top": ""+margintop.toString() + "px"});
-        Celestial.resize({ width: dim });
-    }
-
     /* NOTE: lat-lon temporary fix with hardcoded value. Get these from state. */
     var lat = 34;//$('#static-state').data('lat');
     var lon = -119;//$('#static-state').data('lon');
@@ -276,7 +32,7 @@ function newSkyMap() {
         container: "celestial-map",   // ID of parent element, e.g. div
         datapath: "static/mapdata",  // Path/URL to data files, empty = subfolder 'data'
         stars: {
-            show: true,    // Show stars
+            show: false,    // Show stars
             limit: 3,      // Show only stars brighter than limit magnitude
             colors: true,  // Show stars in spectral colors, if not use "color"
             style: { fill: "#ffffff", opacity: 1 }, // Default style for stars
@@ -389,6 +145,349 @@ function newSkyMap() {
             opacity: 0.4
             }
         };
+
+    var data = [];
+
+    var styles = {
+
+        point: {
+            stroke: "rgba(243,156,18,1)",
+            width: 1,
+        },
+        galaxy: {
+            fill: "rgba(231,76,60,0.8)",
+            width: 1,
+            opacity: 0.5,
+            namestyle: { fill: "rgb(231,76,60)", font: "9px Helvetica, Arial, serif", align: "left", baseline: "top" }
+        },
+        nebula: {
+            shape: "diamond",
+            fill: "rgba(243,156,18,1)",
+            width: 2,
+            opacity: 0.8,
+            namestyle: { fill: "rgba(245,176,65,1)", font: "9px Helvetica, Arial, serif", align: "left", baseline: "top" }
+        },
+        globular_cluster: {
+            opacity: 1,
+            stroke: "rgba(72,201,176,1)",
+            width: 1,
+            namestyle: { fill: "rgba(72,201,176,1)", font: "9px Helvetica, Arial, serif", align: "left", baseline: "top" }
+        },
+        open_cluster: {
+            stroke: "rgba(142,68,173)",
+            width: 1,
+            namestyle: { fill: "rgb(142,68,173)", font: "9px Helvetica, Arial, serif", align: "left", baseline: "top" }
+        },
+        star: {
+            namestyle: { fill: "#ddddbb", font: "9px Georgia, Times, 'Times Roman', serif", align: "left", baseline: "top" },
+            fill: '#ffffff',
+            opacity: 1
+        },
+        crosshair: {
+            width: 1.5,
+            //stroke:"#e74c3c"
+            stroke: '#df2437'
+            //stroke: "#48c9b0"
+        }
+    };
+
+    //b-v color index to rgb color value scale
+    var bvcolor =
+        d3.scale.quantize().domain([3.347, -0.335]) //main sequence <= 1.7
+        .range(['#ff4700', '#ff4b00', '#ff4f00', '#ff5300', '#ff5600', '#ff5900', '#ff5b00', '#ff5d00', '#ff6000', '#ff6300', '#ff6500', '#ff6700', '#ff6900', '#ff6b00', '#ff6d00', '#ff7000', '#ff7300', '#ff7500', '#ff7800', '#ff7a00', '#ff7c00', '#ff7e00', '#ff8100', '#ff8300', '#ff8506', '#ff870a', '#ff8912', '#ff8b1a', '#ff8e21', '#ff9127', '#ff932c', '#ff9631', '#ff9836', '#ff9a3c', '#ff9d3f', '#ffa148', '#ffa34b', '#ffa54f', '#ffa753', '#ffa957', '#ffab5a', '#ffad5e', '#ffb165', '#ffb269', '#ffb46b', '#ffb872', '#ffb975', '#ffbb78', '#ffbe7e', '#ffc184', '#ffc489', '#ffc78f', '#ffc892', '#ffc994', '#ffcc99', '#ffce9f', '#ffd1a3', '#ffd3a8', '#ffd5ad', '#ffd7b1', '#ffd9b6', '#ffdbba', '#ffddbe', '#ffdfc2', '#ffe1c6', '#ffe3ca', '#ffe4ce', '#ffe8d5', '#ffe9d9', '#ffebdc', '#ffece0', '#ffefe6', '#fff0e9', '#fff2ec', '#fff4f2', '#fff5f5', '#fff6f8', '#fff9fd', '#fef9ff', '#f9f6ff', '#f6f4ff', '#f3f2ff', '#eff0ff', '#ebeeff', '#e9edff', '#e6ebff', '#e3e9ff', '#e0e7ff', '#dee6ff', '#dce5ff', '#d9e3ff', '#d7e2ff', '#d3e0ff', '#c9d9ff', '#bfd3ff', '#b7ceff', '#afc9ff', '#a9c5ff', '#a4c2ff', '#9fbfff', '#9bbcff']);
+    
+    starbase = config.stars.size;
+    starexp = config.stars.exponent;
+    adapt = 1;
+    function starSize(d) {
+      var mag = d.properties.mag;
+      if (mag === null) return 0.1;
+      var r = starbase * adapt * Math.exp(starexp * (mag + 2));
+      return Math.max(r, 0.1);
+    }
+
+    var spectral_bv = {
+        'O5': -0.33,
+        'O9': -0.31,
+        'B0': -0.30,
+        'B2': -0.24,
+        'B5': -0.17,
+        'B8': -0.11,
+        'A0': -0.02,
+        'A2': 0.05,
+        'A5': 0.15,
+        'F0': 0.30,
+        'F2': 0.35,
+        'F5': 0.44,
+        'F8': 0.52,
+        'G0': 0.58,
+        'G2': 0.63,
+        'G5': 0.68,
+        'G8': 0.74,
+        'K0': 0.81,
+        'K2': 0.91,
+        'K5': 1.15,
+        'M0': 1.40,
+        'M2': 1.49,
+        'M5': 1.64
+    };
+    var nebula = ['Pl','Di','Bn','Dn', 'Sn'];
+    var galaxies = ['Cg','Sp','Ba','Ir','El','Ln','Px','Sx'];
+    var stars = ['Ds', '**', 'star'];
+
+    var default_filter = {
+        dso_types: ['As','MW','Oc','Gc','Pl','Di','Bn','Dn','Sn','Cg','Sp','Ba','Ir','El','Ln','Px','Sx'],
+        star_types: ['star','Ds','**'],
+        dso_magnitudes: [-50, 50],
+        stellar_magnitudes: [-50,2.5]
+    };
+
+    // p is for selected location, t is for telescope location.
+    function initializePointer() {
+
+        var pointers = {
+            "type":"FeatureCollection",
+            "features":[
+                {"type":"Feature",
+                "id":"pointers",
+                "geometry": {
+                    "type":"Point"
+                },
+                "style": {
+                    "stroke-width":"0.5",
+                    "stroke":"#e74c3c"
+                }}
+            ]
+        };
+
+        //Celestial.clear();
+        Celestial.add({type:"Point", callback: function(error, json) {
+            if (error) return console.warn(error);
+            var pointer_data = Celestial.getData(pointers, config.transform);
+            Celestial.container.selectAll(".pointers")
+                .data(pointer_data.features)
+                .enter().append("path")
+                .attr("class", "point");
+            Celestial.redraw();
+        }, redraw: function() {
+            Celestial.container.selectAll(".point").each(function(d) {
+                Celestial.setStyle(style.crosshair_style);
+                var p_coords = ([Utilities.hour2degree(state.ra_selected), state.de_selected]);
+                var t_coords = ([Utilities.hour2degree(state_mnt1.ra), state_mnt1.dec]);
+                // Limit selectable regions to coordinates on the map with Celestial.clip().
+                if (Celestial.clip(p_coords)) {
+                    p_coords = Celestial.mapProjection(p_coords);
+                    //Celestial.Canvas.symbol()
+                    //.type("marker")
+                    //.size(420)
+                    //.position(Celestial.mapProjection(p_coords))(Celestial.context);
+                    r = 15;
+                    Celestial.context.beginPath();
+                    Celestial.context.moveTo(p_coords[0], p_coords[1] - r);
+                    Celestial.context.lineTo(p_coords[0], p_coords[1] + r);
+                    Celestial.context.moveTo(p_coords[0] - r, p_coords[1]);
+                    Celestial.context.lineTo(p_coords[0] + r, p_coords[1]);
+                    Celestial.context.closePath();
+                    Celestial.context.stroke();
+                }
+                Celestial.Canvas.symbol()
+                    .type("cross-circle")
+                    .size(220)
+                    .position(Celestial.mapProjection(t_coords))(Celestial.context);
+                Celestial.context.stroke();
+            });
+        } });
+    }
+
+
+    function update_chart(filter = default_filter) {
+
+        // Returns false if an object should not be displayed; otherwise returns true.
+        function filterChart(object) {
+            type = object.properties.type;
+            mag = object.properties.mag;
+
+            if (filter.dso_types.indexOf(type) != -1 &&
+                filter.dso_magnitudes[0] <= mag &&
+                filter.dso_magnitudes[1] >= mag) {
+                    return true;
+                }
+
+            if (filter.star_types.indexOf(type) != -1 &&
+                filter.stellar_magnitudes[0] <= mag &&
+                filter.stellar_magnitudes[1] >= mag) {
+                    return true;
+                }
+
+            return false;
+        }
+
+
+        Celestial.clear();
+        Celestial.add({type:"json", file:"/static/mapdata/all_objects.json", callback: function(error,json) {
+            if (error) {return console.warn(error);}
+
+            var sky_objects = Celestial.getData(json, config.transform);
+
+            Celestial.container.selectAll(".custom_objects")
+                .data(sky_objects.features)
+                .enter().append("path")
+                .attr("class", "custom_obj");
+            Celestial.redraw();
+        }, redraw: function() {
+            Celestial.container.selectAll(".custom_obj").each(function (d) {
+                if (Celestial.clip(d.geometry.coordinates) && filterChart(d)) {
+                //if (true) {
+                    var pt = Celestial.mapProjection(d.geometry.coordinates),
+                        type = d.properties.type,
+                        mag = d.properties.mag,
+                        m = d.properties.messier;
+                        //size = d.properties.size;
+
+                    //Celestial.context.fillStyle = "#fff";
+                    if (stars.indexOf(type) !== -1) {
+                        starstyle = styles.star;
+                        Celestial.setStyle(starstyle)
+                        if (d.properties.spectral) {
+                            var bv = spectral_bv[d.properties.spectral.slice(0,2)];
+                            Celestial.context.fillStyle = bvcolor(bv);
+                        }
+                        r = starSize(d);
+                        Celestial.context.beginPath();
+                        Celestial.context.arc(pt[0], pt[1], r, 0, 2 * Math.PI);
+                        Celestial.context.closePath();
+                        Celestial.context.fill();
+                        if (mag < 1.5) {
+                            Celestial.setTextStyle(styles.star.namestyle);
+                            Celestial.context.fillText(d.properties.name, pt[0]+r, pt[1]-r);
+                        }
+                    }
+                    else if (galaxies.indexOf(type) !== -1) {
+                        styles.galaxy.opacity = Math.pow((3.0/mag),1.5)/2 + 0.5;
+                        Celestial.setStyle(styles.galaxy);
+                        var s = 9,
+                          r = s / Math.sqrt(3);
+                        Celestial.context.beginPath();
+                        Celestial.context.moveTo(pt[0], pt[1] - r);
+                        Celestial.context.lineTo(pt[0] + r, pt[1] + r);
+                        Celestial.context.lineTo(pt[0] - r, pt[1] + r);
+                        Celestial.context.closePath();
+                        Celestial.context.fill();
+
+                        if (mag < 8) {
+                            Celestial.setTextStyle(styles.galaxy.namestyle);
+                            Celestial.context.fillText('M'+m, pt[0]+r, pt[1]-r);
+                        }
+                    }
+                    else if (nebula.indexOf(type) !== -1) {
+                        styles.nebula.opacity = Math.pow((5.5/mag),2);
+                        Celestial.setStyle(styles.nebula);
+                        var s = 8,
+                          r = s / 1.5;
+                        Celestial.context.beginPath();
+                        Celestial.context.moveTo(pt[0], pt[1] - r);
+                        Celestial.context.lineTo(pt[0] + r, pt[1]);
+                        Celestial.context.lineTo(pt[0], pt[1] + r);
+                        Celestial.context.lineTo(pt[0] - r, pt[1]);
+                        Celestial.context.closePath();
+                        Celestial.context.fill();
+                        if (mag < 8) {
+                            Celestial.setTextStyle(styles.nebula.namestyle);
+                            Celestial.context.fillText('M'+m, pt[0]+r, pt[1]-r);
+                        }
+                    }
+                    else if (type == 'Gc') {
+                        styles.globular_cluster.opacity = Math.pow((5.5/mag),6);
+                        var s = 8,
+                          r = s / 1.5;
+                        Celestial.setStyle(styles.globular_cluster);
+                        Celestial.map(d)
+                        Celestial.context.beginPath();
+                        Celestial.context.arc(pt[0], pt[1], 3, 0, 2 * Math.PI);
+                        Celestial.context.closePath();
+                        Celestial.context.stroke();
+                        if (mag < 6) {
+                            Celestial.setTextStyle(styles.globular_cluster.namestyle);
+                            Celestial.context.fillText('M'+m, pt[0]+r, pt[1]-r);
+                        }
+                    }
+                    else if (type == 'Oc') {
+                        styles.open_cluster.opacity = Math.pow((4.5/mag),2)/2 + 0.7;
+                        Celestial.setStyle(styles.open_cluster);
+                        var s = 8,
+                          r = s / 1.5;
+                        Celestial.map(d)
+                        Celestial.context.beginPath();
+                        Celestial.context.arc(pt[0], pt[1], 3, 0, 2 * Math.PI);
+                        Celestial.context.closePath();
+                        Celestial.context.stroke();
+                        if (mag < 5) {
+                            Celestial.setTextStyle(styles.open_cluster.namestyle);
+                            Celestial.context.fillText('M'+m, pt[0]+r, pt[1]-r);
+                        }
+                    }
+                    else {
+                        Celestial.setStyle(styles.point);
+                        Celestial.map(d)
+                        Celestial.context.beginPath();
+                        Celestial.context.arc(pt[0], pt[1], 5, 0, 2 * Math.PI);
+                        Celestial.context.closePath();
+                        Celestial.context.stroke();
+                    }
+                }
+            });
+                // This retains the crosshairs when redrawing with different filters.
+                // However, crosshairs are updated by themselves so an entire repaint is avoided.
+                Celestial.setStyle(styles.crosshair);
+                var p_coords = ([Utilities.hour2degree(state.ra_selected), state.de_selected]);
+                var t_coords = ([Utilities.hour2degree(state_mnt1.ra), state_mnt1.dec]);
+                // Limit selectable regions to coordinates on the map with Celestial.clip().
+                if (Celestial.clip(p_coords)) {
+                    //Celestial.Canvas.symbol()
+                    //.type("marker")
+                    //.size(420)
+                    //.position(Celestial.mapProjection(p_coords))(Celestial.context);
+
+                    p_coords = Celestial.mapProjection(p_coords);
+                    r = 18;
+                    r2 = 4;
+                    Celestial.context.beginPath();
+                    Celestial.context.moveTo(p_coords[0], p_coords[1] - r);
+                    Celestial.context.lineTo(p_coords[0], p_coords[1] - r2);
+                    Celestial.context.moveTo(p_coords[0], p_coords[1] + r);
+                    Celestial.context.lineTo(p_coords[0], p_coords[1] + r2);
+                    Celestial.context.moveTo(p_coords[0] - r, p_coords[1]);
+                    Celestial.context.lineTo(p_coords[0] - r2, p_coords[1]);
+                    Celestial.context.moveTo(p_coords[0] + r, p_coords[1]);
+                    Celestial.context.lineTo(p_coords[0] + r2, p_coords[1]);
+                    Celestial.context.closePath();
+                    Celestial.context.stroke();
+                }
+                Celestial.Canvas.symbol()
+                    .type("cross-circle")
+                    .size(220)
+                    .position(Celestial.mapProjection(t_coords))(Celestial.context);
+                Celestial.context.stroke();
+        }});
+    }
+
+    function mapresize() {
+        let width = $('#view-size-helper').width();
+        let height = $('#view-size-helper').height();
+        let dim = width < height ? width:height;
+        let marginleft = 0, margintop = 0;
+        if (width < height) {
+            margintop = (height - width) / 2;
+        } else {
+            marginleft = (width - height) / 2;
+        }
+        // map resize takes a single dimention (width) and creates a square canvas
+        $('#celestial-map').css({"margin-left": ""+marginleft.toString() + "px"});
+        $('#celestial-map').css({"margin-top": ""+margintop.toString() + "px"});
+        Celestial.resize({ width: dim });
+    }
+
+
 
     function update_pointer(ra, de) {
         initializePointer();
