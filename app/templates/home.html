@@ -411,47 +411,52 @@
                         <div id="object-filters" class="container">
                             <form id='filter_form' method="POST" action="/apply_table_filters">
 
-                                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="stars">
-                                <span class="mdl-switch__label">Stars</span>
-                                {{ filter.stars(class_="mdl-switch__input") }}
-                                </label>
+                                <div>
+                                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="stars">
+                                    <span class="mdl-switch__label">Stars</span>
+                                    {{ filter.stars(class_="mdl-switch__input") }}
+                                    </label>
 
-                                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="double_stars">
-                                <span class="mdl-switch__label">Double Stars</span>
-                                {{ filter.double_stars(class_="mdl-switch__input") }}
-                                </label>
-
-                                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="galaxies">
-                                <span class="mdl-switch__label">Galaxies</span>
-                                {{ filter.galaxies(class_="mdl-switch__input") }}
-                                </label>
-
-                                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="nebula">
-                                <span class="mdl-switch__label">Nebula</span>
-                                {{ filter.nebula(class_="mdl-switch__input") }}
-                                </label>
-
-                                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="globular_clusters">
-                                <span class="mdl-switch__label">Globular Clusters</span>
-                                {{ filter.globular_clusters(class_="mdl-switch__input") }}
-                                </label>
-
-                                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="open_clusters">
-                                <span class="mdl-switch__label">Open Clusters</span>
-                                {{ filter.open_clusters(class_="mdl-switch__input") }}
-                                </label>
-
-                                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="everything_else">
-                                <span class="mdl-switch__label">Everything Else</span>
-                                {{ filter.everything_else(class_="mdl-switch__input") }}
-                                </label>
+                                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="double_stars">
+                                    <span class="mdl-switch__label">Double Stars</span>
+                                    {{ filter.double_stars(class_="mdl-switch__input") }}
+                                    </label>
+                                </div>
 
                                 <div>
-                                {{ filter.dso_magnitude_min.label }} {{ filter.dso_magnitude_min() }} 
-                                {{ filter.dso_magnitude_max.label }} {{ filter.dso_magnitude_max() }} 
-                                
-                                {{ filter.star_magnitude_min.label }} {{ filter.star_magnitude_min() }} <br>
-                                {{ filter.star_magnitude_max.label }} {{ filter.star_magnitude_max() }} <br>
+                                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="galaxies">
+                                    <span class="mdl-switch__label">Galaxies</span>
+                                    {{ filter.galaxies(class_="mdl-switch__input") }}
+                                    </label>
+
+                                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="nebula">
+                                    <span class="mdl-switch__label">Nebula</span>
+                                    {{ filter.nebula(class_="mdl-switch__input") }}
+                                    </label>
+
+                                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="globular_clusters">
+                                    <span class="mdl-switch__label">Globular Clusters</span>
+                                    {{ filter.globular_clusters(class_="mdl-switch__input") }}
+                                    </label>
+
+                                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="open_clusters">
+                                    <span class="mdl-switch__label">Open Clusters</span>
+                                    {{ filter.open_clusters(class_="mdl-switch__input") }}
+                                    </label>
+
+                                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="everything_else">
+                                    <span class="mdl-switch__label">Everything Else</span>
+                                    {{ filter.everything_else(class_="mdl-switch__input") }}
+                                    </label>
+                                </div>
+
+                                <div>
+                                    <span>{{ filter.star_magnitude_min.label }} {{ filter.star_magnitude_min() }}</span>
+                                    <span>{{ filter.star_magnitude_max.label }} {{ filter.star_magnitude_max() }}</span>
+                                </div>
+                                <div>
+                                    <span>{{ filter.dso_magnitude_min.label }} {{ filter.dso_magnitude_min() }}</span> 
+                                    <span>{{ filter.dso_magnitude_max.label }} {{ filter.dso_magnitude_max() }}</span>
                                 </div>
                             </form>
                         </div>

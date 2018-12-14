@@ -38,7 +38,7 @@ $(document).ready(function(){
         //paging: false,
         compact: true,
         responsive: true,
-        scrollY: "calc(75vh - 500px)",
+        scrollY: "calc(20vh)",
         //scroller: true,
         scroller: { loadingIndicator: true },
         select: true,
