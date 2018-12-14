@@ -14,7 +14,7 @@ from datatables import ColumnDT, DataTables
 from app.models import User, Dso, ThingsInSpace
 
 expire_time = 120 #seconds
-live_commands = False
+live_commands = True
 
 ####################################################################################
 
@@ -66,8 +66,8 @@ class ObjectFilter(FlaskForm):
     galaxies = BooleanField('galaxies', default=1)
     nebula = BooleanField('nebula', default=1)
 
-    stars = BooleanField('stars', default=0)
-    double_stars = BooleanField('double stars', default=0)
+    stars = BooleanField('stars', default=1)
+    double_stars = BooleanField('double stars', default=1)
 
     dso_magnitude_min = FloatField('DSOs no brighter than: ')
     dso_magnitude_max = FloatField('DSOs no fainter than: ')
@@ -297,13 +297,13 @@ def tablelookup():
         ColumnDT(ThingsInSpace.names),
     ]
 
-    star_types = {} # hide stars by default
+    star_types = all_stars # default
     try:
         star_types = session['star_type_filter']
         print(star_types)
     except: pass
 
-    stellar_magnitudes = [-50,50] # defualt
+    stellar_magnitudes = [-50,2.5] # default
     try:
         stellar_magnitudes = session['stellar_magnitudes']
         print(stellar_magnitudes)
@@ -453,7 +453,40 @@ def recreate_database():
     print(f'Size of database: {db.session.query(ThingsInSpace).count()}')
     return 'success'
 
+@app.route('/merge_geojson')
+@login_required
+def merge_geojson():
+    
+    files = []
+    directory = 'app/static/mapdata/'
+    files.append(directory+'doublesGEO.json')
+    files.append(directory+'threehundredstarsGEO.json')
+    files.append(directory+'messierGEO.json')
 
+    features = []
+
+    for f in files:
+        with open(f,'r') as infile:
+            data = json.load(infile)
+            features += data["features"] 
+
+    print(len(features))
+
+    out = {
+        "type": "FeatureCollection",
+        "features": features
+    }
+
+    # Remove 'NaN', which is invalid json
+    out_json = json.dumps(out)
+    regex = re.compile(r'\bnan\b',flags=re.IGNORECASE)
+    out_json = re.sub(regex, ' null ', out_json)
+
+    with open(directory+'all_objects.json', 'w') as outfile:
+        outfile.write(out_json)
+
+    return 'success'
+    
 
 
 #############################################

@@ -215,6 +215,10 @@ a {
     display: flex;
     overflow: hidden;
 }
+/* Sky chart */
+#viewtab3 {
+    margin: 0px;
+}
 #viewtab5.current {
     display: grid;
     grid-template-columns: 55% 15% 10% 10%;
