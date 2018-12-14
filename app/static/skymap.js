@@ -184,8 +184,9 @@ function newSkyMap() {
             opacity: 1
         },
         crosshair: {
-            width: 1,
-            stroke:"#e74c3c"
+            width: 1.5,
+            //stroke:"#e74c3c"
+            stroke: '#df2437'
             //stroke: "#48c9b0"
         }
     };
@@ -238,7 +239,7 @@ function newSkyMap() {
         dso_types: ['As','MW','Oc','Gc','Pl','Di','Bn','Dn','Sn','Cg','Sp','Ba','Ir','El','Ln','Px','Sx'],
         star_types: ['star','Ds','**'],
         dso_magnitudes: [-50, 50],
-        stellar_magnitudes: [-50,50]
+        stellar_magnitudes: [-50,2.5]
     };
 
     // p is for selected location, t is for telescope location.
@@ -275,10 +276,19 @@ function newSkyMap() {
                 var t_coords = ([Utilities.hour2degree(state_mnt1.ra), state_mnt1.dec]);
                 // Limit selectable regions to coordinates on the map with Celestial.clip().
                 if (Celestial.clip(p_coords)) {
-                    Celestial.Canvas.symbol()
-                    .type("marker")
-                    .size(420)
-                    .position(Celestial.mapProjection(p_coords))(Celestial.context);
+                    p_coords = Celestial.mapProjection(p_coords);
+                    //Celestial.Canvas.symbol()
+                    //.type("marker")
+                    //.size(420)
+                    //.position(Celestial.mapProjection(p_coords))(Celestial.context);
+                    r = 15;
+                    Celestial.context.beginPath();
+                    Celestial.context.moveTo(p_coords[0], p_coords[1] - r);
+                    Celestial.context.lineTo(p_coords[0], p_coords[1] + r);
+                    Celestial.context.moveTo(p_coords[0] - r, p_coords[1]);
+                    Celestial.context.lineTo(p_coords[0] + r, p_coords[1]);
+                    Celestial.context.closePath();
+                    Celestial.context.stroke();
                 }
                 Celestial.Canvas.symbol()
                     .type("cross-circle")
@@ -335,7 +345,24 @@ function newSkyMap() {
                         //size = d.properties.size;
 
                     //Celestial.context.fillStyle = "#fff";
-                    if (galaxies.indexOf(type) !== -1) {
+                    if (stars.indexOf(type) !== -1) {
+                        starstyle = styles.star;
+                        Celestial.setStyle(starstyle)
+                        if (d.properties.spectral) {
+                            var bv = spectral_bv[d.properties.spectral.slice(0,2)];
+                            Celestial.context.fillStyle = bvcolor(bv);
+                        }
+                        r = starSize(d);
+                        Celestial.context.beginPath();
+                        Celestial.context.arc(pt[0], pt[1], r, 0, 2 * Math.PI);
+                        Celestial.context.closePath();
+                        Celestial.context.fill();
+                        if (mag < 1.5) {
+                            Celestial.setTextStyle(styles.star.namestyle);
+                            Celestial.context.fillText(d.properties.name, pt[0]+r, pt[1]-r);
+                        }
+                    }
+                    else if (galaxies.indexOf(type) !== -1) {
                         styles.galaxy.opacity = Math.pow((3.0/mag),1.5)/2 + 0.5;
                         Celestial.setStyle(styles.galaxy);
                         var s = 9,
@@ -399,23 +426,6 @@ function newSkyMap() {
                             Celestial.context.fillText('M'+m, pt[0]+r, pt[1]-r);
                         }
                     }
-                    else if (stars.indexOf(type) !== -1) {
-                        starstyle = styles.star;
-                        Celestial.setStyle(starstyle)
-                        if (d.properties.spectral) {
-                            var bv = spectral_bv[d.properties.spectral.slice(0,2)];
-                            Celestial.context.fillStyle = bvcolor(bv);
-                        }
-                        r = starSize(d);
-                        Celestial.context.beginPath();
-                        Celestial.context.arc(pt[0], pt[1], r, 0, 2 * Math.PI);
-                        Celestial.context.closePath();
-                        Celestial.context.fill();
-                        if (mag < 1.5) {
-                            Celestial.setTextStyle(styles.star.namestyle);
-                            Celestial.context.fillText(d.properties.name, pt[0]+r, pt[1]-r);
-                        }
-                    }
                     else {
                         Celestial.setStyle(styles.point);
                         Celestial.map(d)
@@ -433,10 +443,25 @@ function newSkyMap() {
                 var t_coords = ([Utilities.hour2degree(state_mnt1.ra), state_mnt1.dec]);
                 // Limit selectable regions to coordinates on the map with Celestial.clip().
                 if (Celestial.clip(p_coords)) {
-                    Celestial.Canvas.symbol()
-                    .type("marker")
-                    .size(420)
-                    .position(Celestial.mapProjection(p_coords))(Celestial.context);
+                    //Celestial.Canvas.symbol()
+                    //.type("marker")
+                    //.size(420)
+                    //.position(Celestial.mapProjection(p_coords))(Celestial.context);
+
+                    p_coords = Celestial.mapProjection(p_coords);
+                    r = 18;
+                    r2 = 4;
+                    Celestial.context.beginPath();
+                    Celestial.context.moveTo(p_coords[0], p_coords[1] - r);
+                    Celestial.context.lineTo(p_coords[0], p_coords[1] - r2);
+                    Celestial.context.moveTo(p_coords[0], p_coords[1] + r);
+                    Celestial.context.lineTo(p_coords[0], p_coords[1] + r2);
+                    Celestial.context.moveTo(p_coords[0] - r, p_coords[1]);
+                    Celestial.context.lineTo(p_coords[0] - r2, p_coords[1]);
+                    Celestial.context.moveTo(p_coords[0] + r, p_coords[1]);
+                    Celestial.context.lineTo(p_coords[0] + r2, p_coords[1]);
+                    Celestial.context.closePath();
+                    Celestial.context.stroke();
                 }
                 Celestial.Canvas.symbol()
                     .type("cross-circle")

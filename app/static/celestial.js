@@ -84,7 +84,7 @@
     setClip(proj.clip);
 
     d3.select(window).on('resize', resize);
-    d3.select(par).on('dblclick', function () { zoomBy(1.5625); return false; });
+    d3.select(par).on('dblclick', function () { /*zoomBy(1.111);*/ return false; });
 
 
 

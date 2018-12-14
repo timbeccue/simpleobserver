@@ -72,7 +72,7 @@ class ObjectFilter(FlaskForm):
     dso_magnitude_min = FloatField('DSOs no brighter than: ')
     dso_magnitude_max = FloatField('DSOs no fainter than: ')
     star_magnitude_min = FloatField('Stars no brighter than: ')
-    star_magnitude_max = FloatField('Stars no fainter than: ')
+    star_magnitude_max = FloatField('Stars no fainter than: ', default=2.5)
 
     everything_else = BooleanField('everything else', default=1)
 
