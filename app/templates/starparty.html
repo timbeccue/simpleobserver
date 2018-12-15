@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+<head>
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.amber-red.min.css" />
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"> </script>
+
+
+    <div id="static-state" data-lat={{state.lat}} data-lon={{state.lon}}></div>
+
+</head>
+<body>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        #view-size-helper {
+            width: 100vmin;
+            height: 100vmin;
+            border: #f00, 3px, solid;
+            flex: 0;
+            align-self: stretch;
+        }
+        #object-table {
+            flex: 1;
+
+        }
+        #object-filters {
+            flex: 2;
+        }
+
+        /* Mobile Styles */
+        @media screen and (orientation: portrait) {
+
+            body {
+                background-color: #222222;
+
+                display: flex;
+                flex-direction: column;
+                
+            }
+
+        }
+
+        /* Tablet Styles */
+        @media screen and (orientation: landscape) {
+            body {
+                background-color: #F5CF8E;
+
+                display: flex;
+                flex-direction: row;
+            }
+        }
+
+
+
+
+
+    </style>
+
+    <div id="view-size-helper">
+        <div class="container" id="celestial-map"></div>
+        <div class="container" id="celestial-form" style="display:none;"></div>
+    </div>
+
+    <div id="object-table">
+        <table id="targets-table" class="row-border">
+            <thead>
+                <tr>
+                    <td>M</td>
+                    <td>Type</td>
+                    <td>Mag</td>
+                    <td>Ra</td>
+                    <td>De</td>
+                    <td>Names</td>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div id="object-filters" class="container">
+        <form id='filter_form' method="POST" action="/apply_table_filters">
+
+            <div>
+                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="stars">
+                <span class="mdl-switch__label">Stars</span>
+                {{ filter.stars(class_="mdl-switch__input") }}
+                </label>
+
+                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="double_stars">
+                <span class="mdl-switch__label">Double Stars</span>
+                {{ filter.double_stars(class_="mdl-switch__input") }}
+                </label>
+            </div>
+
+            <div>
+                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="galaxies">
+                <span class="mdl-switch__label">Galaxies</span>
+                {{ filter.galaxies(class_="mdl-switch__input") }}
+                </label>
+
+                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="nebula">
+                <span class="mdl-switch__label">Nebula</span>
+                {{ filter.nebula(class_="mdl-switch__input") }}
+                </label>
+
+                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="globular_clusters">
+                <span class="mdl-switch__label">Globular Clusters</span>
+                {{ filter.globular_clusters(class_="mdl-switch__input") }}
+                </label>
+
+                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="open_clusters">
+                <span class="mdl-switch__label">Open Clusters</span>
+                {{ filter.open_clusters(class_="mdl-switch__input") }}
+                </label>
+
+                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="everything_else">
+                <span class="mdl-switch__label">Everything Else</span>
+                {{ filter.everything_else(class_="mdl-switch__input") }}
+                </label>
+            </div>
+
+            <div>
+                <span>{{ filter.star_magnitude_min.label }} {{ filter.star_magnitude_min() }}</span>
+                <span>{{ filter.star_magnitude_max.label }} {{ filter.star_magnitude_max() }}</span>
+            </div>
+            <div>
+                <span>{{ filter.dso_magnitude_min.label }} {{ filter.dso_magnitude_min() }}</span> 
+                <span>{{ filter.dso_magnitude_max.label }} {{ filter.dso_magnitude_max() }}</span>
+            </div>
+        </form>
+    </div>
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="https://ofrohn.github.io/celestial.css">
+<link rel="stylesheet" type="text/css" href="static/css/datatables.css">
+
+<script type="text/javascript" src="static/utilities.js"></script>
+
+<script type="text/javascript" src="static/d3.js"></script>
+<script type="text/javascript" src="static/d3.geo.projection.min.js"></script>
+<script type="text/javascript" src="static/celestial.js"></script>
+<script type="text/javascript" src="static/skymap.js"></script>
+<script src="https://d3js.org/d3-drag.v1.min.js"></script>
+
+<script type="text/javascript" src="static/userinterface.js"></script>
+<script type="text/javascript" src="static/table.js"></script>
+<script type="text/javascript" src="static/ajax_submit.js"></script>
+<script type="text/javascript" src="static/receive_state.js"></script>
+</body>

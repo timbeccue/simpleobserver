@@ -500,6 +500,10 @@ def merge_geojson():
 def home():
     return render_template('home.html', state=ptr_state, loginform=LoginForm(), cameraform=CameraForm(), filter=ObjectFilter())
 
+@app.route('/starparty', methods=['GET', 'POST'])
+def starparty():
+    return render_template('starparty.html', state=ptr_state, filter=ObjectFilter())
+
 @app.route('/textcommand', methods=['GET', 'POST'])
 @login_required
 def textcommand():
