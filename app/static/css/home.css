@@ -78,8 +78,9 @@ body {
     height: 100px;
     width: 100vw;
 }
-.header h1 {
-    font: 48px/1 'Oswald', sans-serif;
+.header .section-wrapper h1 {
+    color: blue;
+    font: 36px/1 'Oswald', sans-serif;
     font-weight: lighter;
     padding: 25px;
     margin-left: 50px;
@@ -403,7 +404,7 @@ a {
 
 
 /* Scroll Icons */
-.scroll-icons .scroll-button {
+.scroll-icons .scroll-button, .scroll-button-false {
     background-color: rgb(90, 1, 1);
     border: rgb(121, 0, 0) 3px solid;
     border-right: none;

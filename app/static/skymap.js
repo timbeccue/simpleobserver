@@ -10,6 +10,7 @@ function newSkyMap() {
     var lat = 34;//$('#static-state').data('lat');
     var lon = -119;//$('#static-state').data('lon');
 
+    // Main configuration object
     var config = {
         width: 0,     // Default width, 0 = full parent width; height is determined by projection
         projection: "stereographic",  // Map projection used: airy, aitoff, armadillo, august, azimuthalEqualArea, azimuthalEquidistant, baker, berghaus, boggs, bonne, bromley, collignon, craig, craster, cylindricalEqualArea, cylindricalStereographic, eckert1, eckert2, eckert3, eckert4, eckert5, eckert6, eisenlohr, equirectangular, fahey, foucaut, ginzburg4, ginzburg5, ginzburg6, ginzburg8, ginzburg9, gringorten, hammer, hatano, healpix, hill, homolosine, kavrayskiy7, lagrange, larrivee, laskowski, loximuthal, mercator, miller, mollweide, mtFlatPolarParabolic, mtFlatPolarQuartic, mtFlatPolarSinusoidal, naturalEarth, nellHammer, orthographic, patterson, polyconic, rectangularPolyconic, robinson, sinusoidal, stereographic, times, twoPointEquidistant, vanDerGrinten, vanDerGrinten2, vanDerGrinten3, vanDerGrinten4, wagner4, wagner6, wagner7, wiechel, winkel3
@@ -146,10 +147,48 @@ function newSkyMap() {
             }
         };
 
-    var data = [];
+    // chart state variables
+    var night_colors_status = "off";
 
-    var styles = {
+    // Object-type data
+    var spectral_bv = {
+        'O5': -0.33,
+        'O9': -0.31,
+        'B0': -0.30,
+        'B2': -0.24,
+        'B5': -0.17,
+        'B8': -0.11,
+        'A0': -0.02,
+        'A2': 0.05,
+        'A5': 0.15,
+        'F0': 0.30,
+        'F2': 0.35,
+        'F5': 0.44,
+        'F8': 0.52,
+        'G0': 0.58,
+        'G2': 0.63,
+        'G5': 0.68,
+        'G8': 0.74,
+        'K0': 0.81,
+        'K2': 0.91,
+        'K5': 1.15,
+        'M0': 1.40,
+        'M2': 1.49,
+        'M5': 1.64
+    };
+    var nebula = ['Pl','Di','Bn','Dn', 'Sn'];
+    var galaxies = ['Cg','Sp','Ba','Ir','El','Ln','Px','Sx'];
+    var stars = ['Ds', '**', 'star'];
+    var default_filter = {
+        dso_types: ['As','MW','Oc','Gc','Pl','Di','Bn','Dn','Sn','Cg','Sp','Ba','Ir','El','Ln','Px','Sx'],
+        star_types: ['star','Ds','**'],
+        dso_magnitudes: [-50, 50],
+        stellar_magnitudes: [-50,2.5]
+    };
 
+    // Object style data
+    var default_object_styles = {
+        name: "default",
         point: {
             stroke: "rgba(243,156,18,1)",
             width: 1,
@@ -190,57 +229,73 @@ function newSkyMap() {
             //stroke: "#48c9b0"
         }
     };
-
+    var red_obj_styles = {
+        name: "red",
+        point: {
+            stroke: "rgba(243,40,18,1)",
+            width: 1,
+        },
+        galaxy: {
+            fill: "rgba(231,76,60,0.8)",
+            width: 1,
+            opacity: 0.5,
+            namestyle: { fill: "rgb(231,76,60)", font: "14px Helvetica, Arial, serif", align: "left", baseline: "top" }
+        },
+        nebula: {
+            shape: "diamond",
+            fill: "rgba(194,24,7,1)",
+            width: 2,
+            opacity: 0.8,
+            namestyle: { fill: "rgba(194,24,7,1)", font: "14px Helvetica, Arial, serif", align: "left", baseline: "top" }
+        },
+        globular_cluster: {
+            opacity: 1,
+            stroke: "rgba(237,41,57,1)",
+            width: 1,
+            namestyle: { fill: "rgba(237,41,57,1)", font: "14px Helvetica, Arial, serif", align: "left", baseline: "top" }
+        },
+        open_cluster: {
+            stroke: "rgba(150,0,24,1)",
+            width: 1,
+            namestyle: { fill: "rgb(150,0,24,1)", font: "14px Helvetica, Arial, serif", align: "left", baseline: "top" }
+        },
+        star: {
+            namestyle: { fill: "#aa1111", font: "9px Georgia, Times, 'Times Roman', serif", align: "left", baseline: "top" },
+            fill: '#aa1111',
+            opacity: 1
+        },
+        crosshair: {
+            width: 1.5,
+            //stroke:"#e74c3c"
+            stroke: '#df2437'
+            //stroke: "#48c9b0"
+        }
+    };
+    var red_chart_styles = {
+        background: { fill: "#000", stroke: "#200808", width: 2, opacity: 1 },
+        mw: { style: { fill: "#ff2222", opacity: 0.05 }},
+        lines: {
+            graticule: { show: true, stroke: "#cccccc", width: 0.3, opacity: 0.5,      // Show graticule lines
+            lon: {pos: ["center"], fill: "#a77", font: "10px Helvetica, Arial, sans-serif"},
+                    // grid values: "outline", "center", or [lon,...] specific position
+                lat: {pos: ["center"], fill: "#a77", font: "10px Helvetica, Arial, sans-serif"}},
+        }
+    };
     //b-v color index to rgb color value scale
     var bvcolor =
         d3.scale.quantize().domain([3.347, -0.335]) //main sequence <= 1.7
         .range(['#ff4700', '#ff4b00', '#ff4f00', '#ff5300', '#ff5600', '#ff5900', '#ff5b00', '#ff5d00', '#ff6000', '#ff6300', '#ff6500', '#ff6700', '#ff6900', '#ff6b00', '#ff6d00', '#ff7000', '#ff7300', '#ff7500', '#ff7800', '#ff7a00', '#ff7c00', '#ff7e00', '#ff8100', '#ff8300', '#ff8506', '#ff870a', '#ff8912', '#ff8b1a', '#ff8e21', '#ff9127', '#ff932c', '#ff9631', '#ff9836', '#ff9a3c', '#ff9d3f', '#ffa148', '#ffa34b', '#ffa54f', '#ffa753', '#ffa957', '#ffab5a', '#ffad5e', '#ffb165', '#ffb269', '#ffb46b', '#ffb872', '#ffb975', '#ffbb78', '#ffbe7e', '#ffc184', '#ffc489', '#ffc78f', '#ffc892', '#ffc994', '#ffcc99', '#ffce9f', '#ffd1a3', '#ffd3a8', '#ffd5ad', '#ffd7b1', '#ffd9b6', '#ffdbba', '#ffddbe', '#ffdfc2', '#ffe1c6', '#ffe3ca', '#ffe4ce', '#ffe8d5', '#ffe9d9', '#ffebdc', '#ffece0', '#ffefe6', '#fff0e9', '#fff2ec', '#fff4f2', '#fff5f5', '#fff6f8', '#fff9fd', '#fef9ff', '#f9f6ff', '#f6f4ff', '#f3f2ff', '#eff0ff', '#ebeeff', '#e9edff', '#e6ebff', '#e3e9ff', '#e0e7ff', '#dee6ff', '#dce5ff', '#d9e3ff', '#d7e2ff', '#d3e0ff', '#c9d9ff', '#bfd3ff', '#b7ceff', '#afc9ff', '#a9c5ff', '#a4c2ff', '#9fbfff', '#9bbcff']);
-    
-    starbase = config.stars.size;
-    starexp = config.stars.exponent;
-    adapt = 1;
+    var starbase = config.stars.size;
+    var starexp = config.stars.exponent;
     function starSize(d) {
       var mag = d.properties.mag;
       if (mag === null) return 0.1;
-      var r = starbase * adapt * Math.exp(starexp * (mag + 2));
+      var r = starbase * Math.exp(starexp * (mag + 2));
       return Math.max(r, 0.1);
     }
 
-    var spectral_bv = {
-        'O5': -0.33,
-        'O9': -0.31,
-        'B0': -0.30,
-        'B2': -0.24,
-        'B5': -0.17,
-        'B8': -0.11,
-        'A0': -0.02,
-        'A2': 0.05,
-        'A5': 0.15,
-        'F0': 0.30,
-        'F2': 0.35,
-        'F5': 0.44,
-        'F8': 0.52,
-        'G0': 0.58,
-        'G2': 0.63,
-        'G5': 0.68,
-        'G8': 0.74,
-        'K0': 0.81,
-        'K2': 0.91,
-        'K5': 1.15,
-        'M0': 1.40,
-        'M2': 1.49,
-        'M5': 1.64
-    };
-    var nebula = ['Pl','Di','Bn','Dn', 'Sn'];
-    var galaxies = ['Cg','Sp','Ba','Ir','El','Ln','Px','Sx'];
-    var stars = ['Ds', '**', 'star'];
 
-    var default_filter = {
-        dso_types: ['As','MW','Oc','Gc','Pl','Di','Bn','Dn','Sn','Cg','Sp','Ba','Ir','El','Ln','Px','Sx'],
-        star_types: ['star','Ds','**'],
-        dso_magnitudes: [-50, 50],
-        stellar_magnitudes: [-50,2.5]
-    };
+
 
     // p is for selected location, t is for telescope location.
     function initializePointer() {
@@ -299,7 +354,6 @@ function newSkyMap() {
         } });
     }
 
-
     function update_chart(filter = default_filter) {
 
         // Returns false if an object should not be displayed; otherwise returns true.
@@ -322,6 +376,14 @@ function newSkyMap() {
             return false;
         }
 
+        // Default to normal object symbols on sky chart, or red tones if requested.
+        var styles = default_object_styles;
+        if (night_colors_status == "on") {styles = red_obj_styles; }
+        else if (night_colors_status != "off") {
+            alert("Could not apply requested sky chart style. Reverting to default.");
+        }
+        console.log(night_colors_status);
+        console.log(styles.name);
 
         Celestial.clear();
         Celestial.add({type:"json", file:"/static/mapdata/all_objects.json", callback: function(error,json) {
@@ -348,11 +410,13 @@ function newSkyMap() {
                     if (stars.indexOf(type) !== -1) {
                         starstyle = styles.star;
                         Celestial.setStyle(starstyle)
-                        if (d.properties.spectral) {
+
+                        // Apply spectral star colors unless we're in red mode.
+                        if (d.properties.spectral && styles.name != "red") {
                             var bv = spectral_bv[d.properties.spectral.slice(0,2)];
                             Celestial.context.fillStyle = bvcolor(bv);
                         }
-                        r = starSize(d);
+                        var r = starSize(d);
                         Celestial.context.beginPath();
                         Celestial.context.arc(pt[0], pt[1], r, 0, 2 * Math.PI);
                         Celestial.context.closePath();
@@ -487,8 +551,6 @@ function newSkyMap() {
         Celestial.resize({ width: dim });
     }
 
-
-
     function update_pointer(ra, de) {
         initializePointer();
         //update_chart();
@@ -524,7 +586,6 @@ function newSkyMap() {
         }
     }
 
-
     function bestMatch(mouse) {
         var distance, candidate;
         var best = [Number.NEGATIVE_INFINITY,0];
@@ -555,12 +616,28 @@ function newSkyMap() {
         }
     }
 
+    function toggle_night_colors(color) {
+        var setting = color || night_colors_status;
+        if ( setting == "toggle" ) {setting = night_colors_status; }
+        if (setting == "off" || setting == "red") {
+            Celestial.apply(red_chart_styles);
+            night_colors_status = "on";
+            Table.submit_filter();
+        } else if (setting == "on" || setting == "dark") {
+            Celestial.apply(config); 
+            night_colors_status = "off";
+            Table.submit_filter();
+        } else {
+            alert("Error: color settings could not be changed.");
+        }
+
+    }
 
 
 
     /* Initialize the map */
     $('#views').ready( function() {
-        //initializePointer();
+        initializePointer();
         update_chart();
         Celestial.display(config);
         mapresize();
@@ -574,6 +651,9 @@ function newSkyMap() {
     // Periodically update map rotation.
     //setInterval(function() { Celestial.rotate({center: [Utilities.hour2degree(state_mnt1.tel_sid_time), lat, 0]}); }, 5000);
 
+
+    // Expose the following as public
+    var data = [];
     data.bestMatch = bestMatch;
     data.update_pointer = update_pointer;
     data.map_click = map_click;
@@ -581,6 +661,7 @@ function newSkyMap() {
     data.update_chart = update_chart;
     data.default_filter = default_filter;
     data.mapresize = mapresize;
+    data.toggle_night_colors = toggle_night_colors;
     return data;
 }
 

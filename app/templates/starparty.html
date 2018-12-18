@@ -8,11 +8,16 @@
     <script src="static/libraries/ResizeSensor.js"></script>
 
 
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"> </script>
     <link rel="stylesheet" type="text/css" href="static/css/starparty.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Used for resizing div. Not currently used. -->
+    <!--link rel="stylesheet" type="text/css" href="static/libraries/jquery-ui.min.css">
+    <script src="static/libraries/jquery-ui.min.js"></script-->
 
     <div id="static-state" data-lat={{state.lat}} data-lon={{state.lon}}></div>
 
@@ -21,27 +26,37 @@
 
     
     <div id="toggle-options">
-        <a id="homepage" href="/"><i class="material-icons md-36">home</i></a>
-        <div id="show-filters"><i class="material-icons md-36">toggle_off</i></div>
-        <div id="show-table"><i class="material-icons md-36">list</i></div>
+        <a id="homepage" href="/">
+            <i class="material-icons md-36">home</i>
+            <div class="mdl-tooltip" data-mdl-for="homepage">Home Page</div>
+        </a>
+        <div id="show-filters">
+            <i class="material-icons md-36">list</i>
+            <div class="mdl-tooltip" data-mdl-for="show-filters">Object Filters</div>
+        </div>
+        <div id="night-colors">
+            <i class="material-icons md-36">invert_colors</i>
+            <div class="mdl-tooltip" data-mdl-for="night-colors">Night Color Mode</div>
+        </div>
     </div>
 
     <div class="options">
-        <!--div id="object-table">
+        <div id="object-table">
             <table id="targets-table" class="row-border">
                 <thead>
                     <tr>
-                        <td>M</td>
-                        <td>Type</td>
-                        <td>Mag</td>
-                        <td>Ra</td>
-                        <td>De</td>
-                        <td>Names</td>
+                        <th class="all">M</th>
+                        <th class="all">Type</th>
+                        <th class="all">Mag</th>
+                        <th class="all">Ra</th>
+                        <th class="all">De</th>
+                        <th class="all">Names</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
             </table>
-        </div-->
+        </div>
+
         <div id="object-filters" class="container">
             <form id='filter_form' method="POST" action="/apply_table_filters">
 
@@ -113,9 +128,14 @@
             } else {
                 options.classList.add("open");
             }
-            var map_div = document.getElementById("view-size-helper");
+            //var map_div = document.getElementById("view-size-helper");
             //new ResizeSensor(map_div, SkyMap.mapresize);
         });
+
+        var night_colors = document.getElementById("night-colors");
+        night_colors.addEventListener("click", function() {
+            SkyMap.toggle_night_colors();
+        })
     </script>
 
 

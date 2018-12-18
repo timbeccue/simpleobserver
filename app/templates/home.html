@@ -4,6 +4,7 @@
     <!--link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"-->
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.amber-red.min.css" />
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
@@ -23,6 +24,7 @@
         <section class="header">
             <div class="section-wrapper">
                 <h1><a class="title-link" href=".">photon <b>ranch</b></a></h1>
+                
 
                 {% if current_user.is_anonymous %}
                 <form class='notloggedin' id="login" method="POST" action="/login">
@@ -530,13 +532,15 @@
         </section>
 
         <section class="scroll-icons">
-            <div class="scroll-button" data-id="0" id="scroll-0">0</div>
-            <div class="scroll-button" data-id="1" id="scroll-1">1</div>
-            <div class="scroll-button" data-id="2" id="scroll-2">2</div>
-            <div class="scroll-button" data-id="3" id="scroll-3">3</div>
-            <div class="scroll-button" data-id="4" id="scroll-4">4</div>
-            <div class="scroll-button" data-id="5" id="scroll-5">5</div>
-            <div class="scroll-button" data-id="6" id="scroll-6">6</div>
+            <div class="scroll-button" data-id="1" id="scroll-1">
+                <i class="material-icons md-24">camera</i></div>
+            <div class="scroll-button" data-id="2" id="scroll-2">
+                <i class="material-icons md-24">list</i></div>
+            <div class="scroll-button" data-id="3" id="scroll-3"></div>
+            <div class="scroll-button" data-id="4" id="scroll-4"></div>
+            <div class="scroll-button" data-id="5" id="scroll-5"></div>
+            <div class="scroll-button-false" data-id="6" id="scroll-6" data-color='toggle'>
+                <i id="coloricon" class="material-icons md-24" data-color='toggle'>color_lens</i></div>
         </section>
 
 
@@ -571,6 +575,9 @@
 <link type="text/css" rel="stylesheet" href="static/css/obvious-buttons.css">
 <link rel="stylesheet" href="https://ofrohn.github.io/celestial.css">
 <link rel="stylesheet" type="text/css" href="static/css/datatables.css">
+
+
+<script type="text/javascript" src="static/colors.js"></script>
 
 <!-- JS9 -->
 <script type="text/javascript" src="static/MouseTouchExtend.js"></script>
