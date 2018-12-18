@@ -387,12 +387,12 @@ a {
 #filter_form div{
     padding: 1px;
 }
-#filter_form div input[type="checkbox"]{
-    margin-bottom: 10px;
+.mdl-switch {
+    padding-bottom: 30px;
 }
 #filter_form div span{
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: 1fr 50px;
 }
 #filter_form input {
     margin-bottom: 8px;

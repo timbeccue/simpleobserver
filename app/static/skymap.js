@@ -567,6 +567,8 @@ function newSkyMap() {
         $(window).resize(function(){
             mapresize();
         });
+        var map_div = document.getElementById("view-size-helper");
+        new ResizeSensor(map_div, SkyMap.mapresize);
     });
 
     // Periodically update map rotation.
@@ -578,6 +580,7 @@ function newSkyMap() {
     data.config = config;
     data.update_chart = update_chart;
     data.default_filter = default_filter;
+    data.mapresize = mapresize;
     return data;
 }
 

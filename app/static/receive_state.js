@@ -9,12 +9,13 @@ var state_wx = {};
 
 $(document).ready( function() {
 
-    var old_source = new EventSource('/status/old/1');
+    //var old_source = new EventSource('/status/old/1');
     var mnt1_source = new EventSource('/status/mnt/1');
     var foc1_source = new EventSource('/status/foc/1');
     var rot1_source = new EventSource('/status/rot/1');
     var wx_source = new EventSource('/status/wx/1');
 
+    /*
     old_source.onmessage = function(event){
         var sse_contents = tryParseJSON(event.data);
         if (sse_contents) {
@@ -22,6 +23,8 @@ $(document).ready( function() {
             $('#state-dome').text(state.dome);
         }
     };
+    */
+   
     mnt1_source.onmessage = function(event){
         var sse_contents = tryParseJSON(event.data);
         //console.log('sse contents: '+sse_contents);

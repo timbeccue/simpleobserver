@@ -1,0 +1,208 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: #aaa;
+}
+
+input[type="text"] {
+    padding-left: 5px;
+    color: #111;
+}
+
+body {
+    background-color: #080808;
+}
+
+#toggle-options {
+    background-color: #111;
+    flex-shrink: 0;
+    z-index: 100;
+
+    text-align: center;
+}
+#toggle-options i {
+    position: relative;
+    top: calc(50% - 18px);
+}
+#toggle-options * {
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+.options {
+    background-color: #111;
+}
+
+#view-size-helper {
+    flex: 0;
+    position: static;
+    /*
+    width: 100vw;
+    height: 100vw;
+    max-width: 100vh;
+    max-height: 100vh;
+    */
+    flex-basis: 100vmin;
+    flex-grow: 1;
+    flex-shrink: 1;
+    align-self: stretch;
+    padding: 1%;
+    /* border: #f00 3px solid; */
+}
+
+
+#homepage {
+    display: block;
+    background-color: #0e003c;
+}
+#show-filters {
+    background-color: #1d003c;
+}
+#show-table {
+    background-color: #2c003c;
+}
+
+@media screen and (orientation: landscape) {
+    body {
+        display: flex;
+        align-items:flex-start;
+        flex-direction: row;
+        justify-content: flex-start;
+    }
+    #homepage,
+    #show-filters,
+    #show-table {
+        width: 100%;
+        height: 15vmin;
+    }
+    #toggle-options {
+        position: -webkit-sticky;
+        position: -moz-sticky;
+        position: -ms-sticky;
+        position: -o-sticky;
+        position: sticky;
+        left: 0px;
+        height: 100vh;
+        width: 10vmin;
+    }
+    .options {
+        width: 0px;
+        height: 100vh;
+        overflow: hidden;
+        transition: width 0.5s ease;
+        -moz-transition: width 0.5s ease;
+        -ms-transition: width 0.5s ease;
+        -o-transition: width 0.5s ease;
+        -webkit-transition: width 0.5s ease;
+    }
+    .open {
+        width: 300px;
+    }
+    #filter_form {
+        display: grid;
+        grid-template-columns: 1fr; 
+        grid-gap: 2em;
+        padding: 2em;
+        margin-bottom: 2em;
+    }
+    #view-size-helper {
+        max-height: 100vh;
+    }
+}
+
+@media screen and (orientation: portrait) {
+
+    body {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+    #homepage,
+    #show-filters,
+    #show-table {
+        height: 100%;
+        width: 25vmin;
+    }
+    #toggle-options {
+        position: -webkit-sticky;
+        position: -moz-sticky;
+        position: -ms-sticky;
+        position: -o-sticky;
+        position: sticky;
+        top: 0px;
+        width: 100vw;
+        height: 10vmin;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .options {
+        max-height: 0px;
+        width: 100%;
+        overflow: hidden;
+        transition: max-height 0.5s ease;
+        -moz-transition: max-height 0.5s ease;
+        -ms-transition: max-height 0.5s ease;
+        -o-transition: max-height 0.5s ease;
+        -webkit-transition: max-height 0.5s ease;
+    }
+    .open {
+        max-height: 90vh;
+    }
+    #filter_form {
+        display: grid;
+        grid-template-columns: 1fr 1fr; 
+        grid-gap: 2em;
+        padding: 2em;
+        margin-bottom: 2em;
+    }
+    #view-size-helper {
+        max-width: 100vw;
+    }
+}
+
+/*
+.options {
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+}
+*/
+/*
+#filter_form div{
+    padding: 1px;
+}
+.mdl-switch {
+    padding-bottom: 30px;
+}
+*/
+#filter_form div .mag-filter-group {
+    display: grid;
+    grid-template-columns: 1fr 50px;
+}
+/*
+#filter_form input {
+    margin-bottom: 8px;
+}
+#object-table {
+    padding-bottom: 30px;
+}
+*/
+
+/* material design icons */
+/* Rules for sizing the icon. */
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+
+/* Rules for using icons as black on a light background. */
+.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
+.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
+
+/* Rules for using icons as white on a dark background. */
+.material-icons.md-light { color: rgba(255, 255, 255, 1); }
+.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
+

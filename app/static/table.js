@@ -37,7 +37,7 @@ $(document).ready(function(){
         deferRender: true,
         //paging: false,
         compact: true,
-        responsive: true,
+        //responsive: true,
         scrollY: "calc(20vh)",
         //scroller: true,
         scroller: { loadingIndicator: true },
