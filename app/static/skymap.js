@@ -27,7 +27,7 @@ function newSkyMap() {
         interactive: false, // Enable zooming and rotation with mousewheel and dragging
         form: false,        // Display settings form
         location: true,    // Display location settings
-        controls: true,     // Display zoom controls
+        controls: false,     // Display zoom controls
         lang: "",           // Language for names, so far only for constellations: de: german, es: spanish
                             // Default:en or empty string for english
         container: "celestial-map",   // ID of parent element, e.g. div

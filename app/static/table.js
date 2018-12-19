@@ -6,7 +6,7 @@ function newTable() {
         searching: false,
         serverSide: true,
         deferRender: true,
-        //paging: false,
+        pagingType: "simple",
         compact: true,
         responsive: {
             details: {
@@ -16,7 +16,7 @@ function newTable() {
         },
         scrollY: "calc(20vh)",
         //scroller: true,
-        scroller: { loadingIndicator: true },
+        scroller: { loadingIndicator: true }, 
         select: true,
         stateSave: false, // gets out of sync with filters
         ajax: "/tablelookup",
@@ -76,6 +76,7 @@ function newTable() {
     data = [];
     data.table = table;
     data.submit_filter = submit_filter;
+    data.draw = table.draw;
     return data;
 }
 

@@ -33,8 +33,8 @@
   transition-property: background-color;
   transition-duration: 0.2s;
   transition-timing-function: linear;
-  background: #fafafa;
-  color: #222222;
+  background: var(--button-white, #fafafa);
+  color: var(--button-text, #222222);
 }
 .btn i {
   line-height: 37px;
@@ -55,8 +55,8 @@
 }
 .btn:hover,
 .btn:focus {
-  background: #e6e6e6;
-  color: #222222;
+  background: var(--button-white-hoverfocus, #e6e6e6);
+  color: var(--button-text, #222222);
 }
 .btn.btn-primary {
   background: #0088cc;
@@ -77,13 +77,13 @@
   color: #fafafa;
 }
 .btn.btn-success {
-  background: #5bb75b;
-  color: #fafafa;
+  background: var(--button-success, #5bb75b);
+  color: var(--button-success-text, #fafafa);
 }
 .btn.btn-success:hover,
 .btn.btn-success:focus {
-  background: #47a247;
-  color: #fafafa;
+  background: var(--button-success-hoverfocus, #47a247);
+  color: var(--button-success-text, #fafafa);
 }
 .btn.btn-warning {
   background: #faa732;

@@ -4,7 +4,40 @@
     box-sizing: border-box;
     padding: 0;
     margin: 0;
+
+
 }
+ :root {
+
+    --background: #222;
+    --text: #ccc;
+    --formtext: #111;
+    --menu1: #0e003c;
+    --menu2: #1d003c;
+    --menu3: #2c003c;
+    --inputs: #fff;
+    --header: #282828;
+
+    --neutral-1: #111;
+    --neutral-2: #222;
+    --neutral-3: #333;
+    --neutral-4: #444;
+    --neutral-5: #555;
+    --neutral-6: #666;
+    --neutral-7: #777;
+    --neutral-8: #888;
+    --neutral-9: #999;
+    --neutral-a: #aaa;
+    --neutral-b: #bbb;
+    --neutral-c: #ccc;
+    --neutral-d: #ddd;
+    --neutral-e: #eee;
+    --neutral-f: #fff;
+
+ }
+
+
+
 
 .hidden {
     display: none !important;
@@ -14,21 +47,24 @@ input[type="text"] {
     padding-left: 5px;
 }
 
+
 input, select {
     background-color: var(--inputs, #fff);
-    color: var(--text, #000);
+    color: var(--formtext, #000);
+    border: 1px var(--neutral-6) solid;
+    outline: 1px var(--neutral-6);
 }
 
 body {
-    background-color: var(--background, #222);
+    background-color: var(--neutral-2);
     font-family: Helvetica;
-    color: var(--text, #ccc);
+    color: var(--neutral-c);
     overflow:auto;
 }
 
 .header {
     grid-area: header;
-    background: #282828;
+    background: var(--header, #282828);
 }
 .info {
     grid-area: info;
@@ -41,8 +77,25 @@ body {
 }
 .controls {
     grid-area: controls;
-    overflow-y:auto;
+    overflow-y: scroll;
+    /* scrollbars for firefox */
+    scrollbar-color: var(--neutral-a) var(--neutral-4);
+    scrollbar-width:none;
+    scrollbarbutton-up: 
 }
+/* Scroll bars for chrome/safari/opera */
+.controls {
+    scrollbar-face-color: #367CD2;
+    scrollbar-shadow-color: #FFFFFF;
+    scrollbar-highlight-color: #FFFFFF;
+    scrollbar-3dlight-color: #FFFFFF;
+    scrollbar-darkshadow-color: #FFFFFF;
+    scrollbar-track-color: #FFFFFF;
+    scrollbar-arrow-color: #FFFFFF;
+}
+.controls::-webkit-scrollbar-track { background: var(--neutral-4); }
+.controls::-webkit-scrollbar-thumb { background: var(--neutral-a); }
+
 .scroll-icons {
     grid-area: scroll-icons;
     /*border: #f00 2px solid;*/
@@ -50,6 +103,7 @@ body {
     flex-direction: column;
     align-items: flex-end;
     padding-top: 100px;
+    margin-left: 5px;
 }
 
 
@@ -84,20 +138,19 @@ body {
     width: 100vw;
 }
 .header .section-wrapper h1 {
-    color: blue;
     font: 36px/1 'Oswald', sans-serif;
     font-weight: lighter;
     padding: 25px;
     margin-left: 50px;
 }
 .header .title-link{
-    color: #bbb;
+    color: var(--neutral-b);
     outline: 0;
     text-decoration: none;
 }
 .header .title-link:hover,
 .header .title-link.focus {
-    color: #ddd;
+    color: var(--neutral-d);
     outline: 0;
     cursor: pointer;
     text-decoration: none;
@@ -106,7 +159,7 @@ body {
     text-decoration: underline;
 }
 .header .notloggedin {
-    background: #444;
+    background: var(--neutral-4);
     display: grid;
     grid-template-columns: 1fr 1fr;
 
@@ -128,8 +181,8 @@ a {
     margin: 0;
 }
 .loggedin li {
-    color: #fff;
-    background: #333;
+    color: var(--neutral-f);
+    background: var(--neutral-3);
     display: block;
     float: left;
     padding: 1rem;
@@ -138,10 +191,10 @@ a {
     transition-duration: 0.3s;
 }
 .loggedin li a {
-    color: #fff;
+    color: var(--neutral-f);
 }
 .loggedin li:hover {
-    background: #444;
+    background: var(--neutral-4);
     cursor: pointer;
 }
 .loggedin li ul {
@@ -179,7 +232,7 @@ a {
 .register-form form {
     align-self: center;
     padding: 20px;
-    border: #888 1px solid;
+    border: var(--neutral-8) 1px solid;
 }
 .register-form input {
     width: 200px;
@@ -197,7 +250,7 @@ a {
     margin-top: 20px;
     margin-left: 20px;
     margin-right: 20px;
-    border: #666 1px solid;
+    border: var(--neutral-6) 1px solid;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
@@ -217,7 +270,7 @@ a {
     height: calc(100% - 200px);
 }
 .views > .views-menu {
-    border-bottom: #555 3px solid;
+    border-bottom: var(--neutral-5) 3px solid;
     display: flex;
     overflow: hidden;
 }
@@ -249,12 +302,12 @@ a {
 }
 .js-tabs {
     list-style: none;
-    color: #888;
+    color: var(--neutral-8);
 }
 .js-tabs li {
-    background: #333;
+    background: var(--neutral-3);
     font: 14px/1 'Open Sans', sans-serif;
-    color: #aaa;
+    color: var(--neutral-a);
     display: inline-block;
     padding-left: 25px;
     padding-right: 25px;
@@ -262,12 +315,12 @@ a {
     padding-bottom: 10px;
 }
 .js-tabs li:hover {
-    background: #444;
+    background: var(--neutral-4);
     cursor: pointer;
 }
 .js-tabs li.current {
-    background:#555;
-    color: #fff;
+    background: var(--neutral-5);
+    color: var(--neutral-f);
 }
 .tabs-content {
     width: 100%;
@@ -283,16 +336,17 @@ a {
 
 
 /* Module Styles */
+
 .module {
     margin-left: 20px;
     margin-right: 20px;
     margin-top: 20px;
-    border: #444 2px solid;
+    border: var(--neutral-4) 2px solid;
     margin-bottom: 40px;
 }
 .module .module-head {
     height: 70px;
-    background-color: #444;
+    background-color: var(--neutral-4);
     cursor: pointer;
     width: 100%;
     display: flex;
@@ -311,7 +365,7 @@ a {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    color: #000;
+    color: var(--neutral-1);
     width: 100%;
     padding-right: 1.5em;
 }
@@ -320,7 +374,7 @@ a {
     width: 100%;
 }
 .module .head-inputs label {
-    color: white;
+    color: var(--neutral-d);
     margin-bottom: 15px;
 }
 .module .head-inputs .head-input-item {
@@ -333,7 +387,7 @@ a {
 .module .module-body {
     height: auto;
     overflow: hidden;
-    background-color: #333;
+    background-color: var(--neutral-3);
     transition: 0.3s ease-out;
 }
 .module .module-body input[type='text'] {
@@ -344,9 +398,9 @@ a {
     margin: 20px;
 }
 .module-body-wrapper li {
-    background: #252525;
+    background: var(--header, #252525);
     font: 14px/1 'Open Sans', sans-serif;
-    color: #aaa;
+    color: var(--neutral-a);
     display: inline-block;
     padding-left: 25px;
     padding-right: 25px;
@@ -357,8 +411,8 @@ a {
     cursor: pointer;
 }
 .module-body-wrapper li.active {
-    background: #444;
-    color: #fff;
+    background: var(--neutral-4);
+    color: var(--neutral-f);
 }
 
 
@@ -388,7 +442,7 @@ a {
     grid-gap: 2em;
     padding-bottom: 2em;
     margin-bottom: 2em;
-    border-bottom: #444 1px solid;
+    border-bottom: var(--neutral-4) 1px solid;
 }
 #filter_form div{
     padding: 1px;
@@ -422,7 +476,7 @@ a {
     cursor: pointer;
 }
 .scroll-icons a {
-    color: #ccc;
+    color: var(--text);
     outline: 0;
     text-decoration: none;
 }
@@ -437,6 +491,6 @@ a {
 }
 
 .toggle-handle {
-    background-color: white;
+    background-color:var(--neutral-f);
     border: thin rgba(0, 0, 0, .25) solid;
 }

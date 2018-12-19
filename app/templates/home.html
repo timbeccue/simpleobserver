@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <!-- mdl style -->
     <!--link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"-->
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.red-indigo.min.css" />
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link type="text/css" rel="stylesheet" href="static/css/home.css">
+
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"> </script>
 
     <!-- Fast detection of div resize for animation that toggles the map filters sliding in and out. -->
@@ -539,7 +541,9 @@
                 <i class="material-icons md-24">list</i></div>
             <div class="scroll-button" data-id="3" id="scroll-3"></div>
             <div class="scroll-button" data-id="4" id="scroll-4"></div>
-            <div class="scroll-button" data-id="5" id="scroll-5"></div>
+            <div class="scroll-button-false" data-id="5" id="scroll-5">
+                <a href="/starparty"><i id="coloricon" class="material-icons md-24" data-curretcolors='default'>stars</i></a>
+            </div>
             <div class="scroll-button-false" data-id="6" id="night-colors" data-currentcolors='default'>
                 <i id="coloricon" class="material-icons md-24" data-curretcolors='default'>colorize</i></div>
         </section>
@@ -555,27 +559,12 @@
     var lmst = 15.000;
 </script>
 
-<script> /* proper loading/resizing of map and js9 */
-    /*$('#views').ready(function(){
-        JS9.Preload('static/images/555wmos.fits', {display: "default-js9"});
-        js9resize("default-js9");
-        $(window).resize(function(){
-            js9resize("default-js9");
-        });
-    });
-    function js9resize(display) {
-        let width = $('#view-size-helper').width();
-        let height = $('#view-size-helper').height() - 60;
-        JS9.ResizeDisplay(width, height, {display: display });
-    }*/
-
-</script>
 
 <!-- Other CSS -->
 
 <link type="text/css" rel="stylesheet" href="static/css/obvious-buttons.css">
 <link rel="stylesheet" href="https://ofrohn.github.io/celestial.css">
-<link rel="stylesheet" type="text/css" href="static/css/datatables.css">
+<link id="datatables-css" rel="stylesheet" type="text/css" href="static/css/datatables.css">
 
 
 <script type="text/javascript" src="static/colors.js"></script>
@@ -590,6 +579,7 @@
 <script type="text/javascript" src="static/js9/js9plugins.js"></script>
 
 <!-- DataTables -->
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.18/b-1.5.2/b-colvis-1.5.2/b-html5-1.5.2/cr-1.5.0/kt-2.4.0/r-2.2.2/rg-1.0.3/sc-1.5.0/sl-1.2.6/datatables.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.18/b-1.5.2/b-colvis-1.5.2/b-html5-1.5.2/cr-1.5.0/kt-2.4.0/r-2.2.2/rg-1.0.3/sc-1.5.0/sl-1.2.6/datatables.min.js"></script>
 
 <script type="text/javascript" src="static/utilities.js"></script>

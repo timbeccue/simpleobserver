@@ -5,18 +5,50 @@
     box-sizing: border-box;
 }
 
+ :root {
+
+    --background: #222;
+    --text: #ccc;
+    --formtext: #111;
+    --menu1: #0e003c;
+    --menu2: #1d003c;
+    --menu3: #2c003c;
+    --inputs: #fff;
+    --header: #282828;
+    --options-color: #181818;
+
+    --neutral-1: #111;
+    --neutral-2: #222;
+    --neutral-3: #333;
+    --neutral-4: #444;
+    --neutral-5: #555;
+    --neutral-6: #666;
+    --neutral-7: #777;
+    --neutral-8: #888;
+    --neutral-9: #999;
+    --neutral-a: #aaa;
+    --neutral-b: #bbb;
+    --neutral-c: #ccc;
+    --neutral-d: #ddd;
+    --neutral-e: #eee;
+    --neutral-f: #fff;
+
+ }
+
 input[type="text"] {
     padding-left: 5px;
 }
 
 input, select {
-    background-color: var(--inputs, #fff);
-    color: var(--text, #000);
+    background-color: var(--inputs);
+    color: var(--formtext);
+    border: 1px var(--neutral-6) solid;
+    outline: 1px var(--neutral-6);
 }
 
 body {
     background-color: var(--background, #080808);
-    color: var(--text, #aaa);
+    color: var(--text);
 }
 
 .starparty-menu {
@@ -25,7 +57,11 @@ body {
     z-index: 100;
     text-align: center;
     border: rgba(0,0,0,0) 3px solid;
-    border-color: var(--menuborder, rgba(0,0,0,0));
+    border-color: var(--neutral-2, rgba(0,0,0,0));
+}
+#toggle-options {
+    background: var(--options-color);
+    padding: 5px;
 }
 #toggle-options i {
     position: relative;
@@ -38,7 +74,7 @@ body {
 }
 
 .options {
-    background-color: var(--options-color, #111);
+    background-color: var(--neutral-1);
 }
 
 #view-size-helper {
