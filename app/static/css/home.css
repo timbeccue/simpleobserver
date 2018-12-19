@@ -14,10 +14,15 @@ input[type="text"] {
     padding-left: 5px;
 }
 
+input, select {
+    background-color: var(--inputs, #fff);
+    color: var(--text, #000);
+}
+
 body {
-    background-color: #222;
+    background-color: var(--background, #222);
     font-family: Helvetica;
-    color: #ccc;
+    color: var(--text, #ccc);
     overflow:auto;
 }
 

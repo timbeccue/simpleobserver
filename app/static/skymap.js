@@ -197,25 +197,25 @@ function newSkyMap() {
             fill: "rgba(231,76,60,0.8)",
             width: 1,
             opacity: 0.5,
-            namestyle: { fill: "rgb(231,76,60)", font: "9px Helvetica, Arial, serif", align: "left", baseline: "top" }
+            namestyle: { fill: "rgb(231,76,60)", font: "14px Helvetica, Arial, serif", align: "left", baseline: "top" }
         },
         nebula: {
             shape: "diamond",
             fill: "rgba(243,156,18,1)",
             width: 2,
             opacity: 0.8,
-            namestyle: { fill: "rgba(245,176,65,1)", font: "9px Helvetica, Arial, serif", align: "left", baseline: "top" }
+            namestyle: { fill: "rgba(245,176,65,1)", font: "14px Helvetica, Arial, serif", align: "left", baseline: "top" }
         },
         globular_cluster: {
             opacity: 1,
             stroke: "rgba(72,201,176,1)",
             width: 1,
-            namestyle: { fill: "rgba(72,201,176,1)", font: "9px Helvetica, Arial, serif", align: "left", baseline: "top" }
+            namestyle: { fill: "rgba(72,201,176,1)", font: "14px Helvetica, Arial, serif", align: "left", baseline: "top" }
         },
         open_cluster: {
             stroke: "rgba(142,68,173)",
             width: 1,
-            namestyle: { fill: "rgb(142,68,173)", font: "9px Helvetica, Arial, serif", align: "left", baseline: "top" }
+            namestyle: { fill: "rgb(142,68,173)", font: "14px Helvetica, Arial, serif", align: "left", baseline: "top" }
         },
         star: {
             namestyle: { fill: "#ddddbb", font: "9px Georgia, Times, 'Times Roman', serif", align: "left", baseline: "top" },
@@ -382,8 +382,6 @@ function newSkyMap() {
         else if (night_colors_status != "off") {
             alert("Could not apply requested sky chart style. Reverting to default.");
         }
-        console.log(night_colors_status);
-        console.log(styles.name);
 
         Celestial.clear();
         Celestial.add({type:"json", file:"/static/mapdata/all_objects.json", callback: function(error,json) {
@@ -623,7 +621,7 @@ function newSkyMap() {
             Celestial.apply(red_chart_styles);
             night_colors_status = "on";
             Table.submit_filter();
-        } else if (setting == "on" || setting == "dark") {
+        } else if (setting == "on" || setting == "default") {
             Celestial.apply(config); 
             night_colors_status = "off";
             Table.submit_filter();

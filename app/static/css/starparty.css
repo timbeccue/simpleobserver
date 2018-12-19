@@ -3,27 +3,33 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    color: #aaa;
 }
 
 input[type="text"] {
     padding-left: 5px;
-    color: #111;
+}
+
+input, select {
+    background-color: var(--inputs, #fff);
+    color: var(--text, #000);
 }
 
 body {
-    background-color: #080808;
+    background-color: var(--background, #080808);
+    color: var(--text, #aaa);
 }
 
-#toggle-options {
+.starparty-menu {
     background-color: #181818;
     flex-shrink: 0;
     z-index: 100;
-
     text-align: center;
+    border: rgba(0,0,0,0) 3px solid;
+    border-color: var(--menuborder, rgba(0,0,0,0));
 }
 #toggle-options i {
     position: relative;
+    color: var(--text, #aaa);
     top: calc(50% - 18px);
 }
 #toggle-options * {
@@ -32,7 +38,7 @@ body {
 }
 
 .options {
-    background-color: #111;
+    background-color: var(--options-color, #111);
 }
 
 #view-size-helper {
@@ -46,16 +52,15 @@ body {
     /*border: #f00 3px solid; */
 }
 
-
 #homepage {
     display: block;
-    background-color: #0e003c;
+    background-color: var(--menu1, #0e003c);
 }
 #show-filters {
-    background-color: #1d003c;
+    background-color: var(--menu2, #1d003c);
 }
 #night-colors {
-    background-color: #2c003c;
+    background-color: var(--menu3, #2c003c);
 }
 
 #object-table {
