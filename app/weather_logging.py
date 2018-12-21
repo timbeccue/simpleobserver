@@ -161,7 +161,7 @@ class WeatherLogger():
         log = self.check_for_logs(logtype)
         data = self.current_data()
         if data is False:
-            print("Unable to retrieve weather data from redis.")
+            print(f"{int(time.time())} - Unable to retrieve weather data from redis.")
             return "Failure"
         oldest_log_time = int(self._get_oldest_timestamp(log))
         data_time = int(float(data['timestamp']))
