@@ -1,4 +1,5 @@
 alembic==1.0.1
+APScheduler==3.5.3
 argh==0.26.2
 astroid==2.0.4
 certifi==2018.10.15
@@ -32,6 +33,7 @@ mccabe==0.6.1
 monotonic==1.5
 numpy==1.15.4
 packaging==18.0
+pandas==0.23.4
 pathtools==0.1.2
 pip-upgrader==1.4.6
 pycparser==2.19
@@ -41,6 +43,7 @@ python-dateutil==2.7.4
 python-editor==1.0.3
 python-engineio==2.3.2
 python-socketio==2.0.0
+pytz==2018.7
 PyYAML==3.13
 redis==2.10.6
 requests==2.20.1
@@ -50,6 +53,7 @@ SQLAlchemy==1.2.12
 sqlalchemy-datatables==1.2.0
 terminaltables==3.1.0
 typed-ast==1.1.0
+tzlocal==1.5.1
 urllib3==1.24.1
 watchdog==0.9.0
 Werkzeug==0.14.1
