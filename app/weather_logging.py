@@ -49,7 +49,10 @@ class WeatherLogger():
 
     def current_data(self):
         """ Return the most recent weather data from redis as a dictionary """
-        return json.loads(self.redis.get('<ptr-wx-1_state'))
+        if self.redis.exists('<ptr-wx-1_state'):
+            return json.loads(self.redis.get('<ptr-wx-1_state'))
+        else:
+            return False
     
     #def _filename_time(self, filename):
         #""" Returns the timestamp embedded in a log's filename. 
@@ -157,6 +160,9 @@ class WeatherLogger():
 
         log = self.check_for_logs(logtype)
         data = self.current_data()
+        if data is False:
+            print("Unable to retrieve weather data from redis.")
+            return "Failure"
         oldest_log_time = int(self._get_oldest_timestamp(log))
         data_time = int(float(data['timestamp']))
 
@@ -164,6 +170,7 @@ class WeatherLogger():
             log = self._remove_expired_data(logtype, log)
 
         self._write_data(logtype, log, data)
+        return "Success"
 
                 
     def log_everything(self):
