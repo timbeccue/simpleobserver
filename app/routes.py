@@ -47,7 +47,7 @@ class RegistrationForm(FlaskForm):
 class CameraForm(FlaskForm):
     time = FloatField('Exposure Time', validators=[DataRequired()])
     count = IntegerField('Count', default=1, validators=[DataRequired(), NumberRange(min=1)])
-    delay = FloatField('Delay', default=0)
+    delay = FloatField('Delay (s)', default=0)
     dither = SelectField('Dithering', default='off', choices=[('off','off'), ('on','on'), ('random','random')])
     bin = SelectField('Binning', default='1', choices=[('1','1'), ('2','2'), ('4','4')])
     filter_choices = [('PL', 'Clear'), ('PR', 'Red'), ('PG', 'Green'), ('PB', 'Blue'), ('S2', 'S2'), ('HA', 'H\u03B1'),
@@ -76,6 +76,16 @@ class ObjectFilter(FlaskForm):
 
     everything_else = BooleanField('everything else', default=1)
 
+####################################################################################
+
+
+####################################################################################
+from app.weather_logging import weatherlogger
+from apscheduler.schedulers.background import BackgroundScheduler
+
+weather_logger = BackgroundScheduler(daemon=True)
+weather_logger.add_job(weatherlogger.log_everything, 'interval', seconds=55)
+weather_logger.start()
 ####################################################################################
 
 @app.route('/login', methods=['GET', 'POST'])

@@ -6,3 +6,4 @@ migrations/
 __pycache__/
 env/
 sandbox/
+app/weatherlogs/*.csv

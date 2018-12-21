@@ -61,3 +61,29 @@ def main():
 
 if __name__=='__main__':
     main()
+
+
+
+""" 
+1545261660.5361636 at 3:31
+1545262500.9408398 at 3:36
+apscheduler for running this in the background automatically: https://stackoverflow.com/a/46738061
+
+Notes:
+
+Saving weather data for display in chart form has been solved by weather sites already (but reversed).
+
+Recent past has lots of data saved (all data for past 1 week, 30/hr * 24hr * 7 = 5040). 
+Previous month has some of the data saved (eg one datapoint each hour; 24*30 = 720).
+Previous year has even less data saved (eg one datapoint every 12 hours; 2*365 = 730).
+
+Save the three categories seperately:
+W (week): filename should include oldest entry timestamp. when current time is 7 days and 1 hour past 
+    the oldest entry, create a new file with everything except for the oldest hour. This way, there is 
+    always a minimum of a full week of data. 
+M (month): same design as W data, but with longer timescale. HOW TO ADD DATA? (avg, median, on the hour...)
+Y (year): same design as M data. If recent data works well with >5000 records, might as well never delete old 
+    records here. 
+
+
+"""

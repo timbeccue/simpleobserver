@@ -327,17 +327,17 @@
                         <h1><span style="transition:0.5s;">&#9660;</span> &nbsp;Settings</h1>
                     </div>
                     <div class="head-inputs">
-                        <form id=camerasettings action="/command/camera" method="POST" data-autosubmit>
+                        <form id=camerasettings action="/command/camera" method="POST" data-autosubmit autocomplete="off">
                             {{ cameraform.hidden_tag() }}
                             <div class='head-input-item'>
                                 {{ cameraform.time.label }}
                                 <br>
-                                {{ cameraform.time() }}
+                                {{ cameraform.time(autocomplete="off") }}
                             </div>
                             <div class='head-input-item'>
                                 {{ cameraform.filter.label }}
                                 <br>
-                                {{ cameraform.filter() }}
+                                {{ cameraform.filter(autocomplete="off") }}
                             </div>
                             <div class="head-input-item">
                                 {{ cameraform.capture(class_="btn") }}
@@ -355,13 +355,13 @@
                         <div id="camera-tab-content" class="tabs-content camerasettings-content current">
                             {{ cameraform.count.label }}
                             {{ cameraform.delay.label }}
-                            {{ cameraform.count(form="camerasettings") }}
-                            {{ cameraform.delay(form="camerasettings") }}
+                            {{ cameraform.count(form="camerasettings", autocomplete="off") }}
+                            {{ cameraform.delay(form="camerasettings", autocomplete="off") }}
                         <div></div><div></div>
                             {{ cameraform.bin.label }}
                             {{ cameraform.dither.label }}
-                            {{ cameraform.bin(form="camerasettings") }}
-                            {{ cameraform.dither(form="camerasettings") }}
+                            {{ cameraform.bin(form="camerasettings", autocopmlete="off") }}
+                            {{ cameraform.dither(form="camerasettings", autocomplete="off") }}
                         </div>
                         <div id="focus-tab-content" class="tabs-content camerasettings-content">
                             {{ cameraform.autofocus.label }}
