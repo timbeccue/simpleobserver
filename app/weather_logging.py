@@ -33,7 +33,7 @@ Assuming file exists:
 """
 
 
-import json, time, redis, os, csv, glob, itertools
+import json, time, redis, os, csv, glob
 
 
 class WeatherLogger():
@@ -54,10 +54,6 @@ class WeatherLogger():
         else:
             return False
     
-    #def _filename_time(self, filename):
-        #""" Returns the timestamp embedded in a log's filename. 
-        #return filename[-14:-4]
-
     def _init_log(self, logtype):
         """ logtype is either "W", "M", or "Y". """
         if logtype == None: 
