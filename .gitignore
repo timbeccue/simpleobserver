@@ -1,4 +1,3 @@
-
 .vscode/
 6/
 migrations/
@@ -7,3 +6,4 @@ __pycache__/
 env/
 sandbox/
 app/weatherlogs/*.csv
+config.py
