@@ -1,4 +1,4 @@
-
+# app/routes.py
 
 from app import app, db, core1_redis
 from flask import Flask, render_template, request, Response, redirect, jsonify, url_for, flash, send_from_directory
@@ -86,7 +86,30 @@ from apscheduler.schedulers.background import BackgroundScheduler
 weather_logger = BackgroundScheduler(daemon=True)
 weather_logger.add_job(weatherlogger.log_everything, 'interval', seconds=55)
 weather_logger.start()
+
 ####################################################################################
+
+import pandas as pd
+@app.route('/plot_weather/<logtype>', methods=['GET', 'POST'])
+def plot_weather(logtype):
+    weather_log = weatherlogger.check_for_logs(logtype)
+    print(weather_log)
+    w_data = pd.read_csv(weather_log)
+
+    # Select every 10th datapoint from the last day, giving ~70 datapoints.
+    timestamps = list(map(lambda x: x * 1000, list(w_data['timestamp'][-600::])))
+    temperatures = list(w_data['amb_temp C'][-600::])
+    print(timestamps)
+    print(temperatures)
+    
+    #x_time = [1,2,3,4,5]
+    #y_temp = [2,9,8,1,0]
+    to_plot = {
+        "x": timestamps, 
+        "y": temperatures 
+    }
+    return jsonify(to_plot)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
