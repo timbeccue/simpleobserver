@@ -121,9 +121,6 @@
                         <div id="plotly-test"></div>
                         <div id="graph"></div>
 
-                        <form id="refresh-plot" method="GET">
-                            <button id="refresh-plot-button"></button>
-                        </form>
 
                         <table id="weather-table">
                         </table>
@@ -184,24 +181,32 @@
                                 return new Date(timestamp * 1000);
                             }
 
-                            var trace = {
+                            var temperatures = {
                                 type: "line",
-                                name: "line 1",
-                                mode: "line",
+                                name: "Ambient Temp",
+                                mode: "markers",
                                 connectgaps: false,
-                                x: [1, 2, 3, 4, 5],
-                                y: [1, 2, 4, 8, 16], 
                                 line: {
-                                    width: 2.5,
-                                    shape: 'spline',
-                                    dash: 'dash'
+                                    width: 1.5,
+                                    shape: 'spline'
                                 }
                             };
 
-                            var data = [trace];
+                            var dewpoints = {
+                                type: "line",
+                                name: "Dewpoint Temp",
+                                mode: "markers",
+                                connectgaps: false,
+                                line: {
+                                    width: 1.5,
+                                    shape: 'spline'
+                                }
+                            };
+
+                            var data = [temperatures, dewpoints];
 
                             var layout = {
-                                title: 'Plot Title',
+                                title: 'Temperature',
                                 xaxis: {
                                     title: 'time',
                                     showgrid: false,
@@ -223,32 +228,30 @@
 
                             Plotly.newPlot('plotly-test', data, layout, {responsive: true});
 
-                            function plot_weather() {
-                            }
 
-                            $(function() {
-                                $('#refresh-plot').submit(function(e){
-                                    e.preventDefault();
-                                    $.ajax({
-                                        url: "plot_weather/W",
-                                        success: function(new_data) {
-                                            trace.x = new_data.x;
-                                            trace.y = new_data.y;
-                                            console.log(trace.x);
-                                            console.log(trace.y);
-                                            data = [trace]
-                                            Plotly.newPlot('plotly-test', data, layout, {responsive: true});
-                                            //Plotly.restyle(TESTER, { x: trace.x, y: trace.y });
-                                            //Plotly.extendTraces('plotly-test', {x: trace.x, y: trace.y}, [0]);
-                                            //Plotly.relayout('plotly-test', { 'xaxis.range': [cnt-20, cnt]})
+                        function plot_weather(){
+                            $.ajax({
+                                url: "plot_weather/W",
+                                success: function(new_data) {
+                                    temperatures.x = new_data.x;
+                                    dewpoints.x = new_data.x;
+                                    temperatures.y = new_data.temperatures;
+                                    dewpoints.y = new_data.dewpoints;
 
-                                        },
-                                        error: function() {
-                                            console.log('failed to update weather plot data');
-                                        }
-                                    })
+                                    data = [temperatures, dewpoints]
+                                    Plotly.newPlot('plotly-test', data, layout, {responsive: true});
+                                    //Plotly.restyle(TESTER, { x: trace.x, y: trace.y });
+                                    //Plotly.extendTraces('plotly-test', {x: trace.x, y: trace.y}, [0]);
+                                    //Plotly.relayout('plotly-test', { 'xaxis.range': [cnt-20, cnt]})
+
+                                },
+                                error: function() {
+                                    console.log('failed to update weather plot data');
+                                }
                             })
-                        })
+                        }
+
+                        setInterval(plot_weather(), 1000*60*2);
                         
 
 
