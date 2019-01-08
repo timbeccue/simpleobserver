@@ -93,9 +93,9 @@
             <div class="views" id="views">
                 <div class="views-menu">
                     <ul class="js-tabs">
-                        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab1">weather</li>
+                        <li class="tab views-tab current" data-tabtype="views" data-tab="viewtab1">weather</li>
                         <li class="hidden tab views-tab" data-tabtype="views" data-tab="viewtab2">log</li>
-                        <li class="tab views-tab current" data-tabtype="views" data-tab="viewtab3">sky chart</li>
+                        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab3">sky chart</li>
                         <li class="hidden tab views-tab" data-tabtype="views" data-tab="viewtab4">sky cam</li>
                         <li class="tab views-tab" data-tabtype="views" data-tab="viewtab5">enclosure</li>
                         <li class="hidden tab views-tab" data-tabtype="views" data-tab="viewtab6">mountings</li>
@@ -106,7 +106,7 @@
 
                 <div id="view-size-helper" style="width:100%; height: 100%; top: 60px; position: absolute;">
 
-                    <div id="viewtab1" class="tabs-content views-content">
+                    <div id="viewtab1" class="tabs-content views-content current">
                         <style>
                             #weather-table td {
                                 height: 30px;
@@ -117,13 +117,151 @@
                                 padding-right: 20px;
                             }
                         </style>
+                        
+                        <div id="plotly-test"></div>
+                        <div id="graph"></div>
+
+                        <form id="refresh-plot" method="GET">
+                            <button id="refresh-plot-button"></button>
+                        </form>
+
                         <table id="weather-table">
                         </table>
+
+
+                        <!-- Plotly.js -->
+                        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+
+                        <script>
+                            /*
+                            function rand() {
+                                return Math.random();
+                            }
+
+                            var time = new Date();
+
+                            var trace1 = {
+                                x: [time, time, time-2, time-3],
+                                y: [1,0,1,0],
+                                mode: 'lines',
+                                line: {color: '#80CAF6'}
+                            }
+
+                            var data = [trace1]
+
+                            Plotly.plot('graph', data);
+
+                            var cnt = 0;
+
+                            var interval = setInterval(function() {
+                                var time = new Date();
+
+                                var update = {
+                                    x: [[time]],
+                                    y: [[rand()]]
+                                }
+
+                                var olderTime = time.setMinutes(time.getMinutes() - 3);
+                                var futureTime = time.setMinutes(time.getMinutes() + 3);
+
+                                var minuteView = {
+                                        xaxis: {
+                                            type: 'date',
+                                            range: [olderTime, futureTime]
+                                        }
+                                    };
+
+                                Plotly.relayout('graph', minuteView);
+                                Plotly.extendTraces('graph', update, [0])
+
+                                if(cnt === 100) clearInterval(interval);
+                            }, 1000);
+                            */
+
+                            //TESTER = document.getElementById('plotly-test');
+                            function toPlotlyDate(timestamp) {
+                                return new Date(timestamp * 1000);
+                            }
+
+                            var trace = {
+                                type: "line",
+                                name: "line 1",
+                                mode: "line",
+                                connectgaps: false,
+                                x: [1, 2, 3, 4, 5],
+                                y: [1, 2, 4, 8, 16], 
+                                line: {
+                                    width: 2.5,
+                                    shape: 'spline',
+                                    dash: 'dash'
+                                }
+                            };
+
+                            var data = [trace];
+
+                            var layout = {
+                                title: 'Plot Title',
+                                xaxis: {
+                                    title: 'time',
+                                    showgrid: false,
+                                    type: 'date',
+                                    tickmode: 'linear',
+                                    dtick: 3600000
+                                },
+                                yaxis: {
+                                    title: 'temperature [deg C]',
+                                    showgrid: false
+                                },
+                                showlegend: true,
+                                paper_bgcolor: 'rgba(0,0,0,0)',
+                                plot_bgcolor: 'rgba(0,0,0,0)',
+                                font: {
+                                    color: 'aaa'
+                                }
+                            };
+
+                            Plotly.newPlot('plotly-test', data, layout, {responsive: true});
+
+                            function plot_weather() {
+                            }
+
+                            $(function() {
+                                $('#refresh-plot').submit(function(e){
+                                    e.preventDefault();
+                                    $.ajax({
+                                        url: "plot_weather/W",
+                                        success: function(new_data) {
+                                            trace.x = new_data.x;
+                                            trace.y = new_data.y;
+                                            console.log(trace.x);
+                                            console.log(trace.y);
+                                            data = [trace]
+                                            Plotly.newPlot('plotly-test', data, layout, {responsive: true});
+                                            //Plotly.restyle(TESTER, { x: trace.x, y: trace.y });
+                                            //Plotly.extendTraces('plotly-test', {x: trace.x, y: trace.y}, [0]);
+                                            //Plotly.relayout('plotly-test', { 'xaxis.range': [cnt-20, cnt]})
+
+                                        },
+                                        error: function() {
+                                            console.log('failed to update weather plot data');
+                                        }
+                                    })
+                            })
+                        })
+                        
+
+
+
+                                            
+                            </script>
+
+
                     </div>
                     <div id="viewtab2" class="tabs-content views-content">
                         schedule log here
                     </div>
-                    <div id="viewtab3" class="tabs-content views-content current">
+                    <div id="viewtab3" class="tabs-content views-content">
                         <div class=
                         <div class="container">
                             <div class="container" id="celestial-map"></div>
