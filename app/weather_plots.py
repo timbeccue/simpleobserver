@@ -1,17 +1,19 @@
+
 import pandas as pd
 import json
 import plotly 
 from datetime import datetime, date, time, timedelta
+
 from app.weather_logging import weatherlogger
 
 
-def create_plot():
+def create_plot(logtype):
 
     # Get filename of current log and open as pandas dataframe.
-    weather_log = weatherlogger.check_for_logs('W')
+    weather_log = weatherlogger.check_for_logs(logtype)
     weather_data = pd.read_csv(weather_log)
 
-    minutes = -3000 # Number of data points (1 per minute)
+    minutes = 0 # Number of data points (1 per minute)
     interval = 20   # Plot one point for every [interval] points in log 
 
     # x-axis is time
@@ -30,14 +32,14 @@ def create_plot():
             type = 'date',
             range = [datetime.now()-timedelta(days=1), datetime.now()],
             dtick = 3600 * 3 * 1000, # 3 hours in milliseconds
-            linecolor = '#222',
+            linecolor = '#333',
             linewidth = 2,
             gridcolor = '#444',
             gridwidth = 1
         ),
         yaxis = dict(
             title = 'temperature [deg C]',
-            linecolor = '#222',
+            linecolor = '#333',
             linewidth = 2,
             gridcolor = '#444',
             gridwidth = 1

@@ -362,9 +362,8 @@
                         <h1><span>&#9660;</span> &nbsp;Target</h1>
                     </div>
                     <div class="head-inputs">
-                        <form id="goto" method="POST" action="/command" data-autosubmit>
+                        <form id="goto" method="POST" action="/command/go" data-autosubmit>
                             <input class="head-input-item" type="text" name="goto-box" id="target-search" placeholder="name or coordinates...">
-                            <input class="hidden" type="hidden head-input-item" name="category" value="goto">
                             <button type="submit" class="head-input-item btn btn-success" id="goto-button">GO</button>
                         </form>
                     </div>
@@ -542,7 +541,7 @@
 
     function plot_weather(){
         $.ajax({
-            url: "plot_weather/test",
+            url: "plot_weather/W",
             success: function(the_data) {
                 
                 var graphs = JSON.parse(the_data);

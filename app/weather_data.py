@@ -1,3 +1,28 @@
+
+
+
+
+
+
+
+
+
+
+
+# REPLACED BY app/weather_logging.py
+
+
+
+
+
+
+
+
+
+
+
+
+
 import numpy as np
 import json, threading, time, redis
 

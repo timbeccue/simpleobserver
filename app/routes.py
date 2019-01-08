@@ -2,6 +2,7 @@
 
 from app import app, db, core1_redis
 from flask import Flask, render_template, request, Response, redirect, jsonify, url_for, flash, send_from_directory
+
 import re, datetime, time, json, redis
 import datetime
 
@@ -12,71 +13,12 @@ from flask_login import current_user, login_user, logout_user, login_required
 # from sqlalchemy-datatables example
 from datatables import ColumnDT, DataTables
 from app.models import User, Dso, ThingsInSpace
+# Import forms:
+from app.models import LoginForm, RegistrationForm, CameraForm, ObjectFilter, TestAddForm
 
 expire_time = 120 #seconds
 live_commands = True
 
-####################################################################################
-
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, FloatField, SelectField, HiddenField
-from wtforms.fields.html5 import EmailField
-from wtforms.validators import DataRequired, EqualTo, Email, ValidationError, NumberRange
-
-class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    remember_me = BooleanField('Remember Me')
-    submit = SubmitField('Sign In')
-
-class RegistrationForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    email = EmailField('Email', validators=[DataRequired(), ])
-    password = PasswordField('Password', validators=[DataRequired()])
-    password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Register')
-    def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
-        if user is not None:
-            raise ValidationError('Please use a different username.')
-    def validate_email(self, email):
-        user = User.query.filter_by(email=email.data).first()
-        if user is not None:
-            raise ValidationError('Please use a different email address.')
-
-class CameraForm(FlaskForm):
-    time = FloatField('Exposure Time', validators=[DataRequired()])
-    count = IntegerField('Count', default=1, validators=[DataRequired(), NumberRange(min=1)])
-    delay = FloatField('Delay (s)', default=0)
-    dither = SelectField('Dithering', default='off', choices=[('off','off'), ('on','on'), ('random','random')])
-    bin = SelectField('Binning', default='1', choices=[('1','1'), ('2','2'), ('4','4')])
-    filter_choices = [('PL', 'Clear'), ('PR', 'Red'), ('PG', 'Green'), ('PB', 'Blue'), ('S2', 'S2'), ('HA', 'H\u03B1'),
-                      ('O3', 'O3'), ('N2', 'N2')]
-    filter = SelectField('Filter', default='c', choices=filter_choices)
-    capture = SubmitField(' Capture')
-
-    autofocus = BooleanField('Autofocus', default=1)
-
-    position_angle = FloatField('Position Angle', default=0, validators=[DataRequired(),
-                                NumberRange(min=0, max=360, message="Please enter a value between 0 and 360.")])
-
-class ObjectFilter(FlaskForm):
-    open_clusters = BooleanField('open clusters', default=1)
-    globular_clusters = BooleanField('globular clusters', default=1)
-    galaxies = BooleanField('galaxies', default=1)
-    nebula = BooleanField('nebula', default=1)
-
-    stars = BooleanField('stars', default=1)
-    double_stars = BooleanField('double stars', default=1)
-
-    dso_magnitude_min = FloatField('DSOs no brighter than: ')
-    dso_magnitude_max = FloatField('DSOs no fainter than: ')
-    star_magnitude_min = FloatField('Stars no brighter than: ')
-    star_magnitude_max = FloatField('Stars no fainter than: ', default=2.5)
-
-    everything_else = BooleanField('everything else', default=1)
-
-####################################################################################
 
 
 ####################################################################################
@@ -86,36 +28,18 @@ from apscheduler.schedulers.background import BackgroundScheduler
 weather_logger = BackgroundScheduler(daemon=True)
 weather_logger.add_job(weatherlogger.log_everything, 'interval', seconds=55)
 weather_logger.start()
-
 ####################################################################################
 
-import pandas as pd
+
+
+# AJAX Routes
 from app import weather_plots
 @app.route('/plot_weather/<logtype>', methods=['GET', 'POST'])
 def plot_weather(logtype):
-
-    if logtype=='test':
-        return(weather_plots.create_plot())
+    return(weather_plots.create_plot(logtype))
     
-    weather_log = weatherlogger.check_for_logs(logtype)
-    w_data = pd.read_csv(weather_log)
 
-    # Select every 10th datapoint from the last day, giving ~70 datapoints.
-    
-    numberOfPoints = -3000
-    everyXPoints = 20
-    timestamps = list(map(lambda x: x * 1000, list(w_data['timestamp'][numberOfPoints::everyXPoints]))) #multiply all elements by 1000 so timestamp is in miliseconds (for plotly)
-    temperatures = list(w_data['amb_temp C'][numberOfPoints::everyXPoints])
-    dewpoints = list(w_data['dewpoint C'][numberOfPoints::everyXPoints])
-
-    to_plot = {
-        "x": timestamps, 
-        "temperatures": temperatures,
-        "dewpoints": dewpoints
-    }
-    return jsonify(to_plot)
-
-
+# User Login Routes
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -129,13 +53,11 @@ def login():
         login_user(user, remember=form.remember_me.data)
         return redirect(url_for('home'))
     return redirect(url_for('register'))
-
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('home'))
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
@@ -150,6 +72,9 @@ def register():
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('home'))
     return render_template('register.html', form=form, loginform = loginform)
+
+
+
 
 def send(cmd):
     if live_commands==True:
@@ -179,55 +104,10 @@ def stream(device,id):
 # TESTPAGE STUFF ############################
 #############################################
 
+
+from app.reference import object_types, seasons, constellations
+
 from flask import session
-
-object_types = [
-    ('As', 'Asterism'),
-    ('Ds', 'Double Star'),
-    ('MW', 'Milky Way Patch'),
-    ('Oc', 'Open Cluster'),
-    ('Gc', 'Globular Cluster'),
-    ('Pl', 'Planetary Nebula'),
-    ('Di', 'Diffuse nebula'),
-    ('Bn', 'Bright Nebula'),
-    ('Dn', 'Dark Nebula'),
-    ('Sn', 'Supernova Remnant'),
-    ('Cg', 'Clustered Galaxies'),
-    ('Sp', 'Spiral Galaxy'),
-    ('Ba', 'Barred Galaxy'),
-    ('Ir', 'Irregular Galaxy'),
-    ('El', 'Elliptical Galaxy'),
-    ('Ln', 'Lenticular Galaxy'),
-    ('Px', 'Perculiar Galaxy'),
-    ('Sx', 'Seyfert Galaxy')
-    ]
-
-seasons = [
-    ('summer', 'Summer'),
-    ('autumn', 'Autumn'),
-    ('winter', 'Winter'),
-    ('spring', 'Spring')
-    ]
-
-constellations = [
-    ('And', 'Andromeda'),
-    ('Ant', 'Antlia'),
-    ('Aps', 'Apus'),
-    ]
-
-class TestAddForm(FlaskForm):
-    type = SelectField('Type', choices=object_types)
-    magnitude = FloatField('Magnitude', validators=[NumberRange(min=-30, max=100), DataRequired()])
-    size_large = FloatField('Size-Large')
-    size_small = FloatField('Size-Small')
-    distance_ly = FloatField('Distance [ly]')
-    ra_decimal = FloatField('Right Ascension', validators=[NumberRange(min=0, max=24), DataRequired()])
-    de_decimal = FloatField('Declination', validators=[NumberRange(min=0, max=90), DataRequired()])
-    season = SelectField('Season', choices=seasons)
-    constellation = SelectField('Constellation', choices=constellations)
-    names = StringField('Object Name(s)')
-
-
 @app.route('/testpage')
 @login_required
 def testpage():
@@ -257,14 +137,9 @@ def addtodatabase():
         db.session.commit()
         return redirect(url_for('testpage'))
 
-all_dsos = {'As','MW','Oc','Gc','Pl','Di','Bn','Dn','Sn','Cg','Sp','Ba','Ir','El','Ln','Px','Sx'}
-all_stars = {'star', '**', 'Ds'}
-double_stars = {'Ds', '**'}
-nebula = {'Pl','Di','Bn','Dn', 'Sn'}
-galaxies = {'Cg','Sp','Ba','Ir','El','Ln','Px','Sx'}
-globular_clusters = {'Gc'}
-open_clusters = {'Oc'}
-everything_else = {'As','MW'} # Asterisms, Milky Way
+from app.reference import all_dsos, all_stars, double_stars, nebula, galaxies, globular_clusters
+from app.reference import open_clusters, everything_else
+
 
 # Filter the display of objects by type.
 # This route takes users selection and saves it in a session, to be read by tablelookup when the table is redrawn.
@@ -427,7 +302,6 @@ def database_to_json():
     #db_to_json()
     return 'success'
 
-
 @app.route('/recreate_database')
 @login_required
 def recreate_database():
@@ -528,7 +402,7 @@ def merge_geojson():
 
 
 #############################################
-#############################################
+# END TESTPAGE STUFF ########################
 #############################################
 
 
@@ -601,32 +475,10 @@ def textcommand():
     processed = cmd[1] if (len(cmd)>0) else ''
     return jsonify(requested=requested, processed=processed, live=live_commands)
 
-@app.route('/command', methods=['POST'])
-@login_required
-def command():
-    print("form dict: "+str(request.form.to_dict()))
-   # print("button val: "+str(request.form['roof']))
-    category = request.form['category']
-
-    text = str(request.form.to_dict())
-    cmd = ['','']
-    logtext = ''
-
-    if category == 'goto':
-        text = request.form['goto-box']
-        logtext = 'goto: ' + text
-        coordinates = parse_goto_input(text)
-        cmd = cmd_slew(coordinates)
-        print('from /command')
-        print(cmd)
-        send(cmd)
-
-    requested = str(datetime.datetime.now()).split('.')[0]+": . . . . . \t"+logtext
-    processed = cmd[1] if (len(cmd)>0) else ''
-    return jsonify(requested=requested, processed=processed, live=live_commands)
 
 @app.route('/command/<msg>', methods=['POST'])
-def command1(msg):
+@login_required
+def command(msg):
     if msg == 'camera':
         form = CameraForm()
 
@@ -645,6 +497,15 @@ def command1(msg):
             return jsonify(requested="requested", processed=cmd[1], live=live_commands)
         return jsonify(errors=form.errors)
 
+    if msg == 'go':
+        text = request.form['goto-box']
+        coordinates = parse_goto_input(text)
+        cmd = cmd_slew(coordinates)
+        send(cmd)
+        print(cmd)
+        return jsonify(requested="requested", processed=cmd[1], live=live_commands)
+        
+
     if msg == 'lamp': send(cmd_parking(request.form['command']))
     if msg == 'ir-lamp': send(cmd_ir(request.form['command']))
     if msg == 'roof': send(cmd_roof(request.form['command']))
@@ -653,29 +514,9 @@ def command1(msg):
     processed = cmd[1] if (len(cmd)>0) else ''
     return jsonify(requested="requested", processed=processed, live=live_commands, errors=form.errors)
 
-@app.route('/tablelookup1')
-def tablelookup1():
-    """Return server side data for object table"""
-    columns = [
-        ColumnDT(Dso.PrimaryCatalogName),
-        ColumnDT(Dso.PrimaryNumberID),
-        ColumnDT(Dso.Magnitude),
-        ColumnDT(Dso.RightAscension),
-        ColumnDT(Dso.Declination),
-        ColumnDT(Dso.NGCType)
-    ]
 
-    # define the initial query
-    query = db.session.query().filter(Dso.Magnitude < 25)
 
-    # GET parameters
-    params = request.args.to_dict()
 
-    # instantiating a DataTable for the query and table
-    rowTable = DataTables(params, query, columns)
-
-    # returns data to DataTable
-    return jsonify(rowTable.output_result())
 
 if __name__=='__main__':
     app.run(host='10.15.0.15')

@@ -17,6 +17,81 @@ def load_user(id):
     return User.query.get(int(id))
 
 
+# Forms
+
+from app.reference import object_types, seasons, constellations
+
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, FloatField, SelectField, HiddenField
+from wtforms.fields.html5 import EmailField
+from wtforms.validators import DataRequired, EqualTo, Email, ValidationError, NumberRange
+class LoginForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    remember_me = BooleanField('Remember Me')
+    submit = SubmitField('Sign In')
+
+class RegistrationForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    email = EmailField('Email', validators=[DataRequired(), ])
+    password = PasswordField('Password', validators=[DataRequired()])
+    password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Register')
+    def validate_username(self, username):
+        user = User.query.filter_by(username=username.data).first()
+        if user is not None:
+            raise ValidationError('Please use a different username.')
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user is not None:
+            raise ValidationError('Please use a different email address.')
+
+class CameraForm(FlaskForm):
+    time = FloatField('Exposure Time', validators=[DataRequired()])
+    count = IntegerField('Count', default=1, validators=[DataRequired(), NumberRange(min=1)])
+    delay = FloatField('Delay (s)', default=0)
+    dither = SelectField('Dithering', default='off', choices=[('off','off'), ('on','on'), ('random','random')])
+    bin = SelectField('Binning', default='1', choices=[('1','1'), ('2','2'), ('4','4')])
+    filter_choices = [('PL', 'Clear'), ('PR', 'Red'), ('PG', 'Green'), ('PB', 'Blue'), ('S2', 'S2'), ('HA', 'H\u03B1'),
+                      ('O3', 'O3'), ('N2', 'N2')]
+    filter = SelectField('Filter', default='c', choices=filter_choices)
+    capture = SubmitField(' Capture')
+
+    autofocus = BooleanField('Autofocus', default=1)
+
+    position_angle = FloatField('Position Angle', default=0, validators=[DataRequired(),
+                                NumberRange(min=0, max=360, message="Please enter a value between 0 and 360.")])
+
+class ObjectFilter(FlaskForm):
+    open_clusters = BooleanField('open clusters', default=1)
+    globular_clusters = BooleanField('globular clusters', default=1)
+    galaxies = BooleanField('galaxies', default=1)
+    nebula = BooleanField('nebula', default=1)
+
+    stars = BooleanField('stars', default=1)
+    double_stars = BooleanField('double stars', default=1)
+
+    dso_magnitude_min = FloatField('DSOs no brighter than: ')
+    dso_magnitude_max = FloatField('DSOs no fainter than: ')
+    star_magnitude_min = FloatField('Stars no brighter than: ')
+    star_magnitude_max = FloatField('Stars no fainter than: ', default=2.5)
+
+    everything_else = BooleanField('everything else', default=1)
+class TestAddForm(FlaskForm):
+    type = SelectField('Type', choices=object_types)
+    magnitude = FloatField('Magnitude', validators=[NumberRange(min=-30, max=100), DataRequired()])
+    size_large = FloatField('Size-Large')
+    size_small = FloatField('Size-Small')
+    distance_ly = FloatField('Distance [ly]')
+    ra_decimal = FloatField('Right Ascension', validators=[NumberRange(min=0, max=24), DataRequired()])
+    de_decimal = FloatField('Declination', validators=[NumberRange(min=0, max=90), DataRequired()])
+    season = SelectField('Season', choices=seasons)
+    constellation = SelectField('Constellation', choices=constellations)
+    names = StringField('Object Name(s)')
+
+
+
+
 class ThingsInSpace(db.Model):
     __bind_key__ = 'things_in_space'
 
@@ -49,7 +124,6 @@ class ThingsInSpace(db.Model):
 
     def __repr__(self):
         return f'<ID:{self.id}, M{self.messier}, {self.type}, {self.magnitude}>'
-
 
 class User(UserMixin, db.Model):
     __bind_key__ = 'users'
@@ -92,7 +166,6 @@ class Dso(db.Model):
     DuplicateNumberID = db.Column(Integer)
     DuplicateCatalogName = db.Column(Text)
     DisplayMagnitude = db.Column(Float)
-
 
 class Hygdatum(db.Model):
     __tablename__ = 'hygdata'
