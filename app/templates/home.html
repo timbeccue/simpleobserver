@@ -184,10 +184,10 @@
                             var temperatures = {
                                 type: "line",
                                 name: "Ambient Temp",
-                                mode: "markers",
+                                mode: "linest+markers",
                                 connectgaps: false,
                                 line: {
-                                    width: 1.5,
+                                    width: 0.5,
                                     shape: 'spline'
                                 }
                             };
@@ -195,10 +195,10 @@
                             var dewpoints = {
                                 type: "line",
                                 name: "Dewpoint Temp",
-                                mode: "markers",
+                                mode: "lines+markers",
                                 connectgaps: false,
                                 line: {
-                                    width: 1.5,
+                                    width: 0.5,
                                     shape: 'spline'
                                 }
                             };
