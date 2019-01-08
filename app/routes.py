@@ -90,20 +90,24 @@ weather_logger.start()
 ####################################################################################
 
 import pandas as pd
+from app import weather_plots
 @app.route('/plot_weather/<logtype>', methods=['GET', 'POST'])
 def plot_weather(logtype):
+
+    if logtype=='test':
+        return(weather_plots.create_plot())
+    
     weather_log = weatherlogger.check_for_logs(logtype)
-    print(weather_log)
     w_data = pd.read_csv(weather_log)
 
     # Select every 10th datapoint from the last day, giving ~70 datapoints.
     
-    timestamps = list(map(lambda x: x * 1000, list(w_data['timestamp'][-700::10]))) #multiply all elements by 1000 so timestamp is in miliseconds (for plotly)
-    temperatures = list(w_data['amb_temp C'][-700::10])
-    dewpoints = list(w_data['dewpoint C'][-700::10])
-    
-    #x_time = [1,2,3,4,5]
-    #y_temp = [2,9,8,1,0]
+    numberOfPoints = -3000
+    everyXPoints = 20
+    timestamps = list(map(lambda x: x * 1000, list(w_data['timestamp'][numberOfPoints::everyXPoints]))) #multiply all elements by 1000 so timestamp is in miliseconds (for plotly)
+    temperatures = list(w_data['amb_temp C'][numberOfPoints::everyXPoints])
+    dewpoints = list(w_data['dewpoint C'][numberOfPoints::everyXPoints])
+
     to_plot = {
         "x": timestamps, 
         "temperatures": temperatures,

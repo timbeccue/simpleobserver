@@ -118,148 +118,11 @@
                             }
                         </style>
                         
-                        <div id="plotly-test"></div>
-                        <div id="graph"></div>
-
+                        <div id="plot-0"></div>
+                        <div id="plot-1"></div>
 
                         <table id="weather-table">
                         </table>
-
-
-                        <!-- Plotly.js -->
-                        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-
-
-                        <script>
-                            /*
-                            function rand() {
-                                return Math.random();
-                            }
-
-                            var time = new Date();
-
-                            var trace1 = {
-                                x: [time, time, time-2, time-3],
-                                y: [1,0,1,0],
-                                mode: 'lines',
-                                line: {color: '#80CAF6'}
-                            }
-
-                            var data = [trace1]
-
-                            Plotly.plot('graph', data);
-
-                            var cnt = 0;
-
-                            var interval = setInterval(function() {
-                                var time = new Date();
-
-                                var update = {
-                                    x: [[time]],
-                                    y: [[rand()]]
-                                }
-
-                                var olderTime = time.setMinutes(time.getMinutes() - 3);
-                                var futureTime = time.setMinutes(time.getMinutes() + 3);
-
-                                var minuteView = {
-                                        xaxis: {
-                                            type: 'date',
-                                            range: [olderTime, futureTime]
-                                        }
-                                    };
-
-                                Plotly.relayout('graph', minuteView);
-                                Plotly.extendTraces('graph', update, [0])
-
-                                if(cnt === 100) clearInterval(interval);
-                            }, 1000);
-                            */
-
-                            //TESTER = document.getElementById('plotly-test');
-                            function toPlotlyDate(timestamp) {
-                                return new Date(timestamp * 1000);
-                            }
-
-                            var temperatures = {
-                                type: "line",
-                                name: "Ambient Temp",
-                                mode: "lines+markers",
-                                connectgaps: false,
-                                line: {
-                                    width: 0.5,
-                                    shape: 'spline'
-                                }
-                            };
-
-                            var dewpoints = {
-                                type: "line",
-                                name: "Dewpoint Temp",
-                                mode: "lines+markers",
-                                connectgaps: false,
-                                line: {
-                                    width: 0.5,
-                                    shape: 'spline'
-                                }
-                            };
-
-                            var data = [temperatures, dewpoints];
-
-                            var layout = {
-                                title: 'Temperature',
-                                xaxis: {
-                                    title: 'time',
-                                    showgrid: false,
-                                    type: 'date',
-                                    tickmode: 'linear',
-                                    dtick: 3600000
-                                },
-                                yaxis: {
-                                    title: 'temperature [deg C]',
-                                    showgrid: false
-                                },
-                                showlegend: true,
-                                paper_bgcolor: 'rgba(0,0,0,0)',
-                                plot_bgcolor: 'rgba(0,0,0,0)',
-                                font: {
-                                    color: 'aaa'
-                                }
-                            };
-
-                            Plotly.newPlot('plotly-test', data, layout, {responsive: true});
-
-
-                        function plot_weather(){
-                            $.ajax({
-                                url: "plot_weather/W",
-                                success: function(new_data) {
-                                    temperatures.x = new_data.x;
-                                    dewpoints.x = new_data.x;
-                                    temperatures.y = new_data.temperatures;
-                                    dewpoints.y = new_data.dewpoints;
-
-                                    data = [temperatures, dewpoints]
-                                    Plotly.newPlot('plotly-test', data, layout, {responsive: true});
-                                    //Plotly.restyle(TESTER, { x: trace.x, y: trace.y });
-                                    //Plotly.extendTraces('plotly-test', {x: trace.x, y: trace.y}, [0]);
-                                    //Plotly.relayout('plotly-test', { 'xaxis.range': [cnt-20, cnt]})
-
-                                },
-                                error: function() {
-                                    console.log('failed to update weather plot data');
-                                }
-                            })
-                        }
-
-                        setInterval(plot_weather(), 1000*60*2);
-                        
-
-
-
-                                            
-                            </script>
-
-
                     </div>
                     <div id="viewtab2" class="tabs-content views-content">
                         schedule log here
@@ -277,34 +140,6 @@
                     <div id="viewtab5" class="tabs-content views-content">
                         <div id="dome-cam"></div>
                         <script type="text/javascript" src="static/livefeed.js"></script>
-
-                        <!--label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-2">
-                          <span class="mdl-switch__label">Lamp: </span>
-                          <input type="checkbox" id="switch-2" class="mdl-switch__input">
-                        </label>
-                        <div></div>
-                        <div></div>
-
-                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="ir-lamp">
-                          <span class="mdl-switch__label">IR Lamp: </span>
-                          <input type="checkbox" id="ir-lamp" class="mdl-switch__input">
-                        </label>
-                        <div></div>
-                        <div></div>
-
-                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="roof">
-                          <span class="mdl-switch__label">Roof: </span>
-                          <input type="checkbox" id="roof" class="mdl-switch__input">
-                        </label>
-                        <div></div>
-                        <div></div>
-
-                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="park">
-                          <span class="mdl-switch__label">Park: </span>
-                          <input type="checkbox" id="park" class="mdl-switch__input">
-                        </label>
-                        <div></div>
-                        <div></div-->
 
                         <h3>Lamp: </h3>
                             <!--div data-msg="lamp" class="status-box">Off</div-->
@@ -698,6 +533,34 @@
     var js9corsshair_dec // = JS9.js9crosshair_dec;
 
     var lmst = 15.000;
+</script>
+
+<!-- Plotly.js -->
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<script>
+
+    function plot_weather(){
+        $.ajax({
+            url: "plot_weather/test",
+            success: function(the_data) {
+                
+                var graphs = JSON.parse(the_data);
+                var ids = ['plot-0', 'plot-1'];
+
+                for(var i in graphs) {
+                    Plotly.newPlot(ids[i], graphs[i].data, graphs[i].layout, {responsive: true});
+                };
+            },
+            error: function() {
+                console.log('failed to update weather plot data');
+            }
+        })
+    }
+    plot_weather();
+    setInterval(plot_weather(), 1000);
+    
+        
 </script>
 
 
