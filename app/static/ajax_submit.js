@@ -1,5 +1,70 @@
 
 
+/*
+
+all commands issued to the observatory should include a class="form-command" or "button-command". 
+This should be either in a form (if there is a form), or the button that is clicked. 
+
+A single function should be called when an object with the class "send-command" is clicked.
+This function should make an ajax call and respond appropriately on success or failure. 
+
+*/
+
+
+
+
+function sendcommand(url, formdata) {
+    $.ajax({
+        type: 'POST', 
+        url: url, 
+        data: formdata 
+    }).done(function(data) {
+
+        console.log("Command recieved.");
+        console.log(data);
+    
+        // Popup confirming the status of the requested command. 
+        // Optional action button (eg. 'UNDO') in popup_data's commented lines.
+        var notification = document.querySelector('.mdl-js-snackbar');
+        var popup_data = {
+            //actionHandler: function(event) {},
+            //actionText: 'Undo',
+            //timeout: 10000,
+            message: data.response
+            //message: "Command recieved."
+        };
+        notification.MaterialSnackbar.showSnackbar(popup_data);    
+    }).fail(function(data) {
+
+        console.log("Command failed.");
+        
+        // Popup confirming the (failed) status of the requested command.
+        var notification = document.querySelector('.mdl-js-snackbar');
+        notification.MaterialSnackbar.showSnackbar({ message: "Command failed." });    
+    });
+}
+
+$(function() {
+    $('.form-command').submit(function(e) {
+        e.preventDefault();
+        var form = $(this);
+        var url = form.attr('action');
+        var formdata = form.serialize();
+        sendcommand(url, formdata);
+    });
+});
+$(function() {
+    $('.button-command').click(function(e) {
+        e.preventDefault();
+        var button = $(this);
+        var url = '/command/'+button.data('msg');
+        var formdata = { command: $(this).val() };
+        sendcommand(url, formdata);
+    });
+});
+
+
+
 // AJAX form submission (works for any form with data-autosubmit in the form tag).
 (function($) {
     $.fn.auto_submit = function() {
@@ -73,17 +138,17 @@ $(function() {
             });
         });
         return this;
-    }
-})(jQuery)
+    };
+})(jQuery);
 
 $(function() {
     $('form[data-consolesubmit]').console_submit();
 });
 
 $(function() {
-    $('.button-command').click( click_command);
+    //$('.button-command').click( click_command);
     $('.toggle-flip').change(click_command);
-})
+});
 
 function click_command(e) {
     e.preventDefault();
@@ -91,7 +156,7 @@ function click_command(e) {
         type: 'POST',
         url: '/command/'+$(this).data('msg'),
         data: {
-            command: $(this).val(),
+            command: $(this).val()
         },
         success: function(data) {
             if (data.requested) {
@@ -110,10 +175,12 @@ function click_command(e) {
             console.log('error');
         }
     });
-};
+}
 
+
+/* Login Form */
 $('.login-form').click(function(e) {
-    e.preventDefault()
+    e.preventDefault();
     $.ajax({
         type: 'POST',
         url: $(this).data('route'),

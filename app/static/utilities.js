@@ -25,13 +25,31 @@ function newUtilities() {
         var d, h, m, s;
         var UT;
 
+        // If necessary, fetch longitude with an AJAX call to the config file.
+        /*
+
+        // NOTE: THIS FAILS because it is an asynchronous call and doesn't get the value soon enough.
+
         if (typeof(state) === 'undefined') {
-            lon = parseFloat(document.getElementById('static-state').dataset.lon);
-        } else {
-            lon = parseFloat(state.lon);
+            $.ajax({
+                type: 'POST',
+                url: '/getinfo/lon',
+                success: function(data) {
+                    lon = data.lon;
+                    console.log(lon);
+                },
+                error: function() {
+                    console.log("Failed to fetch longitude from server.");
+                }
+            });
         }
+        console.log(lon);
+        */
+
         /* NOTE: Temporary fix. Hardcoded lon val. Should get value from state. */
         lon = -119;
+
+
 
         // Calculate days since J2000
         today_date = new Date();

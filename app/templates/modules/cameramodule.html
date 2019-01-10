@@ -1,0 +1,60 @@
+
+<div class="module" id="module1">
+    <div class="module-head">
+        <div class="head-title">
+            <h1><span style="transition:0.5s;">&#9660;</span> &nbsp;Settings</h1>
+        </div>
+        <div class="head-inputs">
+            <form id=camerasettings action="/command/camera" method="POST" class="form-command" autocomplete="off">
+                {{ cameraform.hidden_tag() }}
+                <div class='head-input-item'>
+                    {{ cameraform.time.label }}
+                    <br>
+                    {{ cameraform.time(autocomplete="off") }}
+                </div>
+                <div class='head-input-item'>
+                    {{ cameraform.filter.label }}
+                    <br>
+                    {{ cameraform.filter(autocomplete="off") }}
+                </div>
+                <div class="head-input-item">
+                    {{ cameraform.capture(class_="btn") }}
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="module-body">
+        <div class="module-body-wrapper">
+            <ul class="js-tabs">
+                <li class="tab camerasettings-tab current" data-tabtype="camerasettings" data-tab="camera-tab-content">Camera</li>
+                <li class="tab camerasettings-tab" data-tabtype="camerasettings" data-tab="focus-tab-content">Focus</li>
+                <li class="tab camerasettings-tab" data-tabtype="camerasettings" data-tab="rotate-tab-content">Rotate</li>
+            </ul>
+            <div id="camera-tab-content" class="tabs-content camerasettings-content current">
+                {{ cameraform.count.label }}
+                {{ cameraform.delay.label }}
+                {{ cameraform.count(form="camerasettings", autocomplete="off") }}
+                {{ cameraform.delay(form="camerasettings", autocomplete="off") }}
+            <div></div><div></div>
+                {{ cameraform.bin.label }}
+                {{ cameraform.dither.label }}
+                {{ cameraform.bin(form="camerasettings", autocopmlete="off") }}
+                {{ cameraform.dither(form="camerasettings", autocomplete="off") }}
+            </div>
+            <div id="focus-tab-content" class="tabs-content camerasettings-content">
+                {{ cameraform.autofocus.label }}
+                {{ cameraform.autofocus(form="camerasettings") }}
+                {% for error in cameraform.autofocus.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div id="rotate-tab-content" class="tabs-content camerasettings-content">
+                {{ cameraform.position_angle.label }}
+                {{ cameraform.position_angle(form="camerasettings") }}
+                {% for error in cameraform.position_angle.errors %}
+                <!--p style="color: red;">[{{ error }}]</p-->
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>

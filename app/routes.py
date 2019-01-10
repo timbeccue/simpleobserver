@@ -37,6 +37,18 @@ from app import weather_plots
 @app.route('/plot_weather/<logtype>', methods=['GET', 'POST'])
 def plot_weather(logtype):
     return(weather_plots.create_plot(logtype))
+
+from configparser import ConfigParser
+@app.route('/getinfo/<item>', methods=['GET', 'POST'])
+# The variable 'item' is a string of config items to get, delimited by a dash (-)
+def get_info(item):
+    config = ConfigParser()
+    config.read('config.ini')
+    item_list = item.split("-")
+    values = {}
+    for val in item_list:
+        values[val] = config['DEFAULT'][val]
+    return jsonify(values)    
     
 
 # User Login Routes
@@ -410,7 +422,7 @@ def merge_geojson():
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template('home.html', state=ptr_state, loginform=LoginForm(), cameraform=CameraForm(), filter=ObjectFilter())
+    return render_template('base.html', state=ptr_state, loginform=LoginForm(), cameraform=CameraForm(), filter=ObjectFilter())
 
 @app.route('/starparty', methods=['GET', 'POST'])
 def starparty():
@@ -479,6 +491,8 @@ def textcommand():
 @app.route('/command/<msg>', methods=['POST'])
 @login_required
 def command(msg):
+
+    # Camera/Imaging Commands
     if msg == 'camera':
         form = CameraForm()
 
@@ -494,25 +508,40 @@ def command(msg):
             cmd = cmd_expose(time, count, bin, dither, autofocus, position_angle, delay, filter)
             send(cmd)
             print(cmd)
-            return jsonify(requested="requested", processed=cmd[1], live=live_commands)
+            response = f"Taking {count} {time} second image(s)."
+            return jsonify(response=response, requested="requested", processed=cmd[1], live=live_commands)
         return jsonify(errors=form.errors)
 
+    # Telescope GOTO Commands
     if msg == 'go':
         text = request.form['goto-box']
         coordinates = parse_goto_input(text)
         cmd = cmd_slew(coordinates)
         send(cmd)
         print(cmd)
-        return jsonify(requested="requested", processed=cmd[1], live=live_commands)
+        response = f"Slewing to {coordinates}"
+        return jsonify(response=response, requested="requested", processed=cmd[1], live=live_commands)
         
-
-    if msg == 'lamp': send(cmd_parking(request.form['command']))
-    if msg == 'ir-lamp': send(cmd_ir(request.form['command']))
-    if msg == 'roof': send(cmd_roof(request.form['command']))
-    if msg == 'parking': send(cmd_parking(request.form['command']))
-
+    # Enclosure Button Commands
+    if msg == 'lamp': 
+        value = request.form['command']
+        response = f"Lamp is {value}."
+        cmd = cmd_lamp(value)
+    if msg == 'ir-lamp': 
+        value = request.form['command']
+        response = f"IR lamp is {value}."
+        cmd = cmd_ir(request.form['command'])
+    if msg == 'roof': 
+        value = request.form['command']
+        response = f"Enclosure roof is {value[:4]}ing."
+        cmd = cmd_roof(request.form['command'])
+    if msg == 'parking': 
+        value = request.form['command']
+        response = f"Telescope is {value}ing."
+        cmd = cmd_parking(request.form['command'])
+    send(cmd)
     processed = cmd[1] if (len(cmd)>0) else ''
-    return jsonify(requested="requested", processed=processed, live=live_commands, errors=form.errors)
+    return jsonify(response=response, requested="requested", processed=processed, live=live_commands)
 
 
 

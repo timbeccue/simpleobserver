@@ -1,5 +1,4 @@
 
-# coding: utf-8
 from sqlalchemy import Column, Float, Integer, Table, Text
 from sqlalchemy.sql.sqltypes import NullType
 from sqlalchemy.ext.declarative import declarative_base
@@ -7,6 +6,9 @@ from app import db
 
 Base = declarative_base()
 metadata = Base.metadata
+
+
+# Users and Login
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
@@ -25,6 +27,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, FloatField, SelectField, HiddenField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired, EqualTo, Email, ValidationError, NumberRange
+
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
@@ -59,7 +62,7 @@ class CameraForm(FlaskForm):
 
     autofocus = BooleanField('Autofocus', default=1)
 
-    position_angle = FloatField('Position Angle', default=0, validators=[DataRequired(),
+    position_angle = FloatField('Position Angle', default=0, validators=[
                                 NumberRange(min=0, max=360, message="Please enter a value between 0 and 360.")])
 
 class ObjectFilter(FlaskForm):
@@ -91,6 +94,8 @@ class TestAddForm(FlaskForm):
 
 
 
+
+# Database Stuff
 
 class ThingsInSpace(db.Model):
     __bind_key__ = 'things_in_space'

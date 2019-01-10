@@ -14,7 +14,7 @@ def create_plot(logtype):
     weather_data = pd.read_csv(weather_log)
 
     minutes = 0 # Number of data points (1 per minute)
-    interval = 20   # Plot one point for every [interval] points in log 
+    interval = 40   # Plot one point for every [interval] points in log 
 
     # x-axis is time
     times = list(weather_data['timestamp'][minutes::interval])
@@ -47,6 +47,12 @@ def create_plot(logtype):
         legend = dict(
             x = 0,
             y = 1.2
+        ),
+        margin = plotly.graph_objs.layout.Margin(
+            l=50,
+            r=0,
+            t=100,
+            b=50
         ),
         paper_bgcolor = 'rgba(0,0,0,0)', 
         plot_bgcolor = 'rgba(0,0,0,0)', 

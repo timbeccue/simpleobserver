@@ -1,0 +1,32 @@
+
+<section class="header">
+    <div class="section-wrapper">
+        <h1><a class="title-link" href=".">photon <b>ranch</b></a></h1>
+        
+
+        {% if current_user.is_anonymous %}
+        <form class='notloggedin' id="login" method="POST" action="/login">
+            {{ loginform.hidden_tag() }}
+            {{ loginform.username.label }}
+            {{ loginform.username() }}
+            {{ loginform.password.label }}
+            {{ loginform.password() }}
+            {# loginform.remember_me() #}
+            {# loginform.remember_me.label #}
+            {{ loginform.submit() }}
+            <a href="{{ url_for('register') }}">
+                <button id="login-register-button" type="button">Create New Account</button>
+            </a>
+        </form>
+        {% else %}
+        <ul class='loggedin'>
+            <li><a href="#">Hello, {{ current_user.username }}</a>
+                <ul class="dropdown">
+                    <li><a href="{{ url_for('logout') }}">logout</a></li>
+                </ul>
+            </li>
+        </ul>
+        {% endif %}
+    </div>
+
+</section>
