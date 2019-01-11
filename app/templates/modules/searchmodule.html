@@ -11,14 +11,58 @@
         </div>
     </div>
     <div class="module-body">
-        <div class="module-body-wrapper">
+        <div class="module-body-wrapper" id=query-body>
+
             <select form="query-object" name="haswildcards">
-                <option value="wildcard-no">only this object</option>
-                <option value="wildcard-yes">with wildcards: *,?,[^abc-z]</option>
+                <option value="False">only this object</option>
+                <option value="True">with wildcards: *,?,[^abc-z]</option>
             </select>
+
+            <!-- Results Table -->
+            <table id="query-result-table">
+                <thead>
+                    <tr>
+                        <th>MAIN_ID</th>
+                        <th>RA</th>
+                        <th>DEC</th>
+                        <th>FLUX_V</th>
+                        <th>ID_Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+
+            <link rel="stylesheet" href="//aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.css" />
+
+            <div id="aladin-lite-div" style="width:auto;height:300px;"></div>
+            <script type="text/javascript" src="//aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>
+            <script type="text/javascript">
+                var aladin = A.aladin('#aladin-lite-div', {survey: "P/DSS2/color", fov:60});
+            </script>
+
         </div>
     </div>
 </div>
+
+<style>
+    #query-body {
+        display: grid;
+        grid-gap: 1em;
+        grid-template-rows: 30px 1fr;
+        grid-template-columns: 1fr 1fr;
+    }
+    #query-result-table{
+        grid-row: 2;
+        grid-column: 1/2;
+        width: 100%;
+    }
+    #aladin-lite-div {
+        margin: 2em;
+        grid-row: 2;
+        grid-column: 2;
+    }
+</style>
 
 
 <script>
@@ -32,7 +76,6 @@ $(function() {
             url:form.attr('action'), 
             data: form.serialize() 
         }).done(function(response) {
-            console.log(response);
             if (response.status == "fail") {
                 console.log("Query failed.")
                 console.log(response.content);
@@ -41,6 +84,13 @@ $(function() {
                 console.log("Query succeeded.")
                 data = JSON.parse(response.content); 
                 console.log(data);
+
+                /* Print results in a table */
+                var num_results = (Object.keys(data.ID_m).length);
+                for (var i=0; i<num_results; i++) {
+                    var row = "<tr><td>"+data.ID_m[i]+"</td><td>"+data.RA_d[i]+"</td><td>"+data.DEC_d[i]+"</td><td"+data.FLUX_V[i]+"</td><td>"+data.ID_name[i]+"</td></tr>";
+                    $('#query-result-table tbody').append(row);
+                }
             }
         }).fail(function(data, textStatus, errorThrown) {
             console.log("AJAX failed to send search results.");

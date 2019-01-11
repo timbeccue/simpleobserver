@@ -65,13 +65,19 @@ def simbadquery():
     if not args or not wildcard: #ensure nonempty fields
         return jsonify(status='fail', content="error: no search argument given.")
 
+    # Customize fields returned by Simbad
+    cSimbad = Simbad()
+    cSimbad.add_votable_fields('main_id', 'id(m)', 'id(ngc)','ra(d)', 'dec(d)', 'ubv', 'flux(V)', 'id(name)')
+    cSimbad.remove_votable_fields('coordinates', 'main_id')
+
+
+    raw_result = cSimbad.query_object(args, wildcard=wildcard)
     try:
-        raw_result = Simbad.query_object(args, wildcard=False)
+        result_b = raw_result.to_pandas()
     except Exception as ex:
         print(ex)
         return jsonify(status='fail', content="error: simbad did not respond to request.")
     
-    result_b = raw_result.to_pandas()
     result = result_b.to_json()
     print(result)
     return jsonify(status="success", content=result)
