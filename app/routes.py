@@ -49,6 +49,33 @@ def get_info(item):
     for val in item_list:
         values[val] = config['DEFAULT'][val]
     return jsonify(values)    
+
+from astroquery.simbad import Simbad
+@app.route('/simbadquery', methods=['GET', 'POST'])
+def simbadquery():
+    ''' 
+    Should return JSON with status=success or fail. 
+    If status=fail, json should include content="error message".
+    If status=success, content should contain a string that is already coded in json format.
+    '''
+
+    args = request.form['query-args']
+    wildcard = request.form['haswildcards']
+
+    if not args or not wildcard: #ensure nonempty fields
+        return jsonify(status='fail', content="error: no search argument given.")
+
+    try:
+        raw_result = Simbad.query_object(args, wildcard=False)
+    except Exception as ex:
+        print(ex)
+        return jsonify(status='fail', content="error: simbad did not respond to request.")
+    
+    result_b = raw_result.to_pandas()
+    result = result_b.to_json()
+    print(result)
+    return jsonify(status="success", content=result)
+
     
 
 # User Login Routes

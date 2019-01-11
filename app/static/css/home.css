@@ -379,7 +379,7 @@ a {
     margin-left: 10px;
     margin-right: 10px;
     margin-top: 5px;
-    height: 50px;
+    height: 35px;
 }
 .module .module-body {
     height: auto;
@@ -423,15 +423,12 @@ a {
     grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
     grid-gap: 5px;
 }
-#target-search {
-    width: 220px;
-}
 /* goto module */
 #module-go {
     display: flex;
     flex-direction: column;
     margin: 30px;
-    height: 70vh;
+    height: auto;
 }
 #filter_form {
     display: grid;

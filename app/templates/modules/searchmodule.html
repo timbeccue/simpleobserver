@@ -1,0 +1,54 @@
+<div class="module" id="module3">
+    <div class="module-head">
+        <div class="head-title">
+            <h1><span style="transition:0.5s;">&#9660;</span> &nbsp;Search</h1>
+        </div>
+        <div class="head-inputs">
+            <form id="query-object" method="POST" action="/simbadquery">
+                <input class="head-input-item" type="text" name="query-args" placeholder="name or identifier...">
+                <button type="submit" class="head-input-item btn">Search</button>
+            </form>
+        </div>
+    </div>
+    <div class="module-body">
+        <div class="module-body-wrapper">
+            <select form="query-object" name="haswildcards">
+                <option value="wildcard-no">only this object</option>
+                <option value="wildcard-yes">with wildcards: *,?,[^abc-z]</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+$(function() {
+    $('#query-object').submit(function(e) {
+        e.preventDefault();
+        var form = $(this);
+        $.ajax({
+            type: 'POST', 
+            url:form.attr('action'), 
+            data: form.serialize() 
+        }).done(function(response) {
+            console.log(response);
+            if (response.status == "fail") {
+                console.log("Query failed.")
+                console.log(response.content);
+            }
+            if (response.status == "success") {
+                console.log("Query succeeded.")
+                data = JSON.parse(response.content); 
+                console.log(data);
+            }
+        }).fail(function(data, textStatus, errorThrown) {
+            console.log("AJAX failed to send search results.");
+            console.log(data);
+            console.log(textStatus);
+            console.log(errorThrown);
+        });
+    });
+});
+
+</script>
