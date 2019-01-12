@@ -51,6 +51,7 @@ def get_info(item):
     return jsonify(values)    
 
 from astroquery.simbad import Simbad
+from astropy.table import Table, vstack
 @app.route('/simbadquery', methods=['GET', 'POST'])
 def simbadquery():
     ''' 
@@ -59,19 +60,27 @@ def simbadquery():
     If status=success, content should contain a string that is already coded in json format.
     '''
 
-    args = request.form['query-args']
-    wildcard = request.form['haswildcards']
+    search_args = request.form['query-args'].split(",")
+    print(search_args)
+    wildcard = True#request.form['haswildcards']
 
-    if not args or not wildcard: #ensure nonempty fields
+    if not search_args or not wildcard: #ensure nonempty fields
         return jsonify(status='fail', content="error: no search argument given.")
 
     # Customize fields returned by Simbad
     cSimbad = Simbad()
-    cSimbad.add_votable_fields('main_id', 'id(m)', 'id(ngc)','ra(d)', 'dec(d)', 'ubv', 'flux(V)', 'id(name)')
+    cSimbad.add_votable_fields('main_id', 'id(m)', 'id(ngc)','ra(d)', 'dec(d)', 'ubv', 'flux(V)', 'id(name)', 'dim_majaxis')
     cSimbad.remove_votable_fields('coordinates', 'main_id')
 
+    # Comma separated queries return multiple tables that are combined into one.
+    def objects(*args): 
+        def gen(*args):
+            for arg in args:
+                yield cSimbad.query_objects(arg, wildcard=True)
+        return vstack(list(gen(*args)))
 
-    raw_result = cSimbad.query_object(args, wildcard=wildcard)
+
+    raw_result = objects(search_args)
     try:
         result_b = raw_result.to_pandas()
     except Exception as ex:

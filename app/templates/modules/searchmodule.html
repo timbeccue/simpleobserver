@@ -1,3 +1,4 @@
+
 <div class="module" id="module3">
     <div class="module-head">
         <div class="head-title">
@@ -5,7 +6,7 @@
         </div>
         <div class="head-inputs">
             <form id="query-object" method="POST" action="/simbadquery">
-                <input class="head-input-item" type="text" name="query-args" placeholder="name or identifier...">
+                <input class="head-input-item" id="simbad-search-box" type="text" name="query-args" placeholder="name or identifier...">
                 <button type="submit" class="head-input-item btn">Search</button>
             </form>
         </div>
@@ -13,21 +14,21 @@
     <div class="module-body">
         <div class="module-body-wrapper" id=query-body>
 
-            <select form="query-object" name="haswildcards">
+            <!--select form="query-object" name="haswildcards">
                 <option value="False">only this object</option>
                 <option value="True">with wildcards: *,?,[^abc-z]</option>
-            </select>
+            </select-->
 
             <!-- Results Table -->
             <table id="query-result-table">
                 <thead>
-                    <tr>
+                    <tr class="table-head">
                         <th>MAIN_ID</th>
                         <th>RA</th>
                         <th>DEC</th>
                         <th>FLUX_V</th>
                         <th>ID_Name</th>
-                    </tr>
+                    </tr><tr> </tr>
                 </thead>
                 <tbody>
                 </tbody>
@@ -35,10 +36,10 @@
 
             <link rel="stylesheet" href="//aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.css" />
 
-            <div id="aladin-lite-div" style="width:auto;height:300px;"></div>
+            <div id="aladin-lite-div"></div>
             <script type="text/javascript" src="//aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>
             <script type="text/javascript">
-                var aladin = A.aladin('#aladin-lite-div', {survey: "P/DSS2/color", fov:60});
+                var aladin = A.aladin('#aladin-lite-div', {survey: "P/DSS2/color", fov:1, target: "M 1", cooFrame: "ICRSd", showLayersControl: false, showFullscreenControl: false});
             </script>
 
         </div>
@@ -46,26 +47,41 @@
 </div>
 
 <style>
-    #query-body {
-        display: grid;
-        grid-gap: 1em;
-        grid-template-rows: 30px 1fr;
-        grid-template-columns: 1fr 1fr;
+    .highlight-textbox {
+        border: orange 2px solid;
     }
-    #query-result-table{
-        grid-row: 2;
-        grid-column: 1/2;
-        width: 100%;
+    #query-body {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
+    #query-result-table {
+        width: 50%;
+        border: green 0px solid;
+        border-collapse: collapse;
+    }
+    #query-result-table thead tr {
+        border-bottom: var(--neutral-6) 1px solid;
+    }
+    .table-head {
+        text-align: left;
     }
     #aladin-lite-div {
-        margin: 2em;
-        grid-row: 2;
-        grid-column: 2;
+        min-height: 300px;
+        width: 40%;
+        border: none;
     }
 </style>
 
 
 <script>
+
+function flash_textbox(ms) {
+    $('#simbad-search-box').addClass('highlight-textbox');
+    setTimeout( function() { 
+        $('#simbad-search-box').removeClass('highlight-textbox'); 
+    }, ms);
+}
 
 $(function() {
     $('#query-object').submit(function(e) {
@@ -79,6 +95,8 @@ $(function() {
             if (response.status == "fail") {
                 console.log("Query failed.")
                 console.log(response.content);
+                
+                flash_textbox(2000);
             }
             if (response.status == "success") {
                 console.log("Query succeeded.")
@@ -86,17 +104,33 @@ $(function() {
                 console.log(data);
 
                 /* Print results in a table */
+                $('#query-result-table tbody').empty()
                 var num_results = (Object.keys(data.ID_m).length);
                 for (var i=0; i<num_results; i++) {
-                    var row = "<tr><td>"+data.ID_m[i]+"</td><td>"+data.RA_d[i]+"</td><td>"+data.DEC_d[i]+"</td><td"+data.FLUX_V[i]+"</td><td>"+data.ID_name[i]+"</td></tr>";
+
+                    var id_m = data.ID_m[i] || '--';
+                    var ra_d = data.RA_d[i].toFixed(2);
+                    var dec_d = data.DEC_d[i].toFixed(2);
+                    var flux_v = parseFloat(data.FLUX_V[i]).toFixed(2) || '--';
+                    var id_name = String(data.ID_name[i]).slice(5) || '--';
+
+                    var row = "<tr><td>"+ id_m + "</td>";
+                        row += "<td>" + ra_d + "</td>";
+                        row += "<td>" + dec_d + "</td>";
+                        row += "<td>" + flux_v + "</td>";
+                        row += "<td>" + id_name + "</td></tr>";
+
                     $('#query-result-table tbody').append(row);
                 }
+                aladin.gotoRaDec(data.RA_d[0], data.DEC_d[0]);
+                aladin.adjustFovForObject(data.ID_name[0]);
             }
         }).fail(function(data, textStatus, errorThrown) {
             console.log("AJAX failed to send search results.");
             console.log(data);
             console.log(textStatus);
             console.log(errorThrown);
+            flash_textbox(1000);
         });
     });
 });
