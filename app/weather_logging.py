@@ -44,7 +44,7 @@ class WeatherLogger():
         self.timestamp_index = 9
         self.folder = os.path.join(os.path.abspath(os.path.dirname(__file__)), "weatherlogs")
         self.filebase = "_weather_" + self.site + "_"
-        self.log_size = {"W":604800, "M": 2592000, "Y": 315360000} # seconds: 7 days, 30 days, 10 years 
+        self.log_size = {"W":60480000, "M": 2592000, "Y": 315360000} # seconds: 7 days, 30 days, 10 years 
         self.log_buffer = {"W":3600, "M": 86400, "Y": 315360000} # seconds: 1 hour, 1 day, 10 years
 
     def current_data(self):
