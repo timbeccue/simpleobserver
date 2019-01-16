@@ -29,13 +29,38 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class='batch-row'>
-                            <td style="min-width: 60px;">{{ cameraform.time(autocomplete="off", class="form-control") }}</td>
-                            <td style="min-width: 50px;">{{ cameraform.count(form="camerasettings", autocomplete="off", class="form-control") }}</td>
-                            <td style="min-width: 70px;">{{ cameraform.delay(form="camerasettings", autocomplete="off", class="form-control") }}</td>
-                            <td style="min-width: 80px;">{{ cameraform.filter(autocomplete="off", class="form-control") }}</td>
-                            <td style="min-width: 60px;">{{ cameraform.bin(form="camerasettings", autocopmlete="off", class="form-control") }}</td>
-                            <td style="min-width: 70px;">{{ cameraform.dither(form="camerasettings", autocomplete="off", class="form-control") }}</td>
+                        <tr class="batch-row">
+                            <td style="min-width: 60px;">
+                                <input autocomplete="off" class="form-control"  name="time" required="" type="text" value="5">
+                            </td>
+                            <td style="min-width: 50px;">
+                                <input autocomplete="off" class="form-control" form="camerasettings" name="count" type="text" value="1">
+                            </td>
+                            <td style="min-width: 70px;">
+                                <input autocomplete="off" class="form-control" form="camerasettings" name="delay" type="text" value="0">
+                            </td>
+                            <td style="min-width: 80px;">
+                                <select autocomplete="off" class="form-control" name="filter">
+                                    <option value="PL">Clear</option><option value="PR">Red</option>
+                                    <option value="PG">Green</option><option value="PB">Blue</option>
+                                    <option value="S2">S2</option><option value="HA">Hα</option>
+                                    <option value="O3">O3</option><option value="N2">N2</option>
+                                </select>
+                            </td>
+                            <td style="min-width: 60px;">
+                                <select autocopmlete="off" class="form-control" form="camerasettings" name="bin">
+                                    <option selected="" value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="4">4</option>
+                                </select>
+                            </td>
+                            <td style="min-width: 70px;">
+                                <select autocomplete="off" class="form-control" form="camerasettings" name="dither">
+                                    <option selected="" value="off">off</option>
+                                    <option value="on">on</option>
+                                    <option value="random">random</option>
+                                </select>
+                            </td>
                         </tr>
                         <tr id="batch-table-bottom"><td><p id="add-another-batch-row">+ row</p></td></tr>
                     </tbody>
@@ -76,10 +101,10 @@
 <script>
 
 /* TODO: change class when adding rows so each row is uniquely identified. */
-    var batch_row = $('.batch-row');
     var bottom_row = $('#batch-table-bottom');
 
     $('#add-another-batch-row').click(function(){
+        var batch_row = $('.batch-row').last();
         var cloned_row = batch_row.clone();
         cloned_row.insertBefore(bottom_row);
     })

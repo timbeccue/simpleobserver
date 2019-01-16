@@ -64,6 +64,7 @@ body {
     font-family: Helvetica;
     color: var(--neutral-c);
     overflow:auto;
+    overflow-x: hidden;
 }
 
 .header {
@@ -84,7 +85,6 @@ body {
     overflow-y: scroll;
     /* scrollbars for firefox */
     scrollbar-color: var(--neutral-a) var(--neutral-4);
-    scrollbar-width:none;
     scrollbarbutton-up: 
 }
 /* Scroll bars for chrome/safari/opera */
@@ -272,9 +272,6 @@ a {
     margin-top: 20px;
     margin-left: 20px;
     margin-right: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
     position: relative;
     height: calc(100% - 200px);
 }

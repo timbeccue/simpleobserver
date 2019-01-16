@@ -92,7 +92,7 @@
 
     // Left-clicks on the map should return exact coordinates.
 
-    d3.selectAll("canvas").on("mousedown", function() {
+    d3.select("#celestial-map canvas").on("mousedown", function() {
         SkyMap.map_click(d3.mouse(this), 'left');
         var div = d3.select(this);
         var w = d3.select("#celestial-map")
@@ -116,7 +116,7 @@
 
 
     // Right-clicks on the map should auto-select a nearby target. If no nearby objects, do nothing.
-    d3.select("canvas").on('contextmenu', function() {
+    d3.select("#celestial-map canvas").on('contextmenu', function() {
       d3.event.preventDefault();
       SkyMap.map_click(d3.mouse(this), 'right');
 

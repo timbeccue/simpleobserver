@@ -25,7 +25,7 @@
             <div id="aladin-lite-div"></div>
             <script type="text/javascript" src="//aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>
             <script type="text/javascript">
-                var aladin = A.aladin('#aladin-lite-div', {survey: "P/DSS2/color", fov:1, target: "M 104", cooFrame: "ICRSd", showLayersControl: false, showFullscreenControl: false});
+                var aladin = A.aladin('#aladin-lite-div', {survey: "P/DSS2/color", fov:2, target: "M 104", cooFrame: "ICRSd", showFullscreenControl: false});
             </script>
 
             <!-- Results Table -->
@@ -101,9 +101,19 @@ function flash_textbox(ms) {
 
 /* Get coordinates of mouse click and send them to the sky chart and goto box. */
 $(function() {
-    aladin.on('click', function(){
-        console.log('aladin lite clicked');
-    })
+    $('#aladin-lite-div canvas').on('click', return_coords)
+    function return_coords(event) {
+        rect = this.getBoundingClientRect();
+        var [aladin_ra, aladin_dec] = aladin.pix2world(event.clientX-rect.left, event.clientY-rect.top);
+        aladin_ra = aladin_ra / 15;
+
+
+        UI.target_clicked(aladin_ra, aladin_dec);
+        SkyMap.update_pointer(aladin_ra, aladin_dec);
+        
+        console.log(aladin_ra, aladin_dec);
+    } 
+    
 })
 
 
