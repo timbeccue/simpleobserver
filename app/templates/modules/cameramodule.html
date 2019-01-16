@@ -7,54 +7,132 @@
         <div class="head-inputs">
             <form id=camerasettings action="/command/camera" method="POST" class="form-command" autocomplete="off">
                 {{ cameraform.hidden_tag() }}
-                <div class='head-input-item'>
-                    {{ cameraform.time.label }}
-                    <br>
-                    {{ cameraform.time(autocomplete="off") }}
-                </div>
-                <div class='head-input-item'>
-                    {{ cameraform.filter.label }}
-                    <br>
-                    {{ cameraform.filter(autocomplete="off") }}
-                </div>
                 <div class="head-input-item">
-                    {{ cameraform.capture(class_="btn") }}
+                    {{ cameraform.capture(class_="btn btn-outline-success") }}
                 </div>
             </form>
         </div>
     </div>
+
     <div class="module-body">
         <div class="module-body-wrapper">
-            <ul class="js-tabs">
-                <li class="tab camerasettings-tab current" data-tabtype="camerasettings" data-tab="camera-tab-content">Camera</li>
-                <li class="tab camerasettings-tab" data-tabtype="camerasettings" data-tab="focus-tab-content">Focus</li>
-                <li class="tab camerasettings-tab" data-tabtype="camerasettings" data-tab="rotate-tab-content">Rotate</li>
-            </ul>
-            <div id="camera-tab-content" class="tabs-content camerasettings-content current">
-                {{ cameraform.count.label }}
-                {{ cameraform.delay.label }}
-                {{ cameraform.count(form="camerasettings", autocomplete="off") }}
-                {{ cameraform.delay(form="camerasettings", autocomplete="off") }}
-            <div></div><div></div>
-                {{ cameraform.bin.label }}
-                {{ cameraform.dither.label }}
-                {{ cameraform.bin(form="camerasettings", autocopmlete="off") }}
-                {{ cameraform.dither(form="camerasettings", autocomplete="off") }}
-            </div>
-            <div id="focus-tab-content" class="tabs-content camerasettings-content">
-                {{ cameraform.autofocus.label }}
-                {{ cameraform.autofocus(form="camerasettings") }}
-                {% for error in cameraform.autofocus.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
-            </div>
-            <div id="rotate-tab-content" class="tabs-content camerasettings-content">
-                {{ cameraform.position_angle.label }}
-                {{ cameraform.position_angle(form="camerasettings") }}
-                {% for error in cameraform.position_angle.errors %}
-                <!--p style="color: red;">[{{ error }}]</p-->
-                {% endfor %}
+            <div class="form-group" id="camera-commands">
+
+                <div class="card camera-card">
+                    <div class="card-header">Camera</div>
+                    <div class="card-body" id="camera-tab-content">
+                        <fieldset class="camera-field">
+                            {{ cameraform.time.label }}
+                            {{ cameraform.time(form="camerasettings", autocomplete="off", class="form-control") }}
+                        </fieldset>
+                        <fieldset class="camera-field">
+                            {{ cameraform.count.label }}
+                            {{ cameraform.count(form="camerasettings", autocomplete="off", class="form-control") }}
+                        </fieldset>
+                        <fieldset class="camera-field">
+                            {{ cameraform.delay.label }}
+                            {{ cameraform.delay(form="camerasettings", autocomplete="off", class="form-control") }}
+                        </fieldset>
+                        <fieldset class="camera-field">
+                            {{ cameraform.filter.label }}
+                            {{ cameraform.filter(form="camerasettings", autocomplete="off", class="form-control") }}
+                        </fieldset>
+                        <fieldset class="camera-field">
+                            {{ cameraform.bin.label }}
+                            {{ cameraform.bin(form="camerasettings", autocopmlete="off", class="form-control") }}
+                        </fieldset>
+                        <fieldset class="camera-field">
+                            {{ cameraform.dither.label }}
+                            {{ cameraform.dither(form="camerasettings", autocomplete="off", class="form-control") }}
+                        </fieldset>
+                    </div>
+                </div>
+
+                <div class="card camera-card">
+                    <div class="card-header">Focus</div>
+                    <div class="card-body" id="focus-tab-content">
+                        <button class='btn btn-small btn-secondary'>home</button>
+                        <fieldset style="width: 100%;">
+                            <button style="width: auto;" class='btn btn-small btn-secondary'>in</button>
+                            <button style="width: auto;" class='btn btn-small btn-secondary'>out</button>
+                        </fieldset>
+                        <button class='btn btn-small btn-secondary'>autofocus</button>
+                    </div>
+                </div>
+
+                <div class="card camera-card">
+                    <div class="card-header">Rotate</div>
+                    <div class="card-body" id="rotate-tab-content">
+                        <fielset>
+                            {{ cameraform.position_angle.label }}
+                            {{ cameraform.position_angle(form="camerasettings", class="form-control") }}
+                        </fieldset>
+                        {% for error in cameraform.position_angle.errors %}
+                        <!--p style="color: red;">[{{ error }}]</p-->
+                        {% endfor %}
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 </div>
+
+
+<style>
+
+.camera-card {
+    margin-bottom: 20px;
+}
+
+#camera-commands {
+    display: grid;
+    grid-gap: 15px;
+    grid-template-columns: 4fr 2fr 2fr;
+    grid-template-rows: 1fr;
+}
+#camera-tab-content {
+    display: flex;
+    flex-wrap: wrap;
+}
+.camera-field {
+    width: 100px;
+    margin: 5px;
+}
+#focus-tab-content {
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    grid-gap: 10px;
+}
+#rotate-tab-content {
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 1fr;
+    grid-gap: 10px;
+}
+
+/* Small Screens */
+@media (max-width: 600px) {
+
+    #camera-commands {
+        display: flex;
+        flex-direction: column;
+    }
+    #focus-tab-content {
+        display: grid;
+        grid-template-columns: 100%;
+        grid-template-rows: 1fr 1fr 1fr;
+        grid-gap: 10px;
+    }
+    #rotate-tab-content {
+        display: grid;
+        grid-template-columns: 100%;
+        grid-template-rows: 1fr;
+        grid-gap: 10px;
+    }
+
+
+}
+
+</style>

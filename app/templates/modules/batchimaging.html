@@ -1,0 +1,87 @@
+
+<div class="module">
+    <div class="module-head">
+        <div class="head-title">
+            <h1><span style="transition:0.5s;">&#9660;</span> &nbsp;Batch Imaging</h1>
+        </div>
+        <div class="head-inputs">
+            <form action="/command/camera" method="POST" class="form-command" autocomplete="off">
+                <div class="head-input-item">
+                    <button class="btn btn-outline-success">Begin Imaging Sequence</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="module-body">
+        <div class="module-body-wrapper">
+            <div class="form-group" id="batch-camera-form">
+
+                <table id="batch-camera-table">
+                    <thead>
+                        <tr>
+                            <th>Time(s)</th>
+                            <th>Count</th>
+                            <th>Delay(s)</th>
+                            <th>Filter</th>
+                            <th>Bin</th>
+                            <th>Dither</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class='batch-row'>
+                            <td style="min-width: 60px;">{{ cameraform.time(autocomplete="off", class="form-control") }}</td>
+                            <td style="min-width: 50px;">{{ cameraform.count(form="camerasettings", autocomplete="off", class="form-control") }}</td>
+                            <td style="min-width: 70px;">{{ cameraform.delay(form="camerasettings", autocomplete="off", class="form-control") }}</td>
+                            <td style="min-width: 80px;">{{ cameraform.filter(autocomplete="off", class="form-control") }}</td>
+                            <td style="min-width: 60px;">{{ cameraform.bin(form="camerasettings", autocopmlete="off", class="form-control") }}</td>
+                            <td style="min-width: 70px;">{{ cameraform.dither(form="camerasettings", autocomplete="off", class="form-control") }}</td>
+                        </tr>
+                        <tr id="batch-table-bottom"><td><p id="add-another-batch-row">+ row</p></td></tr>
+                    </tbody>
+                </table>
+                        
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<style>
+
+
+.batch-row {
+    width: 100%;
+}
+.batch-row td {
+    padding-right: 8px;
+    padding-bottom: 12px;
+}
+#batch-table-bottom {
+    cursor: pointer;
+}
+
+@media (max-width: 475px){
+    .batch-row {
+        overflow: auto;
+    }
+}
+
+
+</style>
+
+
+<script>
+
+/* TODO: change class when adding rows so each row is uniquely identified. */
+    var batch_row = $('.batch-row');
+    var bottom_row = $('#batch-table-bottom');
+
+    $('#add-another-batch-row').click(function(){
+        var cloned_row = batch_row.clone();
+        cloned_row.insertBefore(bottom_row);
+    })
+
+</script>

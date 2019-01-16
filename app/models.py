@@ -50,20 +50,20 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('Please use a different email address.')
 
 class CameraForm(FlaskForm):
-    time = FloatField('Exposure Time', validators=[DataRequired()])
-    count = IntegerField('Count', default=1, validators=[DataRequired(), NumberRange(min=1)])
+    time = FloatField('Exposure (s)', default=5, validators=[DataRequired()])
+    count = IntegerField('Count', default=1, validators=[NumberRange(min=1)])
     delay = FloatField('Delay (s)', default=0)
     dither = SelectField('Dithering', default='off', choices=[('off','off'), ('on','on'), ('random','random')])
     bin = SelectField('Binning', default='1', choices=[('1','1'), ('2','2'), ('4','4')])
     filter_choices = [('PL', 'Clear'), ('PR', 'Red'), ('PG', 'Green'), ('PB', 'Blue'), ('S2', 'S2'), ('HA', 'H\u03B1'),
                       ('O3', 'O3'), ('N2', 'N2')]
     filter = SelectField('Filter', default='c', choices=filter_choices)
-    capture = SubmitField(' Capture')
+    capture = SubmitField(' Capture Image')
 
     autofocus = BooleanField('Autofocus', default=1)
 
-    position_angle = FloatField('Position Angle', default=0, validators=[
-                                NumberRange(min=0, max=360, message="Please enter a value between 0 and 360.")])
+    position_angle = FloatField('Position Angle \n[-180, 180]', default=0, validators=[
+                                NumberRange(min=-180, max=180, message="Please enter a value between 0 and 360.")])
 
 class ObjectFilter(FlaskForm):
     open_clusters = BooleanField('open clusters', default=1)

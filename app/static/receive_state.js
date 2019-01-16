@@ -75,11 +75,21 @@ $(document).ready( function() {
         var sse_contents = tryParseJSON(event.data);
         if (sse_contents) {
             $.extend(state_wx, sse_contents);
-            var table = $('#weather-table')
-            table.find('tr').remove();
+            var table1 = $('#weather-table #wx-col1');
+            var table2 = $('#weather-table #wx-col2');
+            table1.find('tr').remove();
+            table2.find('tr').remove();
+            var i = 0;
+            var keyslen = Object.keys(state_wx).length;
             for (var key in state_wx) {
-                var obj = state_wx[key]
-                table.prepend('<tr><th>'+key+'</th><td>'+obj+'</td></tr>');
+                var obj = state_wx[key];
+                if (i < keyslen/2) {
+                    table1.prepend('<tr><th>'+key+'</th><td>'+obj+'</td></tr>');
+                    i += 1;
+                }
+                else {
+                    table2.prepend('<tr><th>'+key+'</th><td>'+obj+'</td></tr>');
+                }
             }
         }
     };

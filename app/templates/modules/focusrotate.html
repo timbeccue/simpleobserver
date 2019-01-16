@@ -1,0 +1,83 @@
+
+<div class="module">
+    <div class="module-head">
+        <div class="head-title">
+            <h1><span style="transition:0.5s;">&#9660;</span> &nbsp;Focus & Rotate</h1>
+        </div>
+        <div class="head-inputs">
+            <form id=camerasettings action="/command/camera" method="POST" class="form-command" autocomplete="off">
+                {{ cameraform.hidden_tag() }}
+                <div class='head-input-item'>
+                </div>
+                <div class='head-input-item'>
+                </div>
+                <div class="head-input-item">
+                    {{ cameraform.capture(class_="btn btn-outline-success") }}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="module-body">
+        <div class="module-body-wrapper">
+            <div class="form-group" id="camera-commands">
+
+                <table id="camera-settings">
+                    <thead>
+                        <th>{{ cameraform.time.label }}</th>
+                        <th>{{ cameraform.count.label }}</th>
+                        <th>{{ cameraform.bin.label }}</th>
+                        <th>{{ cameraform.filter.label }}</th>
+                        <th>{{ cameraform.dither.label }}</th>
+                    </thead>
+                    <tbody>
+                        <td>{{ cameraform.time(autocomplete="off", class="form-control") }}</td>
+                        <td>{{ cameraform.count(form="camerasettings", autocomplete="off", class="form-control") }}</td>
+                        <td>{{ cameraform.bin(form="camerasettings", autocopmlete="off", class="form-control") }}</td>
+                        <td>{{ cameraform.filter(autocomplete="off", class="form-control") }}</td>
+                        <td>{{ cameraform.dither(form="camerasettings", autocomplete="off", class="form-control") }}</td>
+                    </tbody>
+                </table>
+                        
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="hidden">
+    <button class='btn btn-small btn-secondary'>home</button>
+    <fieldset>
+        <button style="width: auto;" class='btn btn-small btn-secondary'>in</button>
+        <button style="width: auto;" class='btn btn-small btn-secondary'>out</button>
+    </fieldset>
+    <button class='btn btn-small btn-secondary'>autofocus</button>
+
+    {% for error in cameraform.autofocus.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+
+    <fielset>
+        {{ cameraform.position_angle.label }}
+        {{ cameraform.position_angle(form="camerasettings", class="form-control") }}
+    </fieldset>
+    {% for error in cameraform.position_angle.errors %}
+    <!--p style="color: red;">[{{ error }}]</p-->
+    {% endfor %}
+</div>
+
+<style>
+
+#camera-settings {
+    width: 100%;
+    table-layout: fixed;
+}
+#camera-settings th,
+#camera-settings td {
+    padding: 5px;
+}
+
+
+
+</style>

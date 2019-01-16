@@ -7,7 +7,7 @@
         <div class="head-inputs">
             <form id="query-object" method="POST" action="/simbadquery">
                 <input class="head-input-item" id="simbad-search-box" type="text" name="query-args" placeholder="name or identifier...">
-                <button type="submit" class="head-input-item btn">Search</button>
+                <button type="submit" class="head-input-item btn btn-outline-warning">Search</button>
             </form>
         </div>
     </div>
@@ -18,6 +18,15 @@
                 <option value="False">only this object</option>
                 <option value="True">with wildcards: *,?,[^abc-z]</option>
             </select-->
+
+            <!-- Aladin Image Display -->
+            <link rel="stylesheet" href="//aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.css" />
+
+            <div id="aladin-lite-div"></div>
+            <script type="text/javascript" src="//aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>
+            <script type="text/javascript">
+                var aladin = A.aladin('#aladin-lite-div', {survey: "P/DSS2/color", fov:1, target: "M 104", cooFrame: "ICRSd", showLayersControl: false, showFullscreenControl: false});
+            </script>
 
             <!-- Results Table -->
             <table id="query-result-table">
@@ -34,13 +43,6 @@
                 </tbody>
             </table>
 
-            <link rel="stylesheet" href="//aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.css" />
-
-            <div id="aladin-lite-div"></div>
-            <script type="text/javascript" src="//aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>
-            <script type="text/javascript">
-                var aladin = A.aladin('#aladin-lite-div', {survey: "P/DSS2/color", fov:1, target: "M 1", cooFrame: "ICRSd", showLayersControl: false, showFullscreenControl: false});
-            </script>
 
         </div>
     </div>
@@ -71,6 +73,19 @@
         width: 40%;
         border: none;
     }
+
+    @media (max-width: 600px) {
+        #query-body {
+            flex-direction: column;
+        }
+        #query-result-table {
+            width: 100%;
+        }
+        #aladin-lite-div {
+            width: 100%;
+            margin-bottom: 30px;
+        }
+    }
 </style>
 
 
@@ -83,6 +98,16 @@ function flash_textbox(ms) {
     }, ms);
 }
 
+
+/* Get coordinates of mouse click and send them to the sky chart and goto box. */
+$(function() {
+    aladin.on('click', function(){
+        console.log('aladin lite clicked');
+    })
+})
+
+
+/* Perform an object search, returning results in the table and aladin image window. */
 $(function() {
     $('#query-object').submit(function(e) {
         e.preventDefault();
@@ -109,7 +134,7 @@ $(function() {
                 for (var i=0; i<num_results; i++) {
 
                     var id_m = data.ID_m[i] || '--';
-                    var ra_d = data.RA_d[i].toFixed(2);
+                    var ra_d = (data.RA_d[i] / 15).toFixed(2);
                     var dec_d = data.DEC_d[i].toFixed(2);
                     var flux_v = parseFloat(data.FLUX_V[i]).toFixed(2) || '--';
                     var id_name = String(data.ID_name[i]).slice(5) || '--';

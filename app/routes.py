@@ -107,6 +107,7 @@ def login():
         login_user(user, remember=form.remember_me.data)
         return redirect(url_for('home'))
     return redirect(url_for('register'))
+
 @app.route('/logout')
 @login_required
 def logout():
@@ -537,6 +538,13 @@ def command(msg):
     # Camera/Imaging Commands
     if msg == 'camera':
         form = CameraForm()
+        print(form.time.data)
+        print(form.count.data)
+        print(form.delay.data)
+        print(form.dither.data)
+        print(form.autofocus.data)
+        print(form.bin.data)
+        print(form.filter.data)
 
         if form.validate_on_submit():
             time = form.time.data
@@ -551,6 +559,7 @@ def command(msg):
             send(cmd)
             print(cmd)
             response = f"Taking {count} {time} second image(s)."
+            print(response)
             return jsonify(response=response, requested="requested", processed=cmd[1], live=live_commands)
         return jsonify(errors=form.errors)
 

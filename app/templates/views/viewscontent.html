@@ -2,24 +2,46 @@
 <!-- Left side views menu -->
 <div class="views-menu">
     <ul class="js-tabs">
-        <li class="tab views-tab current" data-tabtype="views" data-tab="viewtab1">weather</li>
+        <li class="tab views-tab current" data-tabtype="views" data-tab="viewtab1">sky chart</li>
         <li class="hidden tab views-tab" data-tabtype="views" data-tab="viewtab2">log</li>
-        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab3">sky chart</li>
+        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab3">weather</li>
         <li class="hidden tab views-tab" data-tabtype="views" data-tab="viewtab4">sky cam</li>
         <li class="tab views-tab" data-tabtype="views" data-tab="viewtab5">site</li>
         <li class="hidden tab views-tab" data-tabtype="views" data-tab="viewtab6">mountings</li>
-        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab7" id="js9-tab">instruments</li>
-        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab8">_dev</li>
+        <li class="hidden tab views-tab" data-tabtype="views" data-tab="viewtab7" id="js9-tab">instruments</li>
+        <li class="hidden tab views-tab" data-tabtype="views" data-tab="viewtab8">_dev</li>
     </ul>
 </div>
 
 <!-- Left side views content -->
 <div id="view-size-helper" style="width:100%; height: 100%; top: 60px; position: absolute;">
+    
+
+
+    <!-- Sky Chart -->
+    <div id="viewtab1" class="tabs-content views-content current">
+        <div class="container">
+            <div class="container" id="celestial-map"></div>
+            <div class="container" id="celestial-form" style="display:none;"></div>
+        </div>
+    </div>
+
+
+
+    <!-- Activity Log -->
+    <div id="viewtab2" class="tabs-content views-content">
+        schedule log here
+    </div>
+
+
 
 
     <!-- Weather -->
-    <div id="viewtab1" class="tabs-content views-content current">
+    <div id="viewtab3" class="tabs-content views-content">
         <style>
+            #weather-table {
+                margin-top: 20px;
+            }
             #weather-table td {
                 height: 30px;
             }
@@ -34,24 +56,13 @@
         <div id="plot-1"></div>
 
         <table id="weather-table">
+            <td id="wx-col1">
+            </td>
+            <td id="wx-col2">
+            </td>
         </table>
     </div>
 
-
-    <!-- Activity Log -->
-    <div id="viewtab2" class="tabs-content views-content">
-        schedule log here
-    </div>
-
-
-
-    <!-- Sky Chart -->
-    <div id="viewtab3" class="tabs-content views-content">
-        <div class="container">
-            <div class="container" id="celestial-map"></div>
-            <div class="container" id="celestial-form" style="display:none;"></div>
-        </div>
-    </div>
 
 
 
@@ -61,22 +72,24 @@
     </div>
 
 
+
+
     <!-- Dome/Enclosure Camera -->
     <div id="viewtab5" class="tabs-content views-content">
         <div id="dome-cam"></div>
         <h3>Lamp: </h3>
             <!--div data-msg="lamp" class="status-box">Off</div-->
-            <button value="off" data-msg="lamp" class="btn btn-inverse btn-small button-command">Off</button>
-            <button value="on" data-msg="lamp" class="btn btn-small button-command">On</button>
+            <button value="off" data-msg="lamp" class="btn btn-secondary button-command">Off</button>
+            <button value="on" data-msg="lamp" class="btn btn-primary button-command">On</button>
         <h3>IR Lamp: </h3>
-            <button value="off" data-msg="ir-lamp" class="btn btn-inverse btn-small button-command">Off</button>
-            <button value="on" data-msg="ir-lamp" class="btn btn-small button-command">On</button>
+            <button value="off" data-msg="ir-lamp" class="btn btn-secondary button-command">Off</button>
+            <button value="on" data-msg="ir-lamp" class="btn btn-primary button-command">On</button>
         <h3>Roof: </h3>
-            <button value="close" data-msg="roof" class="btn btn-inverse btn-small button-command">Close</button>
-            <button value="open" data-msg="roof" class="btn btn-small button-command">Open</button>
+            <button value="close" data-msg="roof" class="btn btn-secondary button-command">Close</button>
+            <button value="open" data-msg="roof" class="btn btn-primary button-command">Open</button>
         <h3>Park: </h3>
-            <button value="park" data-msg="parking" class="btn btn-inverse btn-small button-command">Park</button>
-            <button value="unpark" data-msg="parking" class="btn btn-small button-command">Unpark</button>
+            <button value="park" data-msg="parking" class="btn btn-secondary button-command">Park</button>
+            <button value="unpark" data-msg="parking" class="btn btn-primary button-command">Unpark</button>
             
 
     </div>
@@ -94,7 +107,7 @@
 
 
     <!-- Acquired Images/Data (JS9) -->
-    <div id="viewtab7" class="tabs-content views-content">
+    <div id="viewtab7" class="tabs-content views-content hidden">
         instruments/images here
         <div class="guiding-display-grid">
             <div class="js9-container" id="guide-container-primary">
@@ -118,7 +131,7 @@
 
 
     <!-- Console -->
-    <div id="viewtab8" class="tabs-content views-content">
+    <div id="viewtab8" class="tabs-content views-content hidden">
         <form id="textcommand" method="POST" action="/textcommand" data-consolesubmit>
             <br>
             <input type="text" name="console-text" style="height: 30px; width: 400px; padding-left: 5px;">
