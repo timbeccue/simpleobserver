@@ -1,6 +1,7 @@
 
 function newTable() {
 
+    function simple(){return 1;}
     var table = $('#targets-table').DataTable({
         processing: false,
         searching: false,
@@ -15,7 +16,6 @@ function newTable() {
             }
         },
         scrollY: "calc(20vh)",
-        //scroller: true,
         scroller: { loadingIndicator: true }, 
         select: true,
         stateSave: false, // gets out of sync with filters

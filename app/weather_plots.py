@@ -82,10 +82,6 @@ def create_plot(logtype):
     )
 
     graphs = [
-        #dict(
-        #    data = [temperatures_data, dewpoints_data],
-        #    layout = layout
-        #),
         dict(
             data = [temperatures_data, dewpoints_data],
             layout = layout

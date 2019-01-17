@@ -2,6 +2,7 @@
 from sqlalchemy import Column, Float, Integer, Table, Text
 from sqlalchemy.sql.sqltypes import NullType
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.hybrid import hybrid_property
 from app import db
 
 Base = declarative_base()
@@ -12,7 +13,7 @@ metadata = Base.metadata
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
-from app import login
+from app import app,login
 
 @login.user_loader
 def load_user(id):
@@ -97,6 +98,8 @@ class TestAddForm(FlaskForm):
 
 # Database Stuff
 
+from app.helpers import utilities
+import sqlalchemy
 class ThingsInSpace(db.Model):
     __bind_key__ = 'things_in_space'
 
@@ -126,6 +129,15 @@ class ThingsInSpace(db.Model):
         for attr in ('messier', 'ngc', 'bayer', 'type', 'magnitude', 'magnitude2', 'size_large', 'size_small', 'distance_ly', 'ra_decimal',
                      'de_decimal', 'position_angle', 'separation_angle', 'spectral_class', 'season', 'constellation', 'names', 'data_origin'):
             setattr(self, attr, kwargs.get(attr))
+
+    @hybrid_property
+    def altitude(self):
+        altitude = utilities.getAlt(self.ra_decimal, self.de_decimal)
+        return altitude
+    @altitude.expression
+    def altitude(self):
+        altitude = utilities.getAlt(self.ra_decimal, self.de_decimal)
+        return altitude
 
     def __repr__(self):
         return f'<ID:{self.id}, M{self.messier}, {self.type}, {self.magnitude}>'
