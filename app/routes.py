@@ -148,6 +148,37 @@ def stream(device,id):
     sse = event_stream(state_key, refresh_frequency)
     return Response(sse, mimetype="text/event-stream")
 
+altitudes = []
+import numpy as np
+from astropy.coordinates import SkyCoord, EarthLocation, AltAz
+from astropy.time import Time
+import astropy.units as u
+def make_altitude_lut():
+    time = Time.now()
+    location = EarthLocation(lat=34*u.degree, lon=-119*u.degree)
+    # How many points to precalculate for ra and dec.
+    num_ra = 360
+    num_dec = 180
+    # Line up each ra and dec value 
+    ra = np.repeat(np.arange(num_ra), num_dec)
+    dec = np.tile(np.arange(num_dec), num_ra) - 90
+    
+    eq = SkyCoord(ra, dec, unit=u.degree)
+    aa = eq.transform_to(AltAz(obstime=time, location=location)).alt.deg
+    altitudes = np.ndarray.tolist(aa.astype(int))
+    return altitudes
+
+def altitude_lut():
+    while True:
+        altitudes = make_altitude_lut()
+        yield 'data: {}\n\n'.format(json.dumps(altitudes))
+        time.sleep(300)
+
+@app.route('/get_altitude_lut', methods=['GET', 'POST'])
+def stream_altitude_lut():
+    sse = altitude_lut()
+    return Response(sse, mimetype="text/event-stream")
+
 
 
 
@@ -291,6 +322,11 @@ def command(msg):
             return jsonify(response=response, requested="requested", processed=cmd[1], live=live_commands)
         return jsonify(errors=form.errors)
 
+    if msg == 'batch-camera':
+        print(request.form['count-0'])
+        print(request.form['count-1'])
+        print(request.form['count-2'])
+
     # Telescope GOTO Commands
     if msg == 'go':
         text = request.form['goto-box']
@@ -337,7 +373,7 @@ def tablelookup():
         ColumnDT(ThingsInSpace.magnitude),
         ColumnDT(ThingsInSpace.ra_decimal),
         ColumnDT(ThingsInSpace.de_decimal),
-        ColumnDT(ThingsInSpace.altitude)
+        ColumnDT(ThingsInSpace.names)
     ]
 
     star_types = all_stars # default
@@ -387,8 +423,6 @@ def tablelookup():
     # returns data to DataTable
     forTable = jsonify(rowTable.output_result())
     return(forTable)
-
-
 
 
 #-------------------------------------------------------------------------------------------------------------#

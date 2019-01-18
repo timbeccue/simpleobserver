@@ -5,7 +5,7 @@
             <h1><span style="transition:0.5s;">&#9660;</span> &nbsp;Batch Imaging</h1>
         </div>
         <div class="head-inputs">
-            <form action="/command/camera" method="POST" class="form-command" autocomplete="off">
+            <form action="/command/batch-camera" id="batch-form" method="POST" class="form-command" autocomplete="off">
                 <div class="head-input-item">
                     <button class="btn btn-outline-success">Begin Imaging Sequence</button>
                 </div>
@@ -29,18 +29,18 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="batch-row">
+                        <tr class="batch-row" data-rowid="0">
                             <td style="min-width: 60px;">
-                                <input autocomplete="off" class="form-control"  name="time" required="" type="text" value="5">
+                                <input autocomplete="off" class="form-control" form="batch-form" name="time-0" required="" type="text" value="5">
                             </td>
                             <td style="min-width: 50px;">
-                                <input autocomplete="off" class="form-control" form="camerasettings" name="count" type="text" value="1">
+                                <input autocomplete="off" class="form-control" form="batch-form" name="count-0" type="text" value="1">
                             </td>
                             <td style="min-width: 70px;">
-                                <input autocomplete="off" class="form-control" form="camerasettings" name="delay" type="text" value="0">
+                                <input autocomplete="off" class="form-control" form="batch-form" name="delay-0" type="text" value="0">
                             </td>
                             <td style="min-width: 80px;">
-                                <select autocomplete="off" class="form-control" name="filter">
+                                <select autocomplete="off" class="form-control" form="batch-form" name="filter-0">
                                     <option value="PL">Clear</option><option value="PR">Red</option>
                                     <option value="PG">Green</option><option value="PB">Blue</option>
                                     <option value="S2">S2</option><option value="HA">Hα</option>
@@ -48,21 +48,21 @@
                                 </select>
                             </td>
                             <td style="min-width: 60px;">
-                                <select autocopmlete="off" class="form-control" form="camerasettings" name="bin">
+                                <select autocopmlete="off" class="form-control" form="batch-form" name="bin-0">
                                     <option selected="" value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="4">4</option>
                                 </select>
                             </td>
                             <td style="min-width: 70px;">
-                                <select autocomplete="off" class="form-control" form="camerasettings" name="dither">
+                                <select autocomplete="off" class="form-control" form="batch-form" name="dither-0">
                                     <option selected="" value="off">off</option>
                                     <option value="on">on</option>
                                     <option value="random">random</option>
                                 </select>
                             </td>
                         </tr>
-                        <tr id="batch-table-bottom"><td><p id="add-another-batch-row">+ row</p></td></tr>
+                        <tr id="batch-add-row-button"><td><button class="btn btn-small btn-primary" id="add-another-batch-row" style="height: 30px;">+ row</p></td></tr>
                     </tbody>
                 </table>
                         
@@ -74,9 +74,42 @@
 
 
 
+
+
+<script>
+
+/* TODO: change class when adding rows so each row is uniquely identified. */
+    var bottom_button = $('#batch-add-row-button');
+
+    // Row counter: each row has a data attribute with a unique number so they can be distinguished by the server.
+    var number_batch_rows = 1; 
+
+    $('#add-another-batch-row').click(function(){
+        // Select the bottom row to duplicate
+        var batch_row = $('.batch-row').last();
+        var cloned_row = batch_row.clone();
+        
+        // Add the row right above the "add row" button.
+        cloned_row.insertBefore(bottom_button);
+        var added_row = $('.batch-row').last();
+        added_row.attr('data-rowid',number_batch_rows);
+
+        // Each input element should have its name followed by '-x' where x is the row number.
+        // For example: name="count-1"
+        added_row.children().children().each(function() {
+            $(this).attr("name", $(this).attr('name').split('-')[0]+'-'+String(number_batch_rows))
+        });
+
+        // Increment the row counter
+        number_batch_rows += 1;
+
+    })
+
+</script>
+
+
+
 <style>
-
-
 .batch-row {
     width: 100%;
 }
@@ -87,26 +120,9 @@
 #batch-table-bottom {
     cursor: pointer;
 }
-
 @media (max-width: 475px){
     .batch-row {
         overflow: auto;
     }
 }
-
-
 </style>
-
-
-<script>
-
-/* TODO: change class when adding rows so each row is uniquely identified. */
-    var bottom_row = $('#batch-table-bottom');
-
-    $('#add-another-batch-row').click(function(){
-        var batch_row = $('.batch-row').last();
-        var cloned_row = batch_row.clone();
-        cloned_row.insertBefore(bottom_row);
-    })
-
-</script>

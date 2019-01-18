@@ -6,6 +6,9 @@ var state_mnt1 = {};
 var state_foc1 = {};
 var state_rot1 = {};
 var state_wx = {};
+var altitude_lut = [];
+
+
 
 $(document).ready( function() {
 
@@ -118,4 +121,4 @@ function tryParseJSON (jsonString){
     catch (e) { }
 
     return false;
-};
+}

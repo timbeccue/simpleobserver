@@ -1,12 +1,24 @@
 
+// Gets a look up table every 5 minutes. Ra and Dec (both deg) rounded to the nearest degree
+// correspond to a unique altitude. Originally designed to be used by datatables to calculate
+// an altitude column on the fly, but I don't think it works well enough to use. The column is
+// not sortable, and there's no simple way to only show targets with positive altitude.
+/* 
+var altitude_lut = new EventSource('/get_altitude_lut');
+altitude_lut.onmessage = function(event){
+    var sse_contents = tryParseJSON(event.data);
+    altitude_lut = sse_contents;
+    console.log(altitude_lut);
+};
+*/
+
 function newTable() {
 
-    function simple(){return 1;}
     var table = $('#targets-table').DataTable({
         processing: false,
         searching: false,
         serverSide: true,
-        deferRender: true,
+        deferRender: false,
         pagingType: "simple",
         compact: true,
         responsive: {
@@ -26,7 +38,13 @@ function newTable() {
         },{
             targets: [5],
             width: "130px"
-        }]
+        }/*,{
+            targets: [6],
+            render: function (data, type, row) {
+                var index = ~~row[3]*180*15 + ~~(90+row[4]); // should double check this logic before using!
+                return altitude_lut[index]; 
+            }
+        }*/]
         //oSearch: { "sSearch": "M" },
     });
 
