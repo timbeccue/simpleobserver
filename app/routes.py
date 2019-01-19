@@ -476,7 +476,7 @@ def tablelookup():
 #-------------------------------------------------------------------------------------------------------------#
 @app.route('/starparty', methods=['GET', 'POST'])
 def starparty():
-    return render_template('starparty.html', state=ptr_state, filter=ObjectFilter())
+    return render_template('starparty.html', filter=ObjectFilter())
 #-------------------------------------------------------------------------------------------------------------#
 @app.route('/testpage')
 @login_required
