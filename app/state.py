@@ -1,4 +1,4 @@
-from app import core1_redis
+from app import core1_redis, site_attributes
 from configparser import ConfigParser
 import ephem, datetime, json
     # need something to hold status states: telescope ra, dec, altitude, action, dome, sidereal time, etc.
@@ -6,11 +6,8 @@ import ephem, datetime, json
 
 class State:
 
-    config = ConfigParser()
-    config.read('config.ini')
-    lat = config['DEFAULT']['lat']
-    lon = config['DEFAULT']['lon']
-    
+    lat = site_attributes['lat']
+    lon = site_attributes['lon']
 
     def __init__(self):
         self.ra = 14 

@@ -1,6 +1,6 @@
 # app/routes.py
 
-from app import app, db, core1_redis
+from app import app, db, core1_redis, site_attributes
 from flask import Flask, render_template, request, Response, redirect 
 from flask import jsonify, url_for, flash, send_from_directory, session
 from flask_login import current_user, login_user, logout_user, login_required
@@ -35,17 +35,23 @@ from app import weather_plots
 def plot_weather(logtype):
     return(weather_plots.create_plot(logtype))
 
-from configparser import ConfigParser
 @app.route('/getinfo/<item>', methods=['GET', 'POST'])
 # The variable 'item' is a string of config items to get, delimited by a dash (-)
 def get_info(item):
-    config = ConfigParser()
-    config.read('config.ini')
-    item_list = item.split("-")
-    values = {}
-    for val in item_list:
-        values[val] = config['DEFAULT'][val]
-    return jsonify(values)    
+    items = item.split('-')
+    data = {}
+    try:
+        for val in items:
+            data[val] = site_attributes[val]
+        return jsonify(status="success", data=data)
+    except:
+        return jsonify(status="fail")
+
+@app.route('/dome-cam-url', methods=['GET', 'POST'])
+def dome_cam():
+    return jsonify(url=site_attributes['dome-camera'])
+
+
 
 from astroquery.simbad import Simbad
 from astropy.table import Table, vstack
@@ -172,7 +178,7 @@ def altitude_lut():
     while True:
         altitudes = make_altitude_lut()
         yield 'data: {}\n\n'.format(json.dumps(altitudes))
-        time.sleep(300)
+        time.sleep(30000) # Not in use, so no need for fast refresh.
 
 @app.route('/get_altitude_lut', methods=['GET', 'POST'])
 def stream_altitude_lut():
@@ -323,9 +329,52 @@ def command(msg):
         return jsonify(errors=form.errors)
 
     if msg == 'batch-camera':
-        print(request.form['count-0'])
-        print(request.form['count-1'])
-        print(request.form['count-2'])
+        # Fields in each row: time, count, delay, filter, bin, dither.
+        time = []
+        count = [] 
+        delay = [] 
+        filter = []
+        bin = []
+        dither = []
+        cmd = []
+
+        # Get field values for each row submited.
+        rowid = 0
+        while True:
+            try:
+                time.append(request.form[f"time-{rowid}"])
+                count.append(request.form[f"count-{rowid}"])
+                delay.append(request.form[f"delay-{rowid}"])
+                filter.append(request.form[f"filter-{rowid}"])
+                bin.append(request.form[f"bin-{rowid}"])
+                dither.append(request.form[f"dither-{rowid}"])
+            except:
+                break
+            rowid += 1
+        
+        autofocus = request.form['autofocus']
+        position_angle = request.form['position-angle']
+        
+        num_rows = len(time)
+
+        for row in range(num_rows):
+            one_row = cmd_expose(time[row],
+                                 count[row],
+                                 bin[row],
+                                 dither[row], 
+                                 autofocus, 
+                                 position_angle, 
+                                 delay[row], 
+                                 filter[row])
+            cmd.append(one_row)
+
+
+        
+
+
+
+
+
 
     # Telescope GOTO Commands
     if msg == 'go':
@@ -440,5 +489,5 @@ def testpage():
 
 
 
-if __name__=='__main__':
-    app.run(host='10.15.0.15')
+#if __name__=='__main__':
+#    app.run(host='10.15.0.15')

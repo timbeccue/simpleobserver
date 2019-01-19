@@ -8,3 +8,4 @@ env/
 venv/
 sandbox/
 app/weatherlogs/*.csv
+config.ini

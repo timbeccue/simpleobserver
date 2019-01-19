@@ -5,6 +5,9 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 import redis
 
+from configparser import ConfigParser
+config_file = ConfigParser()
+config_file.read('config.ini')
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -14,7 +17,15 @@ migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_view = 'login'
 
-core1_redis = redis.StrictRedis(host='10.15.0.15', port=6379, db=0, decode_responses=True)
+redis_host = config_file['NETWORK']['redis_host']
+redis_port = config_file['NETWORK']['redis_port']
+core1_redis = redis.StrictRedis(host=redis_host, port=redis_port, db=0, decode_responses=True)
+
+site_attributes = {
+    'lat': config_file['SITE']['lat'],
+    'lon': config_file['SITE']['lon'],
+    'dome-camera': config_file['NETWORK']['dome_camera']
+}
 
 #migrate = Migrate(app, db)
 

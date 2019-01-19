@@ -1,0 +1,20 @@
+# Config file for FLASK
+# Rename to 'config.ini' in order to work!
+
+[NETWORK]
+dome_camera = 0.0.0.0
+redis_host = 0.0.0.0
+redis_port = 6379
+
+[SITE]
+lat = 0     # deg
+lon = 0     # deg
+
+[FLASK]
+# Generate a good secret key in terminal: python -c "import os; print(os.urandom(16))"
+secret_key = 'secret key goes here' 
+
+[DATABASE]
+# Filenames of sqlite databases are specified here. They should be located in app/databases.
+skyobjects_database = name1.db 
+users_database = name2.db 

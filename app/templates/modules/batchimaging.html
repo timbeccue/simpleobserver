@@ -17,6 +17,24 @@
         <div class="module-body-wrapper">
             <div class="form-group" id="batch-camera-form">
 
+                <div style="display: flex">
+                    <fieldset style="padding-right: 8px;">
+                        <label for="batch-autofocus">Autofocus: </label>
+                        <select class="form-control" form="batch-form" name="autofocus" id="batch-autofocus" style="max-width: 200px;">
+                            <option value="per-image">before each image</option>
+                            <option value="per-filter">when filter changes</option>
+                            <option value="time-30">every 30 minutes</option>
+                            <option value="time-60">every 60 minutes</option>
+                        </select>
+                    </fieldset>
+                    <fieldset>
+                        <label for="batch-position-angle">Position Angle: </label>
+                        <input type="text" class="form-control" form="batch-form" name="position-angle" id="batch-position-angle" value="0" style="max-width: 75px;">
+                    </fieldset>
+                </div>
+
+                <hr>
+
                 <table id="batch-camera-table">
                     <thead>
                         <tr>

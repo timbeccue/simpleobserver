@@ -1,31 +1,21 @@
+from configparser import ConfigParser
 import os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+config_parser = ConfigParser()
+config_parser.read('config.ini')
+
 class Config(object):
 
-    SECRET_KEY = 'NOT_SECURE'
+    SECRET_KEY = config_parser['FLASK']['secret_key']
 
-    #SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-    #    'sqlite:///' + os.path.join(basedir, 'hygdata.db')
+    skyobjects_name = config_parser['DATABASE']['skyobjects_database']
+    users_name = config_parser['DATABASE']['users_database']
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_BINDS = {
-        'astro': 'sqlite:///'+os.path.join(basedir, 'databases/hygdata.db'),
-        'users': 'sqlite:///'+os.path.join(basedir, 'databases/users.db'),
-        'things_in_space': 'sqlite:///'+os.path.join(basedir, 'databases/things_in_space.db')
+        'things_in_space': 'sqlite:///'+os.path.join(basedir, 'databases/', skyobjects_name),
+        'users': 'sqlite:///'+os.path.join(basedir, 'databases/', users_name)
     }
 
-class Site:
-    def __init__(self):
-        self.name = 'ptr'
-        self.enclosures = {'enc1':1}
-        self.mounts = {'mnt1': 1}
-        self.otas = {'ota1':1}
-        self.focusers = {'foc1':1}
-        self.rotators = {'rot1':1}
-        self.filterwheels = {'fil1':1}
-        self.cameras = {'cam1':1, 'cam2':2}
-        self.lamps = {'lamp1':1}
 
-    def get_site(self):
-        return (self.__dict__)

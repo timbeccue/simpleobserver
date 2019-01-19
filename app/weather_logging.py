@@ -33,13 +33,14 @@ Assuming file exists:
 """
 
 
-import json, time, redis, os, csv, glob
+import json, time, os, csv, glob
+from app import core1_redis as redis
 
 
 class WeatherLogger():
 
     def __init__(self):
-        self.redis = redis.StrictRedis(host='10.15.0.15', port=6379, db=0, decode_responses=True)
+        self.redis = redis
         self.site = "PTR"
         self.timestamp_index = 9
         self.folder = os.path.join(os.path.abspath(os.path.dirname(__file__)), "weatherlogs")
