@@ -14,7 +14,7 @@ class State:
         self.de = 10 
         self.telescope_action = "-"
         self.dome = "-"
-        self.lmst = self.sidereal_time()
+        #self.lmst = self.sidereal_time()
         self.lat = State.lat
         self.lon = State.lon
         self.mount = []
@@ -28,23 +28,23 @@ class State:
        # self.lamps = []
         
     
-    def sidereal_time(self):
-        site = ephem.Observer()
-        site.lon, site.lat = str(State.lon), str(State.lat)
-        site.date = datetime.datetime.utcnow()
-        lmst = site.sidereal_time() * 12 / 3.1415927
-        return round(lmst, 3)
+    #def sidereal_time(self):
+    #    site = ephem.Observer()
+    #    site.lon, site.lat = str(State.lon), str(State.lat)
+    #    site.date = datetime.datetime.utcnow()
+    #    lmst = site.sidereal_time() * 12 / 3.1415927
+    #    return round(lmst, 3)
 
-    def get_state(self): 
-        self.lmst = self.sidereal_time()
-        return (self.__dict__)
+    #def get_state(self): 
+    #    self.lmst = self.sidereal_time()
+    #    return (self.__dict__)
 
-    def set_coordinate_selection(self, ra, de):
-        self.ra_selected = ra
-        self.de_selected = de
+    #def set_coordinate_selection(self, ra, de):
+    #    self.ra_selected = ra
+    #    self.de_selected = de
 
-    def new_mount(self, mount_id):
-        self.mount = Mount(mount_id)
+    #def new_mount(self, mount_id):
+    #    self.mount = Mount(mount_id)
 
     
             

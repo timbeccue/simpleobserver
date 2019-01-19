@@ -7,7 +7,6 @@ from flask_login import current_user, login_user, logout_user, login_required
 
 import re, datetime, time, json, redis, datetime
 
-from app.state import ptr_state
 from app.commands import *
 from app.models import LoginForm, RegistrationForm, CameraForm, ObjectFilter, TestAddForm
 from app.models import User, Dso, ThingsInSpace
@@ -233,7 +232,7 @@ def merge_geojson():
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template('base.html', state=ptr_state, loginform=LoginForm(), cameraform=CameraForm(), filter=ObjectFilter())
+    return render_template('base.html', loginform=LoginForm(), cameraform=CameraForm(), filter=ObjectFilter())
 
 
 @app.route('/textcommand', methods=['GET', 'POST'])
