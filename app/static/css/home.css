@@ -8,8 +8,8 @@
 
 ul {
     margin: 0;
+    line-height: 22px;
 }
-
 
  :root {
 
@@ -76,7 +76,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    height: calc(50vh);
+    height: calc(70vh);
     overflow-y:auto;
     overflow-x: hidden;
 }
@@ -85,7 +85,6 @@ body {
     overflow-y: scroll;
     /* scrollbars for firefox */
     scrollbar-color: var(--neutral-a) var(--neutral-4);
-    scrollbarbutton-up: 
 }
 /* Scroll bars for chrome/safari/opera */
 .controls {
@@ -102,8 +101,8 @@ body {
 
 .scroll-icons {
     grid-area: scroll-icons;
-    /*border: #f00 2px solid;*/
-    display: flex;
+    /* display: none to prevent magin bug, see .scroll-icons in the media query below. */
+    display: none;
     flex-direction: column;
     align-items: flex-end;
     padding-top: 100px;
@@ -122,8 +121,8 @@ body {
 @media (min-width: 1200px) {
     .wrapper {
         grid-template-columns: 1fr 1fr 40px;
-        grid-template-rows: 100px calc(100vh - 100px - 1em);
-        height: 90vh;
+        grid-template-rows: 100px calc(100vh - 100px);
+        height: 100vh;
         grid-template-areas:
             "header header header"
             "info controls scroll-icons";
@@ -132,96 +131,12 @@ body {
         overflow: hidden;
         height: calc(100vh - 100px);
     }
+    /* Only display if not mobile version. Otherwise, small displays have unwanted right margin. */
+    .scroll-icons {
+        display: flex;
+    }
 }
 
-/* Header Layout */
-.header .section-wrapper {
-    display: flex;
-    justify-content: space-between;
-    height: 100px;
-    width: 100vw;
-}
-.header .section-wrapper h1 {
-    font: 36px/1 'Oswald', sans-serif;
-    font-weight: lighter;
-    padding: 25px;
-    margin-left: 50px;
-}
-.header .title-link{
-    color: var(--neutral-b);
-    outline: 0;
-    text-decoration: none;
-}
-.header .title-link:hover,
-.header .title-link.focus {
-    color: var(--neutral-d);
-    outline: 0;
-    cursor: pointer;
-    text-decoration: none;
-}
-.header .title-link:active {
-    text-decoration: underline;
-}
-.header .notloggedin {
-    background: var(--neutral-4);
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-
-    grid-gap: 10px;
-    height: 100%;
-    width: 300px;
-    padding: 10px;
-    margin-left: auto;
-}
-a {
-    text-decoration: none;
-}
-#login-register-button {
-    width: 100%;
-    height: 100%;
-}
-.loggedin {
-    list-style: none;
-    margin: 0;
-}
-.loggedin li {
-    color: var(--neutral-f);
-    background: var(--neutral-3);
-    display: block;
-    float: left;
-    padding: 1rem;
-    position: relative;
-    text-decoration: none;
-    transition-duration: 0.3s;
-}
-.loggedin li a {
-    color: var(--neutral-f);
-}
-.loggedin li:hover {
-    background: var(--neutral-4);
-    cursor: pointer;
-}
-.loggedin li ul {
-    visibility: hidden;
-    opacity: 0;
-    min-width: 5rem;
-    text-justify: right;
-    transition: all 0.3s ease;
-    margin-top: 1em;
-    left: 0;
-    display: none;
-}
-.loggedin li:hover > ul,
-.loggedin li:focus-within > ul,
-.loggedin li ul:hover {
-    visibility: visible;
-    opacity: 1;
-    display: block;
-}
-.loggedin li ul li {
-    clear: both;
-    width: 100%;
-}
 
 /* Registration Form */
 .register-form {
@@ -280,23 +195,6 @@ a {
     display: flex;
     overflow: hidden;
 }
-/* Sky chart */
-#viewtab3 {
-    margin: 0px;
-}
-#viewtab5.current {
-    display: grid;
-    grid-template-columns: 55% 15% 10% 10%;
-    grid-template-rows: 40px 40px 40px 40px;
-    align-items: center;
-    grid-gap: 1em;
-    margin-top: 20px;
-}
-#viewtab5 #dome-cam {
-    grid-column: 1/2;
-    grid-row: 1/5;
-    align-self: start;
-}
 #viewtab5 h3,
 .js-tabs {
     list-style: none;
@@ -322,8 +220,8 @@ a {
     color: var(--neutral-f);
 }
 .tabs-content {
-    width: 100%;
-    height: 100%;
+    width: inherit;
+    height: inherit;
     display: none;
 }
 .tabs-content.current{
@@ -411,41 +309,6 @@ a {
 .module-body-wrapper li.active {
     background: var(--neutral-4);
     color: var(--neutral-f);
-}
-
-
-/* Specific Module Panes */
-
-/* goto module */
-#module-go {
-    display: flex;
-    flex-direction: column;
-    margin: 30px;
-    height: auto;
-}
-#filter_form {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 2em;
-    padding-bottom: 2em;
-    margin-bottom: 2em;
-    border-bottom: var(--neutral-4) 1px solid;
-}
-#filter_form div{
-    padding: 1px;
-}
-.mdl-switch {
-    padding-bottom: 30px;
-}
-#filter_form div span{
-    display: grid;
-    grid-template-columns: 1fr 50px;
-}
-#filter_form input {
-    margin-bottom: 8px;
-}
-#object-table {
-    padding-bottom: 30px;
 }
 
 

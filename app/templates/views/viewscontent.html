@@ -22,6 +22,7 @@
     <div id="viewtab1" class="tabs-content views-content current">
         <div class="container" id="celestial-map"></div>
         <div class="container" id="celestial-form" style="display:none;"></div>
+
     </div>
 
 
@@ -36,8 +37,25 @@
 
     <!-- Weather -->
     <div id="viewtab3" class="tabs-content views-content">
+
+        <div id="plot-0"></div>
+
+        <table id="weather-table">
+            <td id="wx-col1"> </td>
+            <td id="wx-col2"> </td>
+        </table>
+
         <style>
+            #viewtab3.current {
+                display: flex;
+                flex-direction: column;
+            }
+            #plot-0 .main-sgv {
+                height: 300px;
+            }
+
             #weather-table {
+                flex: 1 1 auto;
                 margin-top: 20px;
             }
             #weather-table td {
@@ -48,15 +66,17 @@
                 text-align: right;
                 padding-right: 20px;
             }
+
+
+            @media (max-width: 700px) {
+                #weather-table {
+                    display: none;
+                }
+            }
         </style>
 
-        <div id="plot-0"></div>
-        <div id="plot-1"></div>
 
-        <table id="weather-table">
-            <td id="wx-col1"> </td>
-            <td id="wx-col2"> </td>
-        </table>
+
     </div>
 
 
@@ -73,20 +93,55 @@
     <!-- Dome/Enclosure Camera -->
     <div id="viewtab5" class="tabs-content views-content">
         <div id="dome-cam"></div>
-        <h3>Lamp: </h3>
-            <!--div data-msg="lamp" class="status-box">Off</div-->
-            <button value="off" data-msg="lamp" class="btn btn-secondary button-command">Off</button>
-            <button value="on" data-msg="lamp" class="btn btn-primary button-command">On</button>
-        <h3>IR Lamp: </h3>
-            <button value="off" data-msg="ir-lamp" class="btn btn-secondary button-command">Off</button>
-            <button value="on" data-msg="ir-lamp" class="btn btn-primary button-command">On</button>
-        <h3>Roof: </h3>
-            <button value="close" data-msg="roof" class="btn btn-secondary button-command">Close</button>
-            <button value="open" data-msg="roof" class="btn btn-primary button-command">Open</button>
-        <h3>Park: </h3>
-            <button value="park" data-msg="parking" class="btn btn-secondary button-command">Park</button>
-            <button value="unpark" data-msg="parking" class="btn btn-primary button-command">Unpark</button>
-            
+        <div id="dome-buttons-container">
+            <h3>Lamp: </h3>
+                <button value="off" data-msg="lamp" class="btn btn-secondary button-command">Off</button>
+                <button value="on" data-msg="lamp" class="btn btn-primary button-command">On</button>
+            <h3>IR Lamp: </h3>
+                <button value="off" data-msg="ir-lamp" class="btn btn-secondary button-command">Off</button>
+                <button value="on" data-msg="ir-lamp" class="btn btn-primary button-command">On</button>
+            <h3>Roof: </h3>
+                <button value="close" data-msg="roof" class="btn btn-secondary button-command">Close</button>
+                <button value="open" data-msg="roof" class="btn btn-primary button-command">Open</button>
+            <h3>Park: </h3>
+                <button value="park" data-msg="parking" class="btn btn-secondary button-command">Park</button>
+                <button value="unpark" data-msg="parking" class="btn btn-primary button-command">Unpark</button>
+        </div>
+
+        <style>
+
+            #viewtab5.current {
+                display: flex;
+                width: 100%;
+                flex-wrap: wrap;
+                flex-direction: row;
+                align-content: flex-start;
+            }
+
+            #dome-cam {
+                margin-top: 20px;
+                height: auto;
+                flex: 1 0 auto;
+            }
+            #dome-buttons-container {
+                flex: 0 0 auto;
+                display: grid;
+                grid-template-columns: 3fr 2fr 2fr;
+                grid-gap: 1em;
+                margin-top: 30px;
+            }
+            #viewtab5 #dome-cam {
+                margin-top: 20px;
+            }
+
+            @media (max-width: 700px) {
+                #dome-cam {
+                    width: 100%;
+                }
+            }
+
+
+        </style>
 
     </div>
 

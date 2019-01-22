@@ -63,7 +63,7 @@ class CameraForm(FlaskForm):
 
     autofocus = BooleanField('Autofocus', default=1)
 
-    position_angle = FloatField('Position Angle \n[-180, 180]', default=0, validators=[
+    position_angle = FloatField('Position Angle', default=0, validators=[
                                 NumberRange(min=-180, max=180, message="Please enter a value between 0 and 360.")])
 
 class ObjectFilter(FlaskForm):

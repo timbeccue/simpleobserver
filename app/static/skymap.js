@@ -537,9 +537,9 @@ function newSkyMap() {
         let width = $('#view-size-helper').width();
         let height = $('#view-size-helper').height();
         let dim = width < height ? width:height;
-        let marginleft = 0, margintop = 0;
+        let marginleft = 0, margintop = 20;
         if (width < height) {
-            margintop = (height - width) / 2;
+            margintop += (height - width) / 2;
         } else {
             marginleft = (width - height) / 2;
         }

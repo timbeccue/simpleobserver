@@ -56,7 +56,7 @@
                             <button style="width: auto;" class='btn btn-small btn-secondary'>in</button>
                             <button style="width: auto;" class='btn btn-small btn-secondary'>out</button>
                         </fieldset>
-                        <button class='btn btn-small btn-secondary'>autofocus</button>
+                        <button class='btn btn-small btn-secondary'>auto</button>
                     </div>
                 </div>
 
@@ -65,6 +65,7 @@
                     <div class="card-body" id="rotate-tab-content">
                         <fielset>
                             {{ cameraform.position_angle.label }}
+                            <br><p>[-180, 180]</p>
                             {{ cameraform.position_angle(form="camerasettings", class="form-control") }}
                         </fieldset>
                         {% for error in cameraform.position_angle.errors %}

@@ -54,6 +54,7 @@ def create_plot(logtype):
             t=100,
             b=50
         ),
+        height = 300,
         paper_bgcolor = 'rgba(0,0,0,0)', 
         plot_bgcolor = 'rgba(0,0,0,0)', 
         font = dict(color = 'aaa')

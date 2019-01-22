@@ -131,9 +131,9 @@ def register():
     return render_template('register.html', form=form, loginform = loginform)
 
 
-def send(cmd):
+def send(cmd, expire=expire_time):
     if live_commands==True:
-        send_command = core1_redis.set(cmd[0], json.dumps(cmd[1]), ex=expire_time)
+        send_command = core1_redis.set(cmd[0], json.dumps(cmd[1]), ex=expire)
         print(send_command)
     else:
         print("Commands are offline right now.")
@@ -335,7 +335,7 @@ def command(msg):
         filter = []
         bin = []
         dither = []
-        cmd = []
+        cmds = []
 
         # Get field values for each row submited.
         rowid = 0
@@ -365,15 +365,10 @@ def command(msg):
                                  position_angle, 
                                  delay[row], 
                                  filter[row])
-            cmd.append(one_row)
-
-
+            cmds.append(one_row)
         
 
-
-
-
-
+        
 
     # Telescope GOTO Commands
     if msg == 'go':
