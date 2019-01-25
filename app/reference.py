@@ -51,3 +51,7 @@ common_filters = ['u', 'U', 'B', 'PB', 'g', 'V', 'PG', 'r', 'R', 'PR', 'i', 'I',
                   'Air', 'AIR']
 other_filters =  ['cR', 'Y', 'NIR', 'EXO', 'NII', 'N2', 'HB', 'HBC', 'DAO72', 'SM', 'RS', 'Dif1', 'Dif2', \
                   'Dif3', 'su', 'sb', 'sv', 'sy']
+
+
+# Used in CameraForm to populate the filter selection box.
+filter_choices = [('LUM', 'Luminance'),('BLU', 'Blue'), ('GRN', 'Green'), ('RED', 'Red'), ('O-3', 'O3'), ('H-A', 'H\u03B1'), ('S-2', 'S2'), ('EXO', 'EXO'), ('AIR', 'Air')]

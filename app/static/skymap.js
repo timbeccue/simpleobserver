@@ -664,3 +664,13 @@ function newSkyMap() {
 }
 
 var SkyMap = newSkyMap();
+
+
+/* Repaint the canvas every second. This is a compromise between displaying movement on the map when the telescope
+ * slews, while minimizing the client cpu load. 
+ */
+(function() {
+    setInterval(function() {
+        SkyMap.update_pointer();
+    }, 1000);
+})();

@@ -22,7 +22,7 @@ def load_user(id):
 
 # Forms
 
-from app.reference import object_types, seasons, constellations
+from app.reference import object_types, seasons, constellations, filter_choices
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, FloatField, SelectField, HiddenField
@@ -56,8 +56,6 @@ class CameraForm(FlaskForm):
     delay = FloatField('Delay (s)', default=0)
     dither = SelectField('Dithering', default='off', choices=[('off','off'), ('on','on'), ('random','random')])
     bin = SelectField('Binning', default='1', choices=[('1','1'), ('2','2'), ('4','4')])
-    filter_choices = [('PL', 'Clear'), ('PR', 'Red'), ('PG', 'Green'), ('PB', 'Blue'), ('S2', 'S2'), ('HA', 'H\u03B1'),
-                      ('O3', 'O3'), ('N2', 'N2')]
     filter = SelectField('Filter', default='c', choices=filter_choices)
     capture = SubmitField(' Capture Image')
 

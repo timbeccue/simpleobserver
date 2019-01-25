@@ -54,7 +54,7 @@ $(document).ready( function() {
                   //output += '" WIDTH="';
                   //output += DisplayWidth;
                   output += '" class="img-fluid'
-                  output += '" ALT="Camera Image" style="height: 100%; width: 100%; object-fit: contain">';
+                  output += '" ALT="Camera Image" style="width: 100%; object-fit: contain">';
                   }
                   document.getElementById('dome-cam').innerHTML = output;
             }).fail(function(data) {

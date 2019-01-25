@@ -51,12 +51,8 @@
                 <div class="card camera-card">
                     <div class="card-header">Focus</div>
                     <div class="card-body" id="focus-tab-content">
-                        <button class='btn btn-small btn-secondary'>home</button>
-                        <fieldset style="width: 100%;">
-                            <button style="width: auto;" class='btn btn-small btn-secondary'>in</button>
-                            <button style="width: auto;" class='btn btn-small btn-secondary'>out</button>
-                        </fieldset>
-                        <button class='btn btn-small btn-secondary'>auto</button>
+                        <button class='btn btn-small btn-secondary'>default focus</button>
+                        <button class='btn btn-small btn-secondary'>autofocus now</button>
                     </div>
                 </div>
 
@@ -103,7 +99,7 @@
 #focus-tab-content {
     display: grid;
     grid-template-columns: 100%;
-    grid-template-rows: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
     grid-gap: 10px;
 }
 #rotate-tab-content {
@@ -123,7 +119,7 @@
     #focus-tab-content {
         display: grid;
         grid-template-columns: 100%;
-        grid-template-rows: 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
         grid-gap: 10px;
     }
     #rotate-tab-content {
