@@ -15,6 +15,6 @@ lon = 0     # deg
 secret_key = 'secret key goes here' 
 
 [DATABASE]
-# Filenames of sqlite databases are specified here. They should be located in app/databases.
+# Filenames of sqlite databases are specified here. They should be located in /databases.
 skyobjects_database = name1.db 
 users_database = name2.db 
