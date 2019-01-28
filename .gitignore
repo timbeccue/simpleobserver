@@ -10,3 +10,8 @@ sandbox/
 app/weatherlogs/*.csv
 config.ini
 
+
+databases/astro.db 
+databases.hygdata.db 
+databases.sac.db 
+

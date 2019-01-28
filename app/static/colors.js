@@ -1,17 +1,9 @@
 /* jshint esversion: 6 */
-/* Defines site-wide, color themes that can be selected by the user. */
+/* Defines site-wide, color themes that can be selected by the user. Implements red night mode option. */
 
 
 const root = document.documentElement;
-const color_buttons = ''; // document.querySelectorAll('.color-button');
-
-
-//color_buttons.forEach((btn) => {
-    //btn.addEventListener('click', handleThemeUpdate);
-//});
-
-//var night_colors = document.getElementById("night-colors");
-//night_colors.addEventListener("click", handleThemeUpdate); 
+const color_buttons = '';
 
 var night_colors = $('#night-colors');
 night_colors.click(function() {
