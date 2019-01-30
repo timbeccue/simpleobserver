@@ -169,9 +169,16 @@ class WeatherLogger():
         self._write_data(logtype, log, data)
         return "Success"
 
+    def weather_is_broadcasting(self):
+        if self.redis.exists('<ptr-wx-1_state'): return True
+        else: 
+            print("Weather Logger: Unable to retrieve weather information.")
+            return False
+
                 
     def log_everything(self):
-        self.update_log("W")
+        if self.weather_is_broadcasting():
+            self.update_log("W")
             
 weatherlogger = WeatherLogger()
 
