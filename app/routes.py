@@ -232,7 +232,7 @@ def merge_geojson():
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template('base.html', loginform=LoginForm(), cameraform=CameraForm(), filter=ObjectFilter())
+    return render_template('base.html', loginform=LoginForm(), cameraform=CameraForm(), filter=ObjectFilter(), site=site_attributes)
 
 
 @app.route('/textcommand', methods=['GET', 'POST'])

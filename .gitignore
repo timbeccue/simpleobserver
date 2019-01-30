@@ -12,6 +12,7 @@ config.ini
 
 
 databases/astro.db 
-databases.hygdata.db 
-databases.sac.db 
+databases/hygdata.db 
+databases/sac.db 
+databases/users.db
 

@@ -2,11 +2,17 @@
 # Rename to 'config.ini' in order to work!
 
 [NETWORK]
+has_dome_camera = (true or false)
 dome_camera = 0.0.0.0
 redis_host = 0.0.0.0
 redis_port = 6379
 
 [SITE]
+observatory_name = West Mountain Drive
+city = Santa Barbara
+state = CA 
+country = USA 
+site_abbreviation = WMD
 lat = 0     # deg
 lon = 0     # deg
 

@@ -22,8 +22,14 @@ redis_port = config_file['NETWORK']['redis_port']
 core1_redis = redis.StrictRedis(host=redis_host, port=redis_port, db=0, decode_responses=True)
 
 site_attributes = {
+    'observatory_name': config_file['SITE']['observatory_name'],
+    'city': config_file['SITE']['city'],
+    'state': config_file['SITE']['state'],
+    'country': config_file['SITE']['country'],
+    'site_abbreviation': config_file['SITE']['site_abbreviation'],
     'lat': config_file['SITE']['lat'],
     'lon': config_file['SITE']['lon'],
+    'has-dome-camera': config_file['NETWORK']['has_dome_camera'],
     'dome-camera': config_file['NETWORK']['dome_camera']
 }
 
