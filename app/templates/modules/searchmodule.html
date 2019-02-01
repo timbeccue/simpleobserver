@@ -100,7 +100,7 @@ function flash_textbox(ms) {
 
 
 /* Get coordinates of mouse click and send them to the sky chart and goto box. */
-$(function() {
+$(document).ready(function() {
     $('#aladin-lite-div canvas').on('click', return_coords)
     function return_coords(event) {
         rect = this.getBoundingClientRect();
