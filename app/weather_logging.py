@@ -175,6 +175,9 @@ class WeatherLogger():
             print("Weather Logger: Unable to retrieve weather information.")
             return False
 
+    def log_exists(self, logtype):
+        searchname = os.path.join(self.folder, logtype + self.filebase + '*.csv')
+        return len(glob.glob(searchname)) > 0
                 
     def log_everything(self):
         if self.weather_is_broadcasting():

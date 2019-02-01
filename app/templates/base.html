@@ -109,42 +109,11 @@
     </div>
 
 
-<!--script> /* global functions */
-    // JS9 Coordinates:
-    var js9crosshair_ra // = JS9.js9crosshair_ra;
-    var js9corsshair_dec // = JS9.js9crosshair_dec;
-
-    var lmst = 15.000;
-</script-->
-
 <!-- Plotly.js -->
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
-<script>
-    function plot_weather(){
-        $.ajax({
-            url: "plot_weather/W",
-            success: function(the_data) {
-                
-                var graphs = JSON.parse(the_data);
-                var ids = ['plot-0', 'plot-1'];
-
-                for(var i in graphs) {
-                    Plotly.newPlot(ids[i], graphs[i].data, graphs[i].layout, {responsive: true});
-                };
-            },
-            error: function() {
-                console.log('failed to update weather plot data');
-            }
-        })
-    }
-    plot_weather();
-    setInterval(plot_weather(), 10000);
-</script>
-
 
 <!-- Other CSS -->
-
 <link rel="stylesheet" href="https://ofrohn.github.io/celestial.css">
 <link id="datatables-css" rel="stylesheet" type="text/css" href="static/css/datatables.css">
 

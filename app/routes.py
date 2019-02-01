@@ -5,7 +5,7 @@ from flask import Flask, render_template, request, Response, redirect
 from flask import jsonify, url_for, flash, send_from_directory, session
 from flask_login import current_user, login_user, logout_user, login_required
 
-import re, datetime, time, json, redis, datetime
+import re, datetime, time, json, redis, datetime, os
 
 from app.commands import *
 from app.models import LoginForm, RegistrationForm, CameraForm, ObjectFilter, TestAddForm
@@ -27,11 +27,17 @@ weather_logger.start()
 ####################################################################################
 
 
+@app.route('/testlogexists', methods=['GET', 'POST'])
+def testlogexists():
+    print(str(weatherlogger.log_exists('W')))
+    return ("testlogexists ran successfully")
 
 # AJAX Routes
 from app import weather_plots
 @app.route('/plot_weather/<logtype>', methods=['GET', 'POST'])
 def plot_weather(logtype):
+    if not weatherlogger.log_exists('W'):
+        return("no log found")
     return(weather_plots.create_plot(logtype))
 
 @app.route('/getinfo/<item>', methods=['GET', 'POST'])

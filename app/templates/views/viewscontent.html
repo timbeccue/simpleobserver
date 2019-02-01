@@ -45,6 +45,31 @@
             <td id="wx-col2"> </td>
         </table>
 
+        <script>
+            function plot_weather(){
+                $.ajax({
+                    url: "plot_weather/W",
+                    success: function(the_data) {
+                        if (the_data == "no log found") {
+                            $('#plot-0').append("No weather log available.");
+                        } else {
+                            var graphs = JSON.parse(the_data);
+                            var ids = ['plot-0', 'plot-1'];
+
+                            for(var i in graphs) {
+                                Plotly.newPlot(ids[i], graphs[i].data, graphs[i].layout, {responsive: true});
+                            };
+                        }
+                    },
+                    error: function() {
+                        console.log('failed to update weather plot data');
+                    }
+                })
+            }
+            plot_weather();
+            setInterval(plot_weather(), 10000);
+        </script>
+
         <style>
             #viewtab3.current {
                 display: flex;
