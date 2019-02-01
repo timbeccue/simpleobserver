@@ -15,6 +15,7 @@ country = USA
 site_abbreviation = WMD
 lat = 0     # deg
 lon = 0     # deg
+utc_offset = -8 
 
 [FLASK]
 # Generate a good secret key in terminal: python -c "import os; print(os.urandom(16))"

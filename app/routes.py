@@ -151,7 +151,13 @@ def stream(device,id):
     refresh_frequency = .8
 
     sse = event_stream(state_key, refresh_frequency)
-    return Response(sse, mimetype="text/event-stream")
+    resp = Response(sse, mimetype="text/event-stream")
+   
+    # Disable cache and buffering on SSE. 
+    # Since SSEs are unending connections, buffering (from nginx) severly slows site performance.
+    resp.headers["Cache-Control"] = 'no-cache'
+    resp.headers["X-Accel-Buffering"] = 'no'
+    return resp
 
 altitudes = []
 import numpy as np
@@ -182,7 +188,10 @@ def altitude_lut():
 @app.route('/get_altitude_lut', methods=['GET', 'POST'])
 def stream_altitude_lut():
     sse = altitude_lut()
-    return Response(sse, mimetype="text/event-stream")
+    resp = Response(sse, mimetype="text/event-stream")
+    resp.headers["Cache-Control"] = 'no-cache'
+    resp.headers["X-Accel-Buffering"] = 'no'
+    return resp
 
 
 
