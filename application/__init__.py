@@ -9,12 +9,12 @@ from configparser import ConfigParser
 config_file = ConfigParser()
 config_file.read('config.ini')
 
-app = Flask(__name__)
-app.config.from_object(Config)
+application = Flask(__name__)
+application.config.from_object(Config)
 
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-login = LoginManager(app)
+db = SQLAlchemy(application)
+migrate = Migrate(application, db)
+login = LoginManager(application)
 login.login_view = 'login'
 
 redis_host = config_file['NETWORK']['redis_host']
@@ -35,4 +35,4 @@ site_attributes = {
 
 #migrate = Migrate(app, db)
 
-from app import routes, models, weather_logging
+from application import routes, models, weather_logging

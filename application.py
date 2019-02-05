@@ -1,7 +1,5 @@
-from app import app, db, core1_redis
-from app.models import User, Dso, ThingsInSpace, Hygdatum
-
-
+from application import application, db, core1_redis
+from application.models import User, Dso, ThingsInSpace, Hygdatum
 
 @app.shell_context_processor
 def make_shell_context():

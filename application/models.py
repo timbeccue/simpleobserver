@@ -3,7 +3,7 @@ from sqlalchemy import Column, Float, Integer, Table, Text
 from sqlalchemy.sql.sqltypes import NullType
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.hybrid import hybrid_property
-from app import db
+from application import db
 
 Base = declarative_base()
 metadata = Base.metadata
@@ -13,7 +13,7 @@ metadata = Base.metadata
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
-from app import app,login
+from application import application,login
 
 @login.user_loader
 def load_user(id):
@@ -22,7 +22,7 @@ def load_user(id):
 
 # Forms
 
-from app.reference import object_types, seasons, constellations, filter_choices
+from application.reference import object_types, seasons, constellations, filter_choices
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, FloatField, SelectField, HiddenField
@@ -96,7 +96,7 @@ class TestAddForm(FlaskForm):
 
 # Database Stuff
 
-from app.helpers import utilities
+from application.helpers import utilities
 import sqlalchemy
 class ThingsInSpace(db.Model):
     __bind_key__ = 'things_in_space'

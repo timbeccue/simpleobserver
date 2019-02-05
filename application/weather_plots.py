@@ -4,7 +4,7 @@ import json
 import plotly 
 from datetime import datetime, date, time, timedelta
 
-from app.weather_logging import weatherlogger
+from application.weather_logging import weatherlogger
 
 
 def create_plot(logtype):

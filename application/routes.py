@@ -1,15 +1,15 @@
-# app/routes.py
+# application/routes.py
 
-from app import app, db, core1_redis, site_attributes
+from application import application, db, core1_redis, site_attributes
 from flask import Flask, render_template, request, Response, redirect 
 from flask import jsonify, url_for, flash, send_from_directory, session
 from flask_login import current_user, login_user, logout_user, login_required
 
 import re, datetime, time, json, redis, datetime, os
 
-from app.commands import *
-from app.models import LoginForm, RegistrationForm, CameraForm, ObjectFilter, TestAddForm
-from app.models import User, Dso, ThingsInSpace
+from application.commands import *
+from application.models import LoginForm, RegistrationForm, CameraForm, ObjectFilter, TestAddForm
+from application.models import User, Dso, ThingsInSpace
 
 
 expire_time = 120 #seconds
@@ -18,7 +18,7 @@ live_commands = True
 
 
 ####################################################################################
-from app.weather_logging import weatherlogger
+from application.weather_logging import weatherlogger
 from apscheduler.schedulers.background import BackgroundScheduler
 
 weather_logger = BackgroundScheduler(daemon=True)
@@ -27,20 +27,20 @@ weather_logger.start()
 ####################################################################################
 
 
-@app.route('/testlogexists', methods=['GET', 'POST'])
+@application.route('/testlogexists', methods=['GET', 'POST'])
 def testlogexists():
     print(str(weatherlogger.log_exists('W')))
     return ("testlogexists ran successfully")
 
 # AJAX Routes
-from app import weather_plots
-@app.route('/plot_weather/<logtype>', methods=['GET', 'POST'])
+from application import weather_plots
+@application.route('/plot_weather/<logtype>', methods=['GET', 'POST'])
 def plot_weather(logtype):
     if not weatherlogger.log_exists('W'):
         return("no log found")
     return(weather_plots.create_plot(logtype))
 
-@app.route('/getinfo/<item>', methods=['GET', 'POST'])
+@application.route('/getinfo/<item>', methods=['GET', 'POST'])
 # The variable 'item' is a string of config items to get, delimited by a dash (-)
 def get_info(item):
     items = item.split('-')
@@ -52,7 +52,7 @@ def get_info(item):
     except:
         return jsonify(status="fail")
 
-@app.route('/dome-cam-url', methods=['GET', 'POST'])
+@application.route('/dome-cam-url', methods=['GET', 'POST'])
 def dome_cam():
     return jsonify(url=site_attributes['dome-camera'])
 
@@ -60,7 +60,7 @@ def dome_cam():
 
 from astroquery.simbad import Simbad
 from astropy.table import Table, vstack
-@app.route('/simbadquery', methods=['GET', 'POST'])
+@application.route('/simbadquery', methods=['GET', 'POST'])
 def simbadquery():
     ''' 
     Should return JSON with status=success or fail. 
@@ -102,7 +102,7 @@ def simbadquery():
     
 
 # User Login Routes
-@app.route('/login', methods=['GET', 'POST'])
+@application.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
@@ -116,12 +116,12 @@ def login():
         return redirect(url_for('home'))
     return redirect(url_for('register'))
 
-@app.route('/logout')
+@application.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('home'))
-@app.route('/register', methods=['GET', 'POST'])
+@application.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
@@ -151,7 +151,7 @@ def event_stream(state_key, refresh_frequency):
         time.sleep(refresh_frequency)
 
 # Push telescope_state to the client.
-@app.route('/status/<device>/<id>', methods=['GET', 'POST'])
+@application.route('/status/<device>/<id>', methods=['GET', 'POST'])
 def stream(device,id):
     state_key = f"<ptr-{device}-{id}_state"
     refresh_frequency = .8
@@ -191,7 +191,7 @@ def altitude_lut():
         yield 'data: {}\n\n'.format(json.dumps(altitudes))
         time.sleep(30000) # Not in use, so no need for fast refresh.
 
-@app.route('/get_altitude_lut', methods=['GET', 'POST'])
+@application.route('/get_altitude_lut', methods=['GET', 'POST'])
 def stream_altitude_lut():
     sse = altitude_lut()
     resp = Response(sse, mimetype="text/event-stream")
@@ -203,38 +203,38 @@ def stream_altitude_lut():
 
 
 
-import app.database_helpers as database
+import application.database_helpers as database
 
-from app.helpers import utilities
-@app.route('/altitude')
+from application.helpers import utilities
+@application.route('/altitude')
 def alt():
     print(utilities.getAlt(3,89))
     return(jsonify(alt=utilities.getAlt(3,89)))
 
-@app.route('/addtodatabase', methods=['POST', 'GET'])
+@application.route('/addtodatabase', methods=['POST', 'GET'])
 @login_required
 def addtodatabase():
     return database.add_to_database()
 
 # Filter the display of objects by type.
 # This route takes users selection and saves it in a session, to be read by tablelookup when the table is redrawn.
-@app.route('/apply_table_filters', methods=['POST', 'GET'])
+@application.route('/apply_table_filters', methods=['POST', 'GET'])
 def apply_table_filters():
     return database.apply_table_filters()
 
 
 # Dumps all data into a json file (geojson format) for use in the d3celestial sky chart.
-@app.route('/database_to_json')
+@application.route('/database_to_json')
 @login_required
 def database_to_json():
     return database.database_to_json()
 
-@app.route('/recreate_database')
+@application.route('/recreate_database')
 @login_required
 def recreate_database():
     return database.recreate_database()
 
-@app.route('/merge_geojson')
+@application.route('/merge_geojson')
 @login_required
 def merge_geojson():
     return database.merge_geojson()
@@ -245,12 +245,12 @@ def merge_geojson():
 #############################################
 
 
-@app.route('/', methods=['GET', 'POST'])
+@application.route('/', methods=['GET', 'POST'])
 def home():
     return render_template('base.html', loginform=LoginForm(), cameraform=CameraForm(), filter=ObjectFilter(), site=site_attributes)
 
 
-@app.route('/textcommand', methods=['GET', 'POST'])
+@application.route('/textcommand', methods=['GET', 'POST'])
 @login_required
 def textcommand():
     #print("form dict: "+str(request.form.to_dict()))
@@ -310,7 +310,7 @@ def textcommand():
     return jsonify(requested=requested, processed=processed, live=live_commands)
 
 
-@app.route('/command/<msg>', methods=['POST'])
+@application.route('/command/<msg>', methods=['POST'])
 @login_required
 def command(msg):
 
@@ -417,11 +417,11 @@ def command(msg):
     return jsonify(response=response, requested="requested", processed=processed, live=live_commands)
 
 
-from app.reference import all_dsos, all_stars, double_stars, nebula, galaxies, globular_clusters
-from app.reference import open_clusters, everything_else
+from application.reference import all_dsos, all_stars, double_stars, nebula, galaxies, globular_clusters
+from application.reference import open_clusters, everything_else
 from sqlalchemy import and_, or_
 from datatables import ColumnDT, DataTables
-@app.route('/tablelookup')
+@application.route('/tablelookup')
 def tablelookup():
     """Return server side data for object table"""
 
@@ -484,11 +484,11 @@ def tablelookup():
 
 
 #-------------------------------------------------------------------------------------------------------------#
-@app.route('/starparty', methods=['GET', 'POST'])
+@application.route('/starparty', methods=['GET', 'POST'])
 def starparty():
     return render_template('starparty.html', filter=ObjectFilter())
 #-------------------------------------------------------------------------------------------------------------#
-@app.route('/testpage')
+@application.route('/testpage')
 @login_required
 def testpage():
     database = db.session.query(ThingsInSpace).all()
@@ -499,4 +499,4 @@ def testpage():
 
 
 #if __name__=='__main__':
-#    app.run(host='10.15.0.15')
+#    application.run(host='10.15.0.15')

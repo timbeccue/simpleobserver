@@ -56,7 +56,7 @@ def cmd_expose(time, count, binning, dither, autofocus, position_angle, start_de
     }
     return [key, val]
 
-from app.reference import common_filters, other_filters
+from application.reference import common_filters, other_filters
 def cmd_filter(filter):
     ''' filter is a case-sensitive string matching an input from the filter arrays above. '''
     key = '>ptr-fil-1'

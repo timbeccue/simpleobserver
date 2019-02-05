@@ -34,7 +34,7 @@ Assuming file exists:
 
 
 import json, time, os, csv, glob
-from app import core1_redis as redis
+from application import core1_redis as redis
 
 
 class WeatherLogger():
