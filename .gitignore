@@ -7,7 +7,7 @@ __pycache__/
 env/
 venv/
 sandbox/
-app/weatherlogs/*.csv
+application/weatherlogs/*.csv
 config.ini
 
 
