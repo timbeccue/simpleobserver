@@ -18,8 +18,8 @@ class Config(object):
     #    'users': 'sqlite:///'+os.path.join(basedir, 'databases/', users_name)
     #}
     SQLALCHEMY_BINDS = {
-        'things_in_space': 'sqlite:///'+os.path.join(basedir, 'databases/', skyobjects_name),
-        'users': 'mysql+pymysql://testdb11:testdb11@testdb1.cyuke35resta.us-west-1.rds.amazonaws.com:3306/users' 
+        'things_in_space': 'mysql_pymysql://testdb11:testdb11@ptr-db.cyuke35resta.us-west-1.rds.amazonaws.com:3306/things_in_space',
+        'users': 'mysql+pymysql://testdb11:testdb11@ptr-db.cyuke35resta.us-west-1.rds.amazonaws.com:3306/users' 
     }
 
 

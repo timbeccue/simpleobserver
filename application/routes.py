@@ -57,47 +57,48 @@ def dome_cam():
     return jsonify(url=site_attributes['dome-camera'])
 
 
+# Something with simbad/astropy/astroquery is causing the site to fail (err 500) on aws. Temporarily disabled.
 
-from astroquery.simbad import Simbad
-from astropy.table import Table, vstack
-@application.route('/simbadquery', methods=['GET', 'POST'])
-def simbadquery():
-    ''' 
-    Should return JSON with status=success or fail. 
-    If status=fail, json should include content="error message".
-    If status=success, content should contain a string that is already coded in json format.
-    '''
-
-    search_args = request.form['query-args'].split(",")
-    print(search_args)
-    wildcard = True#request.form['haswildcards']
-
-    if not search_args or not wildcard: #ensure nonempty fields
-        return jsonify(status='fail', content="error: no search argument given.")
-
-    # Customize fields returned by Simbad
-    cSimbad = Simbad()
-    cSimbad.add_votable_fields('main_id', 'id(m)', 'id(ngc)','ra(d)', 'dec(d)', 'ubv', 'flux(V)', 'id(name)', 'dim_majaxis')
-    cSimbad.remove_votable_fields('coordinates', 'main_id')
-
-    # Comma separated queries return multiple tables that are combined into one.
-    def objects(*args): 
-        def gen(*args):
-            for arg in args:
-                yield cSimbad.query_objects(arg, wildcard=True)
-        return vstack(list(gen(*args)))
-
-
-    raw_result = objects(search_args)
-    try:
-        result_b = raw_result.to_pandas()
-    except Exception as ex:
-        print(ex)
-        return jsonify(status='fail', content="error: simbad did not respond to request.")
-    
-    result = result_b.to_json()
-    print(result)
-    return jsonify(status="success", content=result)
+#from astroquery.simbad import Simbad
+#from astropy.table import Table, vstack
+#@application.route('/simbadquery', methods=['GET', 'POST'])
+#def simbadquery():
+#    ''' 
+#    Should return JSON with status=success or fail. 
+#    If status=fail, json should include content="error message".
+#    If status=success, content should contain a string that is already coded in json format.
+#    '''
+#
+#    search_args = request.form['query-args'].split(",")
+#    print(search_args)
+#    wildcard = True#request.form['haswildcards']
+#
+#    if not search_args or not wildcard: #ensure nonempty fields
+#        return jsonify(status='fail', content="error: no search argument given.")
+#
+#    # Customize fields returned by Simbad
+#    cSimbad = Simbad()
+#    cSimbad.add_votable_fields('main_id', 'id(m)', 'id(ngc)','ra(d)', 'dec(d)', 'ubv', 'flux(V)', 'id(name)', 'dim_majaxis')
+#    cSimbad.remove_votable_fields('coordinates', 'main_id')
+#
+#    # Comma separated queries return multiple tables that are combined into one.
+#    def objects(*args): 
+#        def gen(*args):
+#            for arg in args:
+#                yield cSimbad.query_objects(arg, wildcard=True)
+#        return vstack(list(gen(*args)))
+#
+#
+#    raw_result = objects(search_args)
+#    try:
+#        result_b = raw_result.to_pandas()
+#    except Exception as ex:
+#        print(ex)
+#        return jsonify(status='fail', content="error: simbad did not respond to request.")
+#    
+#    result = result_b.to_json()
+#    print(result)
+#    return jsonify(status="success", content=result)
 
     
 
