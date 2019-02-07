@@ -6,7 +6,7 @@
         </div>
         <div class="head-inputs">
             <form id="query-object" method="POST" action="/simbadquery">
-                <input class="head-input-item" id="aladin-search-box" type="text" name="query-args" placeholder="name or identifier...">
+                <input class="head-input-item" id="aladin-search-box" type="text" name="query-args" placeholder="object name/position...">
                 <button type="submit" class="head-input-item btn btn-outline-warning">Search</button>
             </form>
         </div>
@@ -26,10 +26,10 @@
             <script type="text/javascript" src="//aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>
             <script type="text/javascript" src="//aladin.u-strasbg.fr/AladinLite/api/v2/beta/aladin.min.js" charset="utf-8"></script>
             <script type="text/javascript">
-                var aladin = A.aladin('#aladin-lite-div', {survey: "P/DSS2/color", fov:1.9, target: "M 20", cooFrame: "ICRSd", showFullscreenControl: false, showSimbadPointerControl: true});
+                var aladin = A.aladin('#aladin-lite-div', {survey: "P/DSS2/color", fov:1, target: "M 33", cooFrame: "ICRSd", showFullscreenControl: false, showGotoControl: false, showSimbadPointerControl: true});
             </script>
 
-            <!-- Results Table -->
+            <!-- Results Table >
             <table id="query-result-table">
                 <thead>
                     <tr class="table-head">
@@ -42,7 +42,7 @@
                 </thead>
                 <tbody>
                 </tbody>
-            </table>
+            </table-->
 
 
         </div>
@@ -53,6 +53,16 @@
     .highlight-textbox {
         border: orange 2px solid;
     }
+    #query-body {
+        margin: 0;
+        padding: 0;
+    }
+    #aladin-lite-div {
+        min-height: 450px;
+        width: 100%;
+        border: none;
+    }
+    /*
     #query-body {
         display: flex;
         flex-direction: row;
@@ -74,7 +84,6 @@
         width: 40%;
         border: none;
     }
-
     @media (max-width: 600px) {
         #query-body {
             flex-direction: column;
@@ -87,6 +96,7 @@
             margin-bottom: 30px;
         }
     }
+    */
 </style>
 
 

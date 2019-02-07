@@ -133,13 +133,6 @@ def register():
     return render_template('register.html', form=form, loginform = loginform)
 
 
-
-#def event_stream(state_key, refresh_frequency):
-#    while True:
-#        state_dict = core1_redis.get(state_key)
-#        yield 'data: {}\n\n'.format(state_dict)
-#        time.sleep(refresh_frequency)
-
 def event_stream(refresh_frequency=1):
     while True:
         state_dict = compile_state_to_send()
@@ -160,20 +153,6 @@ def compile_state_to_send():
 
     return json.dumps(compiled_state)
 
-# Push telescope_state to the client.
-#@application.route('/status/<device>/<id>', methods=['GET', 'POST'])
-#def stream(device,id):
-#    state_key = f"<ptr-{device}-{id}_state"
-#    refresh_frequency = .8
-#
-#    sse = event_stream(state_key, refresh_frequency)
-#    resp = Response(sse, mimetype="text/event-stream")
-#   
-#    # Disable cache and buffering on SSE. 
-#    # Since SSEs are unending connections, buffering (from nginx) severly slows site performance.
-#    #resp.headers["Cache-Control"] = 'no-cache'
-#    #resp.headers["X-Accel-Buffering"] = 'no'
-#    return resp
 @application.route('/status/all', methods=['GET', 'POST'])
 def stream():
     refresh_frequency = .8
