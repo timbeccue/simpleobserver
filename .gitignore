@@ -15,6 +15,7 @@ databases/astro.db
 databases/hygdata.db 
 databases/sac.db 
 databases/users.db
+databases/data.sql
 
 
 # Elastic Beanstalk Files

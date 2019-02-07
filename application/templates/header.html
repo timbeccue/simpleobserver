@@ -23,7 +23,7 @@
             {# loginform.remember_me() #}
             {# loginform.remember_me.label #}
             {{ loginform.submit() }}
-            <a href="{{ url_for('register') }}">
+            <a href="/register">
                 <button id="login-register-button" type="button">Create New Account</button>
             </a>
         </form>
@@ -31,7 +31,7 @@
         <ul class='loggedin'>
             <li><a href="#">Hello, {{ current_user.username }}</a>
                 <ul class="dropdown">
-                    <li><a href="{{ url_for('logout') }}">logout</a></li>
+                    <li><a href="/logout">logout</a></li>
                 </ul>
             </li>
         </ul>
@@ -157,6 +157,9 @@
     @media (max-width: 700px) {
         .header .title-link {
             margin-left: 0;
+        }
+        .header-site-name {
+            display:none;
         }
     }
 

@@ -12,18 +12,13 @@ from application.models import LoginForm, RegistrationForm, CameraForm, ObjectFi
 from application.models import User, Dso, ThingsInSpace
 
 
-expire_time = 120 #seconds
-live_commands = True
-
-
-
 ####################################################################################
-from application.weather_logging import weatherlogger
-from apscheduler.schedulers.background import BackgroundScheduler
-
-weather_logger = BackgroundScheduler(daemon=True)
-weather_logger.add_job(weatherlogger.log_everything, 'interval', seconds=55)
-weather_logger.start()
+#from application.weather_logging import weatherlogger
+#from apscheduler.schedulers.background import BackgroundScheduler
+#
+#weather_logger = BackgroundScheduler(daemon=True)
+#weather_logger.add_job(weatherlogger.log_everything, 'interval', seconds=55)
+#weather_logger.start()
 ####################################################################################
 
 
@@ -33,24 +28,24 @@ def testlogexists():
     return ("testlogexists ran successfully")
 
 # AJAX Routes
-from application import weather_plots
-@application.route('/plot_weather/<logtype>', methods=['GET', 'POST'])
-def plot_weather(logtype):
-    if not weatherlogger.log_exists('W'):
-        return("no log found")
-    return(weather_plots.create_plot(logtype))
+#from application import weather_plots
+#@application.route('/plot_weather/<logtype>', methods=['GET', 'POST'])
+#def plot_weather(logtype):
+#    if not weatherlogger.log_exists('W'):
+#        return("no log found")
+#    return(weather_plots.create_plot(logtype))
 
-@application.route('/getinfo/<item>', methods=['GET', 'POST'])
-# The variable 'item' is a string of config items to get, delimited by a dash (-)
-def get_info(item):
-    items = item.split('-')
-    data = {}
-    try:
-        for val in items:
-            data[val] = site_attributes[val]
-        return jsonify(status="success", data=data)
-    except:
-        return jsonify(status="fail")
+#@application.route('/getinfo/<item>', methods=['GET', 'POST'])
+## The variable 'item' is a string of config items to get, delimited by a dash (-)
+#def get_info(item):
+#    items = item.split('-')
+#    data = {}
+#    try:
+#        for val in items:
+#            data[val] = site_attributes[val]
+#        return jsonify(status="success", data=data)
+#    except:
+#        return jsonify(status="fail")
 
 @application.route('/dome-cam-url', methods=['GET', 'POST'])
 def dome_cam():
@@ -138,67 +133,93 @@ def register():
     return render_template('register.html', form=form, loginform = loginform)
 
 
-def send(cmd, expire=expire_time):
-    if live_commands==True:
-        send_command = core1_redis.set(cmd[0], json.dumps(cmd[1]), ex=expire)
-        print(send_command)
-    else:
-        print("Commands are offline right now.")
 
-def event_stream(state_key, refresh_frequency):
+#def event_stream(state_key, refresh_frequency):
+#    while True:
+#        state_dict = core1_redis.get(state_key)
+#        yield 'data: {}\n\n'.format(state_dict)
+#        time.sleep(refresh_frequency)
+
+def event_stream(refresh_frequency=1):
     while True:
-        state_dict = core1_redis.get(state_key)
+        state_dict = compile_state_to_send()
         yield 'data: {}\n\n'.format(state_dict)
         time.sleep(refresh_frequency)
 
+def compile_state_to_send():
+    ''' Get various state information from redis and publish to SSE broadcast combined in a single JSON object '''
+
+    state_keys = ['mnt-1', 'foc-1', 'rot-1', 'wx-1']
+    compiled_state = {} 
+    
+    for key in state_keys:
+        raw = {key: "empty"}
+        if core1_redis.get(f'<ptr-{key}_state') is not None:
+            raw = json.loads(core1_redis.get(f'<ptr-{key}_state')) 
+        compiled_state[key] = raw
+
+    return json.dumps(compiled_state)
+
 # Push telescope_state to the client.
-@application.route('/status/<device>/<id>', methods=['GET', 'POST'])
-def stream(device,id):
-    state_key = f"<ptr-{device}-{id}_state"
+#@application.route('/status/<device>/<id>', methods=['GET', 'POST'])
+#def stream(device,id):
+#    state_key = f"<ptr-{device}-{id}_state"
+#    refresh_frequency = .8
+#
+#    sse = event_stream(state_key, refresh_frequency)
+#    resp = Response(sse, mimetype="text/event-stream")
+#   
+#    # Disable cache and buffering on SSE. 
+#    # Since SSEs are unending connections, buffering (from nginx) severly slows site performance.
+#    #resp.headers["Cache-Control"] = 'no-cache'
+#    #resp.headers["X-Accel-Buffering"] = 'no'
+#    return resp
+@application.route('/status/all', methods=['GET', 'POST'])
+def stream():
     refresh_frequency = .8
 
-    sse = event_stream(state_key, refresh_frequency)
+    sse = event_stream(refresh_frequency)
     resp = Response(sse, mimetype="text/event-stream")
    
     # Disable cache and buffering on SSE. 
     # Since SSEs are unending connections, buffering (from nginx) severly slows site performance.
-    resp.headers["Cache-Control"] = 'no-cache'
-    resp.headers["X-Accel-Buffering"] = 'no'
+    #resp.headers["Cache-Control"] = 'no-cache'
+    #resp.headers["X-Accel-Buffering"] = 'no'
     return resp
 
-altitudes = []
-import numpy as np
-from astropy.coordinates import SkyCoord, EarthLocation, AltAz
-from astropy.time import Time
-import astropy.units as u
-def make_altitude_lut():
-    time = Time.now()
-    location = EarthLocation(lat=34*u.degree, lon=-119*u.degree)
-    # How many points to precalculate for ra and dec.
-    num_ra = 360
-    num_dec = 180
-    # Line up each ra and dec value 
-    ra = np.repeat(np.arange(num_ra), num_dec)
-    dec = np.tile(np.arange(num_dec), num_ra) - 90
-    
-    eq = SkyCoord(ra, dec, unit=u.degree)
-    aa = eq.transform_to(AltAz(obstime=time, location=location)).alt.deg
-    altitudes = np.ndarray.tolist(aa.astype(int))
-    return altitudes
+#altitudes = []
+#import numpy as np
+#from astropy.coordinates import SkyCoord, EarthLocation, AltAz
+#from astropy.time import Time
+#import astropy.units as u
+#def make_altitude_lut():
+#    time = Time.now()
+#    location = EarthLocation(lat=34*u.degree, lon=-119*u.degree)
+#    # How many points to precalculate for ra and dec.
+#    num_ra = 360
+#    num_dec = 180
+#    # Line up each ra and dec value 
+#    ra = np.repeat(np.arange(num_ra), num_dec)
+#    dec = np.tile(np.arange(num_dec), num_ra) - 90
+#    
+#    eq = SkyCoord(ra, dec, unit=u.degree)
+#    aa = eq.transform_to(AltAz(obstime=time, location=location)).alt.deg
+#    altitudes = np.ndarray.tolist(aa.astype(int))
+#    return altitudes
 
-def altitude_lut():
-    while True:
-        altitudes = make_altitude_lut()
-        yield 'data: {}\n\n'.format(json.dumps(altitudes))
-        time.sleep(30000) # Not in use, so no need for fast refresh.
+#def altitude_lut():
+#    while True:
+#        altitudes = make_altitude_lut()
+#        yield 'data: {}\n\n'.format(json.dumps(altitudes))
+#        time.sleep(30000) # Not in use, so no need for fast refresh.
 
-@application.route('/get_altitude_lut', methods=['GET', 'POST'])
-def stream_altitude_lut():
-    sse = altitude_lut()
-    resp = Response(sse, mimetype="text/event-stream")
-    resp.headers["Cache-Control"] = 'no-cache'
-    resp.headers["X-Accel-Buffering"] = 'no'
-    return resp
+#@application.route('/get_altitude_lut', methods=['GET', 'POST'])
+#def stream_altitude_lut():
+#    sse = altitude_lut()
+#    resp = Response(sse, mimetype="text/event-stream")
+#    resp.headers["Cache-Control"] = 'no-cache'
+#    resp.headers["X-Accel-Buffering"] = 'no'
+#    return resp
 
 
 
@@ -249,67 +270,6 @@ def merge_geojson():
 @application.route('/', methods=['GET', 'POST'])
 def home():
     return render_template('base.html', loginform=LoginForm(), cameraform=CameraForm(), filter=ObjectFilter(), site=site_attributes)
-
-
-@application.route('/textcommand', methods=['GET', 'POST'])
-@login_required
-def textcommand():
-    #print("form dict: "+str(request.form.to_dict()))
-    command = request.form['console-text'].strip()
-    cmd = ''
-
-
-    first = command.split(" ")[0].lower()
-    if any(word in first for word in ["slew", "go", "goto"]):
-    # Space-separated coordinates (eq): "slew 11.32 74.3"
-        ra = float(command.split(" ")[1])
-        de = float(command.split(" ")[2])
-        cmd = cmd_slew([ra, de])
-        print(cmd)
-        send(cmd)
-    if first in ["unpark", "park"]:
-    #sends command directly to mount.
-        cmd = cmd_parking(first)
-        print(cmd)
-        send(cmd)
-    if any(x in first for x in ["filter"]):
-        # accepts "filter g" or "filter ha".
-        fil = command.split(" ")[1]
-        cmd = cmd_filter(fil)
-        print(cmd)
-        send(cmd)
-    if any(x in first for x in ['expose', 'capture', 'take', 'start', 'image']):
-        # exposure time is 30s or 30.5s, number of images is 5x, binning is 2bin or bin2
-        t = re.search(r"\d+[^\sx]+",command)
-        c = re.search(r"\d*x", command)
-        b = re.search(r"[124]?bin[124]?", command)
-        count = c.group() if c else '1'
-        time = t.group() if t else '5'
-        binning = b.group() if b else '1'
-        count = re.sub(r"\D", "", count)
-        time = re.sub(r"\D", "", time)
-        binning = re.sub(r"\D", "", binning)
-        cmd = cmd_expose(float(time), float(count), float(binning))
-        print(cmd)
-        send(cmd)
-    if first == 'track' or first == 'track:':
-        split = command.split(" ")
-        if len(split) == 2: cmd = cmd_track(split[1])
-        if len(split) == 3:
-            ra = split[1]
-            de = split[2]
-            cmd = cmd_track('custom', ra, de)
-        elif len(split) == 1: cmd = cmd_track('sidereal')
-        print(cmd)
-        send(cmd)
-
-
-
-
-    requested = str(datetime.datetime.now()).split('.')[0]+": . . . . . \t"+command
-    processed = cmd[1] if (len(cmd)>0) else ''
-    return jsonify(requested=requested, processed=processed, live=live_commands)
-
 
 @application.route('/command/<msg>', methods=['POST'])
 @login_required

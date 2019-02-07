@@ -12,6 +12,7 @@ config_file.read('config.ini')
 application = Flask(__name__)
 application.config.from_object(Config)
 
+
 db = SQLAlchemy(application)
 migrate = Migrate(application, db)
 login = LoginManager(application)
