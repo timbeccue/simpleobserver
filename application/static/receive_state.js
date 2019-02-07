@@ -12,11 +12,9 @@ $(document).ready( function() {
     var state_SSE = new EventSource('/status/all');
     state_SSE.onmessage = function(event){
         var obj = JSON.parse(event.data);
-        console.log(obj);
         var keys = Object.keys(obj);
 
         if (obj["mnt-1"] && obj["mnt-1"]["mnt-1"] != "empty") {
-            console.log('recieved mnt1 state');
             $.extend(state_mnt1, obj["mnt-1"]);
             var telescope_action = 'unknown';
             if (state_mnt1.mnt1_connected == 'no') {
@@ -56,8 +54,7 @@ $(document).ready( function() {
         }
 
         if (obj["wx-1"] && obj["wx-1"]["wx-1"] != "empty") {
-            console.log('recieved wx1 state');
-            $.extend(state_wx1, obj["wx-1"]);
+            $.extend(state_wx, obj["wx-1"]);
             var table1 = $('#weather-table #wx-col1');
             var table2 = $('#weather-table #wx-col2');
             table1.find('tr').remove();

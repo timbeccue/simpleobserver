@@ -13,12 +13,12 @@ from application.models import User, Dso, ThingsInSpace
 
 
 ####################################################################################
-#from application.weather_logging import weatherlogger
-#from apscheduler.schedulers.background import BackgroundScheduler
-#
-#weather_logger = BackgroundScheduler(daemon=True)
-#weather_logger.add_job(weatherlogger.log_everything, 'interval', seconds=55)
-#weather_logger.start()
+from application.weather_logging import weatherlogger
+from apscheduler.schedulers.background import BackgroundScheduler
+
+weather_logger = BackgroundScheduler(daemon=True)
+weather_logger.add_job(weatherlogger.log_everything, 'interval', seconds=55)
+weather_logger.start()
 ####################################################################################
 
 
@@ -28,12 +28,12 @@ def testlogexists():
     return ("testlogexists ran successfully")
 
 # AJAX Routes
-#from application import weather_plots
-#@application.route('/plot_weather/<logtype>', methods=['GET', 'POST'])
-#def plot_weather(logtype):
-#    if not weatherlogger.log_exists('W'):
-#        return("no log found")
-#    return(weather_plots.create_plot(logtype))
+from application import weather_plots
+@application.route('/plot_weather/<logtype>', methods=['GET', 'POST'])
+def plot_weather(logtype):
+    if not weatherlogger.log_exists('W'):
+        return("no log found")
+    return(weather_plots.create_plot(logtype))
 
 #@application.route('/getinfo/<item>', methods=['GET', 'POST'])
 ## The variable 'item' is a string of config items to get, delimited by a dash (-)
@@ -398,25 +398,21 @@ def tablelookup():
     star_types = all_stars # default
     try:
         star_types = session['star_type_filter']
-        print(star_types)
     except: pass
 
     stellar_magnitudes = [-50,2.5] # default
     try:
         stellar_magnitudes = session['stellar_magnitudes']
-        print(stellar_magnitudes)
     except: pass
 
     dso_types = all_dsos # default
     try:
         dso_types = session['dso_type_filter']
-        print(dso_types)
     except: pass
 
     dso_magnitudes = [-50,50] # default
     try:
         dso_magnitudes = session['dso_magnitudes']
-        print(dso_magnitudes)
     except: pass
 
 

@@ -7,7 +7,6 @@ $(document).ready( function() {
       }).done(function(data) {
                   var dome_cam_address = data.url;
                   var BaseURL = "http://"+dome_cam_address+"/";
-                  console.log(BaseURL);
                   var Camera = ""; // If you use an AXIS 240Q/241S(A)/241Q(A)/243SA, comment away this line by inserting "//"
                   // var Camera = "n"; // Change n to the Video source used in the AXIS 240Q/ 241S(A)/241Q(A)/243SA and remove "//"
             

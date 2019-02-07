@@ -6,7 +6,7 @@
         </div>
         <div class="head-inputs">
             <form id="query-object" method="POST" action="/simbadquery">
-                <input class="head-input-item" id="simbad-search-box" type="text" name="query-args" placeholder="name or identifier...">
+                <input class="head-input-item" id="aladin-search-box" type="text" name="query-args" placeholder="name or identifier...">
                 <button type="submit" class="head-input-item btn btn-outline-warning">Search</button>
             </form>
         </div>
@@ -22,10 +22,11 @@
             <!-- Aladin Image Display -->
             <link rel="stylesheet" href="//aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.css" />
 
-            <div id="aladin-lite-div"></div>
+            <div id="aladin-lite-div"> </div>
             <script type="text/javascript" src="//aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>
+            <script type="text/javascript" src="//aladin.u-strasbg.fr/AladinLite/api/v2/beta/aladin.min.js" charset="utf-8"></script>
             <script type="text/javascript">
-                var aladin = A.aladin('#aladin-lite-div', {survey: "P/DSS2/color", fov:2, target: "M 104", cooFrame: "ICRSd", showFullscreenControl: false});
+                var aladin = A.aladin('#aladin-lite-div', {survey: "P/DSS2/color", fov:1.9, target: "M 20", cooFrame: "ICRSd", showFullscreenControl: false, showSimbadPointerControl: true});
             </script>
 
             <!-- Results Table -->
@@ -98,21 +99,20 @@ function flash_textbox(ms) {
     }, ms);
 }
 
+function return_coords() {
+    //rect = this.getBoundingClientRect();
+    //var [aladin_ra, aladin_dec] = aladin.pix2world(event.clientX-rect.left, event.clientY-rect.top);
+    var [aladin_ra, aladin_dec] = aladin.getRaDec();
+    aladin_ra = aladin_ra / 15;
+
+    UI.target_clicked(aladin_ra, aladin_dec);
+    SkyMap.update_pointer(aladin_ra, aladin_dec);
+    
+} 
 
 /* Get coordinates of mouse click and send them to the sky chart and goto box. */
 $(document).ready(function() {
     $('#aladin-lite-div canvas').on('click', return_coords)
-    function return_coords(event) {
-        rect = this.getBoundingClientRect();
-        var [aladin_ra, aladin_dec] = aladin.pix2world(event.clientX-rect.left, event.clientY-rect.top);
-        aladin_ra = aladin_ra / 15;
-
-
-        UI.target_clicked(aladin_ra, aladin_dec);
-        SkyMap.update_pointer(aladin_ra, aladin_dec);
-        
-        console.log(aladin_ra, aladin_dec);
-    } 
     
 })
 
@@ -122,6 +122,10 @@ $(document).ready(function() {
     $('#query-object').submit(function(e) {
         e.preventDefault();
         var form = $(this);
+        var search_text = $('#aladin-search-box').val();
+        aladin.gotoObject(search_text, {success: return_coords});
+
+        /*
         $.ajax({
             type: 'POST', 
             url:form.attr('action'), 
@@ -138,7 +142,7 @@ $(document).ready(function() {
                 data = JSON.parse(response.content); 
                 console.log(data);
 
-                /* Print results in a table */
+                // Print results in a table 
                 $('#query-result-table tbody').empty()
                 var num_results = (Object.keys(data.ID_m).length);
                 for (var i=0; i<num_results; i++) {
@@ -167,6 +171,7 @@ $(document).ready(function() {
             console.log(errorThrown);
             flash_textbox(1000);
         });
+        */
     });
 });
 

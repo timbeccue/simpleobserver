@@ -90,6 +90,7 @@ function newUI() {
         state.ra_selected = ra;
         state.de_selected = de;
         $('#target-search').val(ra.toFixed(2)+', '+de.toFixed(2));
+        aladin.gotoRaDec(ra*15, de); // ra is converted from hours to degrees. 
     }
 
     window.onbeforeunload = function() {
