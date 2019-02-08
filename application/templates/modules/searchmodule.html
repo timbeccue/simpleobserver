@@ -13,12 +13,6 @@
     </div>
     <div class="module-body">
         <div class="module-body-wrapper" id=query-body>
-
-            <!--select form="query-object" name="haswildcards">
-                <option value="False">only this object</option>
-                <option value="True">with wildcards: *,?,[^abc-z]</option>
-            </select-->
-
             <!-- Aladin Image Display -->
             <link rel="stylesheet" href="//aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.css" />
 
@@ -28,23 +22,6 @@
             <script type="text/javascript">
                 var aladin = A.aladin('#aladin-lite-div', {survey: "P/DSS2/color", fov:1, target: "M 33", cooFrame: "ICRSd", showFullscreenControl: false, showGotoControl: false, showSimbadPointerControl: true});
             </script>
-
-            <!-- Results Table >
-            <table id="query-result-table">
-                <thead>
-                    <tr class="table-head">
-                        <th>id</th>
-                        <th>ra</th>
-                        <th>dec</th>
-                        <th>flux_v</th>
-                        <th>name</th>
-                    </tr><tr> </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table-->
-
-
         </div>
     </div>
 </div>
@@ -62,41 +39,6 @@
         width: 100%;
         border: none;
     }
-    /*
-    #query-body {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-evenly;
-    }
-    #query-result-table {
-        width: 50%;
-        border: green 0px solid;
-        border-collapse: collapse;
-    }
-    #query-result-table thead tr {
-        border-bottom: var(--neutral-6) 1px solid;
-    }
-    .table-head {
-        text-align: left;
-    }
-    #aladin-lite-div {
-        min-height: 300px;
-        width: 40%;
-        border: none;
-    }
-    @media (max-width: 600px) {
-        #query-body {
-            flex-direction: column;
-        }
-        #query-result-table {
-            width: 100%;
-        }
-        #aladin-lite-div {
-            width: 100%;
-            margin-bottom: 30px;
-        }
-    }
-    */
 </style>
 
 
@@ -134,54 +76,6 @@ $(document).ready(function() {
         var form = $(this);
         var search_text = $('#aladin-search-box').val();
         aladin.gotoObject(search_text, {success: return_coords});
-
-        /*
-        $.ajax({
-            type: 'POST', 
-            url:form.attr('action'), 
-            data: form.serialize() 
-        }).done(function(response) {
-            if (response.status == "fail") {
-                console.log("Query failed.")
-                console.log(response.content);
-                
-                flash_textbox(2000);
-            }
-            if (response.status == "success") {
-                console.log("Query succeeded.")
-                data = JSON.parse(response.content); 
-                console.log(data);
-
-                // Print results in a table 
-                $('#query-result-table tbody').empty()
-                var num_results = (Object.keys(data.ID_m).length);
-                for (var i=0; i<num_results; i++) {
-
-                    var id_m = data.ID_m[i] || '--';
-                    var ra_d = (data.RA_d[i] / 15).toFixed(2);
-                    var dec_d = data.DEC_d[i].toFixed(2);
-                    var flux_v = parseFloat(data.FLUX_V[i]).toFixed(2) || '--';
-                    var id_name = String(data.ID_name[i]).slice(5) || '--';
-
-                    var row = "<tr><td>"+ id_m + "</td>";
-                        row += "<td>" + ra_d + "</td>";
-                        row += "<td>" + dec_d + "</td>";
-                        row += "<td>" + flux_v + "</td>";
-                        row += "<td>" + id_name + "</td></tr>";
-
-                    $('#query-result-table tbody').append(row);
-                }
-                aladin.gotoRaDec(data.RA_d[0], data.DEC_d[0]);
-                aladin.adjustFovForObject(data.ID_name[0]);
-            }
-        }).fail(function(data, textStatus, errorThrown) {
-            console.log("AJAX failed to send search results.");
-            console.log(data);
-            console.log(textStatus);
-            console.log(errorThrown);
-            flash_textbox(1000);
-        });
-        */
     });
 });
 

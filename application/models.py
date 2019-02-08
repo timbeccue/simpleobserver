@@ -19,6 +19,21 @@ from application import application,login
 def load_user(id):
     return User.query.get(int(id))
 
+def login_required(role="ANY"):
+    def wrapper(fn):
+        @wraps(fn)
+        def decorated_view(*args, **kwargs):
+
+            if not current_user.is_authenticated():
+                return current_app.login_manager.unauthorized()
+            urole = current_app.login_manager.reload_user().get_urole()
+            if ( (urole != role) and (role != "ANY")):
+                return current_app.login_manager.unauthorized()
+            return fn(*args, **kwargs)
+        return decorated_view
+    return wrapper
+
+
 
 # Forms
 
@@ -141,21 +156,44 @@ class ThingsInSpace(db.Model):
         return f'<ID:{self.id}, M{self.messier}, {self.type}, {self.magnitude}>'
 
 class User(UserMixin, db.Model):
-    __bind_key__ = 'users'
 
+    __bind_key__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
+    is_active = db.Column(db.Boolean, default=False)
+    urole = db.Column(db.String(80))
+
+    def __init__(self, username,email,password_hash,is_active,urole):
+        self.username = username
+        self.email = email
+        self.password_hash = password_hash 
+        self.is_active = is_active 
+        self.urole = urole
 
     def __repr__(self):
         return f'<User {self.username}>'
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
-
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def get_id(self):
+        return self.id
+    def is_active(self):
+        return self.is_active
+    def activate_user(self):
+        self.is_active = True
+    def get_username(self):
+        return self.username
+    def get_urole(self):
+        return self.urole
+
+    
+
+    
 
 class Dso(db.Model):
     __bind_key__ = 'astro'
