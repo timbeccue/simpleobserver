@@ -45,6 +45,8 @@
             <td id="wx-col2"> </td>
         </table>
 
+        <!-- Plotly.js -->
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
         <script>
             function plot_weather(){
                 $.ajax({
@@ -62,11 +64,10 @@
                         }
                     },
                     error: function() {
-                        console.log('failed to update weather plot data');
+                        $('#plot-0').append("No weather log available.");
                     }
                 })
             }
-            plot_weather();
             setInterval(plot_weather(), 10000);
         </script>
 

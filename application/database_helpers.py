@@ -1,9 +1,9 @@
-# app/database_helpers.py
+# application/database_helpers.py
 
-from app import app, db
-from app.reference import all_dsos, all_stars, double_stars, nebula, galaxies, globular_clusters
-from app.reference import open_clusters, everything_else, object_types, seasons, constellations
-from app.models import User, Dso, ThingsInSpace, TestAddForm, ObjectFilter
+from application import application, db
+from application.reference import all_dsos, all_stars, double_stars, nebula, galaxies, globular_clusters
+from application.reference import open_clusters, everything_else, object_types, seasons, constellations
+from application.models import User, Dso, ThingsInSpace, TestAddForm, ObjectFilter
 
 import re, json
 
@@ -153,7 +153,7 @@ def recreate_database():
     features = []
 
     for file in geojson_list:
-        with open('app/static/mapdata/'+file, 'r') as f:
+        with open('application/static/mapdata/'+file, 'r') as f:
             data = json.load(f)
             features += data["features"]
 
@@ -198,7 +198,7 @@ def recreate_database():
 
 def merge_geojson():
     files = []
-    directory = 'app/static/mapdata/'
+    directory = 'application/static/mapdata/'
     files.append(directory+'doublesGEO.json')
     files.append(directory+'threehundredstarsGEO.json')
     files.append(directory+'messierGEO.json')

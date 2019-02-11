@@ -3,7 +3,7 @@ from sqlalchemy import Column, Float, Integer, Table, Text
 from sqlalchemy.sql.sqltypes import NullType
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.hybrid import hybrid_property
-from app import db
+from application import db
 
 Base = declarative_base()
 metadata = Base.metadata
@@ -13,16 +13,31 @@ metadata = Base.metadata
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
-from app import app,login
+from application import application,login
 
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
 
+def login_required(role="ANY"):
+    def wrapper(fn):
+        @wraps(fn)
+        def decorated_view(*args, **kwargs):
+
+            if not current_user.is_authenticated():
+                return current_app.login_manager.unauthorized()
+            urole = current_app.login_manager.reload_user().get_urole()
+            if ( (urole != role) and (role != "ANY")):
+                return current_app.login_manager.unauthorized()
+            return fn(*args, **kwargs)
+        return decorated_view
+    return wrapper
+
+
 
 # Forms
 
-from app.reference import object_types, seasons, constellations, filter_choices
+from application.reference import object_types, seasons, constellations, filter_choices
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, FloatField, SelectField, HiddenField
@@ -96,7 +111,7 @@ class TestAddForm(FlaskForm):
 
 # Database Stuff
 
-from app.helpers import utilities
+from application.helpers import utilities
 import sqlalchemy
 class ThingsInSpace(db.Model):
     __bind_key__ = 'things_in_space'
@@ -141,21 +156,44 @@ class ThingsInSpace(db.Model):
         return f'<ID:{self.id}, M{self.messier}, {self.type}, {self.magnitude}>'
 
 class User(UserMixin, db.Model):
-    __bind_key__ = 'users'
 
+    __bind_key__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
+    is_active = db.Column(db.Boolean, default=False)
+    urole = db.Column(db.String(80))
+
+    def __init__(self, username,email,password_hash,is_active,urole):
+        self.username = username
+        self.email = email
+        self.password_hash = password_hash 
+        self.is_active = is_active 
+        self.urole = urole
 
     def __repr__(self):
         return f'<User {self.username}>'
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
-
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def get_id(self):
+        return self.id
+    def is_active(self):
+        return self.is_active
+    def activate_user(self):
+        self.is_active = True
+    def get_username(self):
+        return self.username
+    def get_urole(self):
+        return self.urole
+
+    
+
+    
 
 class Dso(db.Model):
     __bind_key__ = 'astro'

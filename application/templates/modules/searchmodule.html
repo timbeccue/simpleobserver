@@ -1,0 +1,82 @@
+
+<div class="module" id="module3">
+    <div class="module-head">
+        <div class="head-title">
+            <h1><span style="transition:0.5s;">&#9660;</span> &nbsp;Search</h1>
+        </div>
+        <div class="head-inputs">
+            <form id="query-object" method="POST" action="/simbadquery">
+                <input class="head-input-item" id="aladin-search-box" type="text" name="query-args" placeholder="object name/position...">
+                <button type="submit" class="head-input-item btn btn-outline-warning">Search</button>
+            </form>
+        </div>
+    </div>
+    <div class="module-body">
+        <div class="module-body-wrapper" id=query-body>
+            <!-- Aladin Image Display -->
+            <link rel="stylesheet" href="//aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.css" />
+
+            <div id="aladin-lite-div"> </div>
+            <script type="text/javascript" src="//aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>
+            <script type="text/javascript" src="//aladin.u-strasbg.fr/AladinLite/api/v2/beta/aladin.min.js" charset="utf-8"></script>
+            <script type="text/javascript">
+                var aladin = A.aladin('#aladin-lite-div', {survey: "P/DSS2/color", fov:1, target: "M 33", cooFrame: "ICRSd", showFullscreenControl: false, showGotoControl: false, showSimbadPointerControl: true});
+            </script>
+        </div>
+    </div>
+</div>
+
+<style>
+    .highlight-textbox {
+        border: orange 2px solid;
+    }
+    #query-body {
+        margin: 0;
+        padding: 0;
+    }
+    #aladin-lite-div {
+        min-height: 450px;
+        width: 100%;
+        border: none;
+    }
+</style>
+
+
+<script>
+
+function flash_textbox(ms) {
+    $('#simbad-search-box').addClass('highlight-textbox');
+    setTimeout( function() { 
+        $('#simbad-search-box').removeClass('highlight-textbox'); 
+    }, ms);
+}
+
+function return_coords() {
+    //rect = this.getBoundingClientRect();
+    //var [aladin_ra, aladin_dec] = aladin.pix2world(event.clientX-rect.left, event.clientY-rect.top);
+    var [aladin_ra, aladin_dec] = aladin.getRaDec();
+    aladin_ra = aladin_ra / 15;
+
+    UI.target_clicked(aladin_ra, aladin_dec);
+    SkyMap.update_pointer(aladin_ra, aladin_dec);
+    
+} 
+
+/* Get coordinates of mouse click and send them to the sky chart and goto box. */
+$(document).ready(function() {
+    $('#aladin-lite-div canvas').on('click', return_coords)
+    
+})
+
+
+/* Perform an object search, returning results in the table and aladin image window. */
+$(document).ready(function() {
+    $('#query-object').submit(function(e) {
+        e.preventDefault();
+        var form = $(this);
+        var search_text = $('#aladin-search-box').val();
+        aladin.gotoObject(search_text, {success: return_coords});
+    });
+});
+
+</script>

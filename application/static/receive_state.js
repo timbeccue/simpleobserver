@@ -8,10 +8,74 @@ var state_rot1 = {};
 var state_wx = {};
 var altitude_lut = [];
 
-
-
 $(document).ready( function() {
+    var state_SSE = new EventSource('/status/all');
+    state_SSE.onmessage = function(event){
+        var obj = JSON.parse(event.data);
+        var keys = Object.keys(obj);
 
+        if (obj["mnt-1"] && obj["mnt-1"]["mnt-1"] != "empty") {
+            $.extend(state_mnt1, obj["mnt-1"]);
+            var telescope_action = 'unknown';
+            if (state_mnt1.mnt1_connected == 'no') {
+                telescope_action = 'disconnected';
+            }
+            if (state_mnt1.mnt1_connected == 'yes'){
+                telescope_action = 'connected';
+            }
+            if (state_mnt1.parked == 'no') {
+                telescope_action = 'unparked';
+            }
+            if (state_mnt1.parked == 'yes') {
+                telescope_action = 'parked';
+            }
+            if (state_mnt1.tracking == 'yes') {
+                telescope_action = 'tracking';
+            }
+            if (state_mnt1.slewing == 'yes') {
+                telescope_action = 'slewing';
+            }
+
+            $('#state-ra').text(parseFloat(state_mnt1.ra).toFixed(2));
+            $('#state-de').text(parseFloat(state_mnt1.dec).toFixed(2));
+            $('#state-telescope').text(telescope_action);
+            $('#state-alt').text(parseFloat(state_mnt1.alt).toFixed(3)+'\u00B0');
+            $('#state-az').text(parseFloat(state_mnt1.az).toFixed(3)+'\u00B0');
+            $('#state-enclosure').text(state_mnt1.enclosure_status);
+            $('#state-lmst').text(parseFloat(state_mnt1.tel_sid_time).toFixed(3));
+        }
+        
+        if (obj["foc-1"] && obj["foc-1"]["foc-1"] != "empty") {
+            $.extend(state_foc1, obj["foc-1"]);
+        }
+
+        if (obj["rot-1"] && obj["rot-1"]["rot-1"] != "empty") {
+            $.extend(state_rot1, obj["rot-1"]);
+        }
+
+        if (obj["wx-1"] && obj["wx-1"]["wx-1"] != "empty") {
+            $.extend(state_wx, obj["wx-1"]);
+            var table1 = $('#weather-table #wx-col1');
+            var table2 = $('#weather-table #wx-col2');
+            table1.find('tr').remove();
+            table2.find('tr').remove();
+            var i = 0;
+            var keyslen = Object.keys(state_wx).length;
+            for (var key in state_wx) {
+                var obj = state_wx[key];
+                if (i < keyslen/2) {
+                    table1.prepend('<tr><th>'+key+'</th><td>'+obj+'</td></tr>');
+                    i += 1;
+                }
+                else {
+                    table2.prepend('<tr><th>'+key+'</th><td>'+obj+'</td></tr>');
+                }
+            }
+        }
+
+    }
+
+    /*
     var mnt1_source = new EventSource('/status/mnt/1');
     var foc1_source = new EventSource('/status/foc/1');
     var rot1_source = new EventSource('/status/rot/1');
@@ -86,15 +150,10 @@ $(document).ready( function() {
             }
         }
     };
-        /*
-        old_source.close();
-        wx_source.close();
-        rot1_source.close();
-        foc1_source.close();
-        mnt1_source.close();
-        console.log("closed sources");
-        */
+        
+*/        
 });
+
 
 function tryParseJSON (jsonString){
     try {

@@ -4,6 +4,15 @@ import re
 #    array[0] is the key string for a redis command
 #    array[1] is the value for a redis command, in the form of a dictionary(?)
 
+expire_time = 120 #seconds
+live_commands = True
+from application import core1_redis
+def send(cmd, expire=expire_time):
+    if live_commands==True:
+        send_command = core1_redis.set(cmd[0], json.dumps(cmd[1]), ex=expire)
+        print(send_command)
+    else:
+        print("Commands are offline right now.")
 
 def parse_goto_input(text):
     valid_ra = [0,24]
@@ -56,7 +65,7 @@ def cmd_expose(time, count, binning, dither, autofocus, position_angle, start_de
     }
     return [key, val]
 
-from app.reference import common_filters, other_filters
+from application.reference import common_filters, other_filters
 def cmd_filter(filter):
     ''' filter is a case-sensitive string matching an input from the filter arrays above. '''
     key = '>ptr-fil-1'

@@ -7,7 +7,7 @@ __pycache__/
 env/
 venv/
 sandbox/
-app/weatherlogs/*.csv
+application/weatherlogs/*.csv
 config.ini
 
 
@@ -15,4 +15,10 @@ databases/astro.db
 databases/hygdata.db 
 databases/sac.db 
 databases/users.db
+databases/data.sql
 
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

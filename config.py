@@ -13,9 +13,13 @@ class Config(object):
     skyobjects_name = config_parser['DATABASE']['skyobjects_database']
     users_name = config_parser['DATABASE']['users_database']
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    #SQLALCHEMY_BINDS = {
+    #    'things_in_space': 'sqlite:///'+os.path.join(basedir, 'databases/', skyobjects_name),
+    #    'users': 'sqlite:///'+os.path.join(basedir, 'databases/', users_name)
+    #}
     SQLALCHEMY_BINDS = {
-        'things_in_space': 'sqlite:///'+os.path.join(basedir, 'databases/', skyobjects_name),
-        'users': 'sqlite:///'+os.path.join(basedir, 'databases/', users_name)
+        'things_in_space': 'mysql+pymysql://testdb11:testdb11@ptr-db.cyuke35resta.us-west-1.rds.amazonaws.com:3306/things_in_space',
+        'users': 'mysql+pymysql://testdb11:testdb11@ptr-db.cyuke35resta.us-west-1.rds.amazonaws.com:3306/users' 
     }
 
 
