@@ -111,3 +111,23 @@ def cmd_ir(on_or_off):
         'command': on_or_off
     }
     return [key, val]
+# Screen flats panel
+def cmd_flatscreen(on_or_off, param0_255):
+    ''' on_or_of is a string either 'on' or 'off'.
+        param0_255 is an int in [0,255]. '''
+    key = '>ptr-screen-1'
+    val = {
+        'command': on_or_off,
+        'value': param0_255
+    }
+    return [key, val]
+# Screen flats panel
+def cmd_cover(on_or_off, param0_255):
+    ''' on_or_of is a string either 'on' or 'off'.
+        param0_255 is an int in [0,255]. '''
+    key = '>ptr-cover-1'
+    val = {
+        'command': on_or_off,
+        'value': param0_255
+    }
+    return [key, val]
