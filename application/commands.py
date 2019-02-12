@@ -1,5 +1,6 @@
 
 import re
+import json
 # functions here should return an array with two strings:
 #    array[0] is the key string for a redis command
 #    array[1] is the value for a redis command, in the form of a dictionary(?)
