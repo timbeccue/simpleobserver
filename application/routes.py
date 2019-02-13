@@ -27,6 +27,16 @@ def testlogexists():
     print(str(weatherlogger.log_exists('W')))
     return ("testlogexists ran successfully")
 
+import boto3
+@application.route('/gettestimage', methods=['GET', 'POST'])
+def gettestimage():
+    s3 = boto3.client('s3')
+    Bucket = 'ptrtestbucket'
+    Key = "CCD Image 6_768.jpg"
+    Params = {'Bucket': Bucket, 'Key': Key}
+    return s3.generate_presigned_url('get_object', Params, ExpiresIn = 100)
+    
+
 # AJAX Routes
 from application import weather_plots
 @application.route('/plot_weather/<logtype>', methods=['GET', 'POST'])

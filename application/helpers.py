@@ -1,4 +1,4 @@
-import ephem, datetime, configparser
+import datetime, configparser
 from astropy.coordinates import SkyCoord, EarthLocation, AltAz
 from astropy.time import Time
 import astropy.units as u
@@ -23,10 +23,11 @@ utilities = Utilities()
 
 
 
-def sidereal_time(lat, lon):
-    config = configparser.ConfigParser()
-    config.read('../config.ini')
-    site = ephem.Observer()
-    site.lon, site.lat = str(lon), str(lat)
-    site.date = datetime.datetime.utcnow()
-    return site.sidereal_time() 
+#import ephem
+#def sidereal_time(lat, lon):
+#    config = configparser.ConfigParser()
+#    config.read('../config.ini')
+#    site = ephem.Observer()
+#    site.lon, site.lat = str(lon), str(lat)
+#    site.date = datetime.datetime.utcnow()
+#    return site.sidereal_time() 

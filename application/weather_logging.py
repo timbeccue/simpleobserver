@@ -66,6 +66,12 @@ class WeatherLogger():
         return filename
     
     def _write_data(self, logtype, filename, data):
+        
+        # Create weatherlogs foler if it doesn't exist
+        if not os.path.exists('application/weatherlogs'):
+            print('creating weatherlogs directory')
+            os.mkdir('application/weatherlogs')
+
         with open(filename, 'a', newline='') as f:
             writer = csv.DictWriter(f, data.keys())
             if f.tell() == 0:

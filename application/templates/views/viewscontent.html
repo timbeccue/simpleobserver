@@ -7,7 +7,7 @@
         <li class="tab views-tab" data-tabtype="views" data-tab="viewtab3">weather</li>
         <li class="hidden tab views-tab" data-tabtype="views" data-tab="viewtab4">sky cam</li>
         <li class="tab views-tab" data-tabtype="views" data-tab="viewtab5">site</li>
-        <li class="hidden tab views-tab" data-tabtype="views" data-tab="viewtab6">mountings</li>
+        <li class="tab views-tab" data-tabtype="views" data-tab="viewtab6">images</li>
         <li class="hidden tab views-tab" data-tabtype="views" data-tab="viewtab7">instruments</li>
         <li class="hidden tab views-tab" data-tabtype="views" data-tab="viewtab8">_dev</li>
     </ul>
@@ -177,14 +177,34 @@
     </div>
 
 
-    <!-- Instruments/Devices -->
+    <!-- Images -->
     <div id="viewtab6" class="tabs-content views-content">
-        mountings info/selection here
-        <div class="js9-container" id="default-js9">
-            <div class="JS9Menubar" id="default-js9Menubar" data-buttonClass="JS9Button-flat"></div>
-            <div class="JS9" id="default-js9"></div>
+        <div id="image-display-window" style="width:100%; height:100%;">
         </div>
     </div>
+    <script>
+
+        $(document).ready( function() { 
+            $.ajax({
+                type: 'GET',
+                url: '/gettestimage',
+            }).done(function(data) {
+                console.log("gettestimage success");
+                console.log(data);
+                var img = $('<img />').attr('src',data)
+                img.attr('style', );
+                img.attr('class', 'img-fluid image-for-main-display');
+                var maxheight = $('#view-size-helper').height() - 40;
+                console.log(maxheight);
+                img.attr('style', 'max-height: '+maxheight+'; margin-top: 10px; margin-bottom: 10px;');
+                $('#image-display-window').append(img);
+            }).fail(function(data) {
+                console.log("gettestimage failed");
+            });
+        })
+        //$(<img />).attr('src','http://somedomain.com/image.jpg');
+        
+    </script>
 
 
 
