@@ -353,15 +353,25 @@ def command(msg):
     if msg == 'ir-lamp': 
         value = request.form['command']
         response = f"IR lamp is {value}."
-        cmd = cmd_ir(request.form['command'])
+        cmd = cmd_ir(value)
     if msg == 'roof': 
         value = request.form['command']
         response = f"Enclosure roof is {value[:4]}ing."
-        cmd = cmd_roof(request.form['command'])
+        cmd = cmd_roof(value)
     if msg == 'parking': 
         value = request.form['command']
         response = f"Telescope is {value}ing."
-        cmd = cmd_parking(request.form['command'])
+        cmd = cmd_parking(value)
+    if msg == 'flatscreen':
+        value = request.form['command']
+        param = request.form['param']
+        response = f"Flat screen turned {value}."
+        cmd = cmd_flatscreen(value, param)
+    if msg == 'cover':
+        value = request.form['command']
+        param = request.form['param']
+        response = f"Telescope cover set to {value}."
+        cmd = cmd_cover(value, param)
     send(cmd)
     processed = cmd[1] if (len(cmd)>0) else ''
     return jsonify(response=response, requested="requested", processed=processed, live=live_commands)

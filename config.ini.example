@@ -23,5 +23,6 @@ secret_key = 'secret key goes here'
 
 [DATABASE]
 # Filenames of sqlite databases are specified here. They should be located in /databases.
+uselocaldatabase = yes
 skyobjects_database = name1.db 
 users_database = name2.db 

@@ -1,5 +1,6 @@
 
 import re
+import json
 # functions here should return an array with two strings:
 #    array[0] is the key string for a redis command
 #    array[1] is the value for a redis command, in the form of a dictionary(?)
@@ -109,5 +110,25 @@ def cmd_ir(on_or_off):
     key = '>ptr-ir-1'
     val = {
         'command': on_or_off
+    }
+    return [key, val]
+# Screen flats panel
+def cmd_flatscreen(on_or_off, param0_255):
+    ''' on_or_of is a string either 'on' or 'off'.
+        param0_255 is an int in [0,255]. '''
+    key = '>ptr-screen-1'
+    val = {
+        'command': on_or_off,
+        'value': param0_255
+    }
+    return [key, val]
+# Screen flats panel
+def cmd_cover(on_or_off, param0_255):
+    ''' on_or_of is a string either 'on' or 'off'.
+        param0_255 is an int in [0,255]. '''
+    key = '>ptr-cover-1'
+    val = {
+        'command': on_or_off,
+        'value': param0_255
     }
     return [key, val]
