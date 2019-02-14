@@ -24,7 +24,7 @@
             {# loginform.remember_me.label #}
             {{ loginform.submit() }}
             <a href="/register">
-                <button id="login-register-button" type="button">Create New Account</button>
+                <button id="login-register-button" type="button">Register</button>
             </a>
         </form>
         {% else %}
@@ -79,9 +79,13 @@
 
         grid-gap: 4px;
         height: 100%;
-        width: 300px;
+        width: 200px;
         padding: 10px;
         margin-left: auto;
+        margin-right: 10px;
+    }
+    .header .notloggedin input {
+        width: 100%;
     }
     .header a {
         text-decoration: none;

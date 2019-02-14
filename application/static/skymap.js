@@ -538,15 +538,23 @@ function newSkyMap() {
         let height = $('#view-size-helper').height();
         let dim = width < height ? width:height;
         let marginleft = 0, margintop = 20;
-        if (width < height) {
-            margintop += (height - width) / 2;
+        if (document.body.clientWidth < 1200) {
+            Celestial.resize({ width: 0.7*width });
+            marginleft = 0.3*width / 2;
+            $('#celestial-map').css({"margin-left": ""+marginleft.toString() + "px"});
+            $('#celestial-map').css({"margin-top": "20px"});
         } else {
-            marginleft = (width - height) / 2;
+            if (width < height) {
+                margintop += (height - width) / 2;
+            } else {
+                marginleft = (width - height) / 2;
+            }
+            // map resize takes a single dimention (width) and creates a square canvas
+            $('#celestial-map').css({"margin-left": ""+marginleft.toString() + "px"});
+            $('#celestial-map').css({"margin-top": ""+margintop.toString() + "px"});
+            Celestial.resize({ width: dim });
+            console.log('width > 1200!');
         }
-        // map resize takes a single dimention (width) and creates a square canvas
-        $('#celestial-map').css({"margin-left": ""+marginleft.toString() + "px"});
-        $('#celestial-map').css({"margin-top": ""+margintop.toString() + "px"});
-        Celestial.resize({ width: dim });
     }
 
     function update_pointer(ra, de) {

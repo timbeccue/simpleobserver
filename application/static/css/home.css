@@ -76,7 +76,6 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    height: calc(70vh);
     overflow-y:auto;
     overflow-x: hidden;
 }
@@ -154,7 +153,7 @@ body {
     border: var(--neutral-8) 1px solid;
 }
 .register-form input {
-    width: 200px;
+    width: 100px;
     margin: 10px;
     align-self: center;
 }
