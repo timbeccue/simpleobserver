@@ -165,10 +165,10 @@ class User(UserMixin, db.Model):
     #is_active = db.Column(db.Boolean, default=False)
     #urole = db.Column(db.String(80))
 
-    def __init__(self, username,email,password_hash,is_active,urole):
+    def __init__(self, username,email):
         self.username = username
         self.email = email
-        self.password_hash = password_hash 
+        #self.password_hash = password_hash 
         #self.is_active = is_active 
         #self.urole = urole
 

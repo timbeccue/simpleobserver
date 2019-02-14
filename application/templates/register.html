@@ -7,6 +7,10 @@
     <link type="text/css" rel="stylesheet" href="static/css/home.css">
     <link type="text/css" rel="stylesheet" href="static/css/obvious-buttons.css">
 
+    <!-- Bootstrap -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <link type="text/css" rel="stylesheet" href="static/css/darkly-bootstrap.css">
+
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.deep_purple-indigo.min.css" />
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
@@ -15,66 +19,41 @@
 <body>
 
     <div class="wrapper">
-        <section class="header">
-            <div class="section-wrapper">
-                <h1><a class="title-link" href=".">photon <b>ranch</b></a></h1>
-
-                {% if current_user.is_anonymous %}
-                <form class='notloggedin' id="login" method="POST" action="/login">
-                    {{ loginform.hidden_tag() }}
-                    {{ loginform.username.label }}
-                    {{ loginform.username() }}
-                    {{ loginform.password.label }}
-                    {{ loginform.password() }}
-                    {# loginform.remember_me() #}
-                    {# loginform.remember_me.label #}
-                    {{ loginform.submit() }}
-                    <a href="{{ url_for('register') }}"><button id="login-register-button" type="button">Create New Account</button></a>
-                </form>
-                {% else %}
-                <ul class='loggedin'>
-                    <li><a href="#">Hello, {{ current_user.username }}</a>
-                        <ul class="dropdown">
-                            <li><a href="{{ url_for('logout') }}">logout</a></li>
-                        </ul>
-                    </li>
-                </ul>
-                {% endif %}
-            </div>
-        </section>
+        {% include "header.html" %}
 
         <div class="register-form">
             <form action="" method="post">
                 {{ form.hidden_tag() }}
-                <p>
-                    {{ form.username.label }}<br>
-                    {{ form.username(size=64, id="reg_username") }}<br>
+                <fieldset>
+                    {{ form.username.label }}
+                    {{ form.username(size=64, id="reg_username", class="form-control") }}<br>
                     {% for error in form.username.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                     {% endfor %}
-                </p>
-                <p>
-                    {{ form.email.label }}<br>
-                    {{ form.email(size=64, id="reg_email") }}<br>
+                </fieldset>
+                <fieldset>
+                    {{ form.email.label }}
+                    {{ form.email(size=64, id="reg_email", class="form-control") }}<br>
                     {% for error in form.email.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                     {% endfor %}
-                </p>
-                <p>
-                    {{ form.password.label }}<br>
-                    {{ form.password(size=32, id="reg_password") }}<br>
+                </fieldset>
+                <fieldset>
+                    {{ form.password.label }}
+                    {{ form.password(size=32, id="reg_password", class="form-control") }}<br>
                     {% for error in form.password.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                     {% endfor %}
-                </p>
-                <p>
-                    {{ form.password2.label }}<br>
-                    {{ form.password2(size=32, id="reg_password2") }}<br>
+                </fieldset>
+                <fieldset>
+                    {{ form.password2.label }}
+                    {{ form.password2(size=32, id="reg_password2", class="form-control") }}<br>
                     {% for error in form.password2.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                     {% endfor %}
-                </p>
-                <p>{{ form.submit(id="reg_submit", class_="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary mdl-color--light-green") }}</p>
+                </fieldset>
+                <br>
+                <fielset>{{ form.submit(id="reg_submit", class_="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--primary mdl-color--green") }}</fieldset>
             </form>
         </div>
 
@@ -119,3 +98,35 @@
 
 
 </body>
+
+
+<style>
+
+/* Registration Form */
+.register-form {
+    grid-row: 2/3;
+    grid-column: 1/4;
+
+    display: flex;
+    flex-direction: column;
+
+    margin: 30px;
+}
+.register-form form {
+    align-self: center;
+    padding: 50px;
+    background-color: #1c1c1c;
+}
+.register-form input {
+    width: 200px;
+    margin-left: 10px;
+    margin-right: 10px;
+    align-self: center;
+}
+.register-form label {
+    margin-left: 10px;
+    align-self: center;
+}
+
+
+</style>

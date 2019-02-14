@@ -40,6 +40,9 @@ ul {
 
  }
 
+.form-control {
+    background-color: var(--inputs);
+}
 
 
 
@@ -137,30 +140,6 @@ body {
 }
 
 
-/* Registration Form */
-.register-form {
-    grid-row: 2/3;
-    grid-column: 1/4;
-
-    display: flex;
-    flex-direction: column;
-
-    margin: 30px;
-}
-.register-form form {
-    align-self: center;
-    padding: 20px;
-    border: var(--neutral-8) 1px solid;
-}
-.register-form input {
-    width: 100px;
-    margin: 10px;
-    align-self: center;
-}
-.register-form label {
-    margin: 10px;
-    align-self: center;
-}
 
 
 /* Info Panel (left half of page) */

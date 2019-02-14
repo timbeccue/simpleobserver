@@ -140,7 +140,7 @@ def register():
         db.session.commit()
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('home'))
-    return render_template('register.html', form=form, loginform = loginform)
+    return render_template('register.html', form=form, loginform = loginform, site=site_attributes)
 
 
 def event_stream(refresh_frequency=1):
