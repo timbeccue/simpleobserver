@@ -72,6 +72,8 @@ class CameraForm(FlaskForm):
     dither = SelectField('Dithering', default='off', choices=[('off','off'), ('on','on'), ('random','random')])
     bin = SelectField('Binning', default='1', choices=[('1','1'), ('2','2'), ('4','4')])
     filter = SelectField('Filter', default='c', choices=filter_choices)
+    filename_hint = StringField('Hint')
+    sitename = SelectField('Site', default='ptr', choices=[('ptr','ptr'), ('wmd','wmd'), ('saf','saf')])
     capture = SubmitField(' Capture Image')
 
     autofocus = BooleanField('Autofocus', default=1)

@@ -273,6 +273,8 @@ def command(msg):
         print(form.dither.data)
         print(form.autofocus.data)
         print(form.bin.data)
+        print(form.filename_hint.data)
+        print(form.sitename.data)
         print(form.filter.data)
 
         if form.validate_on_submit():
@@ -282,9 +284,11 @@ def command(msg):
             dither = form.dither.data
             autofocus = form.autofocus.data
             position_angle = form.position_angle.data
+            filename_hint = form.filename_hint.data
+            sitename = form.sitename.data
             bin = form.bin.data
             filter = form.filter.data
-            cmd = cmd_expose(time, count, bin, dither, autofocus, position_angle, delay, filter)
+            cmd = cmd_expose(time, count, bin, dither, autofocus, position_angle, filename_hint, sitename, delay, filter)
             send(cmd)
             print(cmd)
             response = f"Taking {count} {time} second image(s)."

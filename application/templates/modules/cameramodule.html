@@ -45,6 +45,13 @@
                             {{ cameraform.dither.label }}
                             {{ cameraform.dither(form="camerasettings", autocomplete="off", class="form-control") }}
                         </fieldset>
+                        <fieldset class="camera-field">
+                            {{ cameraform.filename_hint.label }} 
+                            {{ cameraform.filename_hint(form="camerasettings", autocomplete="off", class="form-control") }} </fieldset>
+                        <fieldset class="camera-field">
+                            {{ cameraform.sitename.label }}
+                            {{ cameraform.sitename(form="camerasettings", autocomplete="off", class="form-control") }}
+                        </fieldset>
                     </div>
                 </div>
 
