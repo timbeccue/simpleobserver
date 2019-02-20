@@ -1,6 +1,6 @@
 # application/routes.py
 
-from application import application, db, core1_redis, site_attributes
+from application import application, db, core1_redis, site_attributes, boto_credentials
 from flask import Flask, render_template, request, Response, redirect 
 from flask import jsonify, url_for, flash, send_from_directory, session
 from flask_login import current_user, login_user, logout_user, login_required
@@ -28,13 +28,25 @@ def testlogexists():
     return ("testlogexists ran successfully")
 
 import boto3
-@application.route('/gettestimage', methods=['GET', 'POST'])
+@application.route('/getrecentimages', methods=['GET', 'POST'])
 def gettestimage():
-    s3 = boto3.client('s3')
+    ''' Generate a list of urls for all jpgs in s3/ptrtestbucket/wmd/postage '''
+    
+    s3 = boto3.client(
+       's3', 
+       aws_access_key_id=boto_credentials['access_key_id'],
+       aws_secret_access_key=boto_credentials['secret_access_key'],
+    )
     Bucket = 'ptrtestbucket'
-    Key = "CCD Image 6_768.jpg"
-    Params = {'Bucket': Bucket, 'Key': Key}
-    return s3.generate_presigned_url('get_object', Params, ExpiresIn = 100)
+
+    urls = []
+    for item in s3.list_objects(Bucket=Bucket, Prefix='wmd/postage/')['Contents']:
+        if item['Key'][-4:] == '.jpg': 
+            Params = {'Bucket': Bucket, 'Key': item['Key']}
+            urls.append(s3.generate_presigned_url('get_object', Params))
+    
+    json_urls = json.dumps(urls)
+    return json_urls
     
 
 # AJAX Routes

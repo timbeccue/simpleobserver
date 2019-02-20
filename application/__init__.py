@@ -33,6 +33,11 @@ site_attributes = {
     'has-dome-camera': config_file['NETWORK']['has_dome_camera'],
     'dome-camera': config_file['NETWORK']['dome_camera']
 }
+boto_credentials = {
+    'access_key_id': config_file['AWS']['aws_access_key_id'],
+    'secret_access_key': config_file['AWS']['aws_secret_access_key'],
+    'region': config_file['AWS']['region']
+}
 
 #migrate = Migrate(app, db)
 

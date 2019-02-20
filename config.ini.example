@@ -26,3 +26,8 @@ secret_key = 'secret key goes here'
 uselocaldatabase = yes
 skyobjects_database = name1.db 
 users_database = name2.db 
+
+[AWS]
+aws_access_key_id = key
+aws_secret_access_key = secret
+region = us-west-1

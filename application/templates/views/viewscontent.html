@@ -187,11 +187,12 @@
         $(document).ready( function() { 
             $.ajax({
                 type: 'GET',
-                url: '/gettestimage',
+                url: '/getrecentimages',
             }).done(function(data) {
+                urls = JSON.parse(data);
                 console.log("gettestimage success");
-                console.log(data);
-                var img = $('<img />').attr('src',data)
+                console.log(urls);
+                var img = $('<img />').attr('src',urls.slice(-1)[0])
                 img.attr('style', );
                 img.attr('class', 'img-fluid image-for-main-display');
                 var maxheight = $('#view-size-helper').height() - 40;
@@ -199,10 +200,9 @@
                 img.attr('style', 'max-height: '+maxheight+'; margin-top: 10px; margin-bottom: 10px;');
                 $('#image-display-window').append(img);
             }).fail(function(data) {
-                console.log("gettestimage failed");
+                console.log("getrecentimages failed");
             });
         })
-        //$(<img />).attr('src','http://somedomain.com/image.jpg');
         
     </script>
 
