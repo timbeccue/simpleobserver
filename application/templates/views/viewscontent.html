@@ -180,11 +180,53 @@
     <!-- Images -->
     <div id="viewtab6" class="tabs-content views-content">
         <div id="image-display-window" style="width:100%; height:100%;">
+            <div>
+                <img id="displayed-image"></img>
+            <div></div>
+            <div id="below-displayed-image" style="display: flex; justify-content: space-between;">
+                <div>
+                <button id="prev-image" class="btn">prev</button>
+                <button id="next-image" class="btn">next</button>
+                </div>
+            </div>
         </div>
+
     </div>
     <script>
 
+        function url_to_filename(url) {
+            url = url.split('?')[0]
+            url = url.split('/').reverse()[0]
+            return url
+        }
+        function next_image() {
+            console.log('in next_image');
+            last_displayed = (last_displayed+num_recent - 1) % num_recent;
+            $("#displayed-image").attr('src', recent_urls[last_displayed])
+            $('#displayed-image-name').text(url_to_filename(recent_urls[last_displayed]));
+            console.log(num_recent);
+            console.log(last_displayed);
+            console.log(recent_urls.slice(-1)[last_displayed]);
+            console.log(recent_urls);
+        }
+        function prev_image() {
+            console.log('in prev_image');
+            last_displayed = (last_displayed+num_recent + 1) % num_recent;
+            $("#displayed-image").attr('src', recent_urls[last_displayed])
+            $('#displayed-image-name').text(url_to_filename(recent_urls[last_displayed]));
+            console.log(num_recent);
+            console.log(last_displayed);
+            console.log(recent_urls.slice(-1)[last_displayed]);
+        }
+        var num_recent = 0;
+        var last_displayed = 0;
+        var recent_urls = [];
+
         $(document).ready( function() { 
+
+            $('#prev-image').click(prev_image);
+            $('#next-image').click(next_image);
+
             $.ajax({
                 type: 'GET',
                 url: '/getrecentimages',
@@ -192,18 +234,30 @@
                 urls = JSON.parse(data);
                 console.log("gettestimage success");
                 console.log(urls);
-                var img = $('<img />').attr('src',urls.slice(-1)[0])
-                img.attr('style', );
-                img.attr('class', 'img-fluid image-for-main-display');
+
+                num_recent = urls.length;
+                last_displayed = 0;
+                recent_urls = urls;
+
+                var filename = $('<p>'+url_to_filename(urls.slice(-1)[0])+'</p>')
+                filename.attr('id', 'displayed-image-name');
+                filename.attr('style', 'margin-right: 20px');
+                $('#below-displayed-image').append(filename);
+
+                var img = $('#displayed-image');
                 var maxheight = $('#view-size-helper').height() - 40;
-                console.log(maxheight);
                 img.attr('style', 'max-height: '+maxheight+'; margin-top: 10px; margin-bottom: 10px;');
-                $('#image-display-window').append(img);
+                img.attr('src',urls.slice(-1)[0]);
+                img.attr('class', 'img-fluid image-for-main-display');
+
             }).fail(function(data) {
                 console.log("getrecentimages failed");
             });
         })
         
+
+
+
     </script>
 
 
