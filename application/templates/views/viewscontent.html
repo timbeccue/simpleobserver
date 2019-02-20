@@ -185,74 +185,91 @@
             <div></div>
             <div id="below-displayed-image" style="display: flex; justify-content: space-between;">
                 <div>
-                <button id="prev-image" class="btn">prev</button>
-                <button id="next-image" class="btn">next</button>
+                    <button id="prev-image" class="btn btn-primary btn-sm">prev</button>
+                    <button id="next-image" class="btn btn-primary btn-sm">next</button>
+                    <button id="refresh-image" class="btn btn-outline-success btn-sm" style="margin-left: 10px;">refresh</button>
                 </div>
+                <p id="displayed-image-name" style="margin-right: 20px;"></p>
+
             </div>
         </div>
 
     </div>
     <script>
 
+        // Current image displayed
+        var cur_img = 0;
+        // List of urls (for recent images) that can be viewed.
+        var urls = [];
+        // Url of the most recent image. Check against ajax value to determine if a newer image is ready.
+        var newest_img_url = ""
+        var newest_img_name = ""
+
         function url_to_filename(url) {
+            // Assume the url is something similar to:
+            // https://ptrtestbucket.s3.amazonaws.com/wmd/postage/3-00009446.jpg?AWSAccessKeyId=AKIAITB4Y...
+            // Get the filename as the string that ends before "?" and starts after the closest "/".
             url = url.split('?')[0]
             url = url.split('/').reverse()[0]
             return url
         }
-        function next_image() {
-            console.log('in next_image');
-            last_displayed = (last_displayed+num_recent - 1) % num_recent;
-            $("#displayed-image").attr('src', recent_urls[last_displayed])
-            $('#displayed-image-name').text(url_to_filename(recent_urls[last_displayed]));
-            console.log(num_recent);
-            console.log(last_displayed);
-            console.log(recent_urls.slice(-1)[last_displayed]);
-            console.log(recent_urls);
-        }
-        function prev_image() {
-            console.log('in prev_image');
-            last_displayed = (last_displayed+num_recent + 1) % num_recent;
-            $("#displayed-image").attr('src', recent_urls[last_displayed])
-            $('#displayed-image-name').text(url_to_filename(recent_urls[last_displayed]));
-            console.log(num_recent);
-            console.log(last_displayed);
-            console.log(recent_urls.slice(-1)[last_displayed]);
-        }
-        var num_recent = 0;
-        var last_displayed = 0;
-        var recent_urls = [];
 
-        $(document).ready( function() { 
-
-            $('#prev-image').click(prev_image);
-            $('#next-image').click(next_image);
-
+        function get_recent_images() {
             $.ajax({
                 type: 'GET',
                 url: '/getrecentimages',
             }).done(function(data) {
-                urls = JSON.parse(data);
-                console.log("gettestimage success");
-                console.log(urls);
+                // Expect data to be json array of urls of recent jpg images.
+                // Urls are sorted like [oldest, ..., newest]. 
+                var latest_urls = JSON.parse(data);
 
-                num_recent = urls.length;
-                last_displayed = 0;
-                recent_urls = urls;
+                // Check if recent image has changed (compare names, since urls will change each refresh).
+                // If names are different, update. Otherwise, we don't change anything.
+                if (url_to_filename(latest_urls[latest_urls.length-1]) != newest_img_name) {
 
-                var filename = $('<p>'+url_to_filename(urls.slice(-1)[0])+'</p>')
-                filename.attr('id', 'displayed-image-name');
-                filename.attr('style', 'margin-right: 20px');
-                $('#below-displayed-image').append(filename);
+                    // Update list of urls and the index of the one currently displayed.
+                    urls = JSON.parse(data);
+                    cur_img = urls.length - 1;
+                    newest_img_url = urls[cur_img];
+                    newest_img_name = url_to_filename(newest_img_url);
 
-                var img = $('#displayed-image');
-                var maxheight = $('#view-size-helper').height() - 40;
-                img.attr('style', 'max-height: '+maxheight+'; margin-top: 10px; margin-bottom: 10px;');
-                img.attr('src',urls.slice(-1)[0]);
-                img.attr('class', 'img-fluid image-for-main-display');
+                    // Update Filename
+                    $('#displayed-image-name').text(newest_img_name);
+
+                    var img = $('#displayed-image');
+                    var maxheight = $('#view-size-helper').height() - 40;
+                    img.attr('style', 'max-height: '+maxheight+'; margin-top: 10px; margin-bottom: 10px;');
+                    img.attr('src',newest_img_url);
+                    img.attr('class', 'img-fluid image-for-main-display');
+                }
 
             }).fail(function(data) {
-                console.log("getrecentimages failed");
+                console.log("Failed to retrieve recent images.");
             });
+        }
+
+        function next_image() {
+            console.log('in next_image');
+            cur_img = (cur_img + urls.length + 1) % urls.length;
+            $("#displayed-image").attr('src', urls[cur_img])
+            $('#displayed-image-name').text(url_to_filename(urls[cur_img]));
+            console.log(urls.length);
+            console.log(cur_img);
+        }
+        function prev_image() {
+            console.log('in prev_image');
+            cur_img = (cur_img + urls.length - 1) % urls.length;
+            $("#displayed-image").attr('src', urls[cur_img])
+            $('#displayed-image-name').text(url_to_filename(urls[cur_img]));
+            console.log(urls.length);
+            console.log(cur_img);
+        }
+
+        $(document).ready( function() { 
+            $('#prev-image').click(prev_image);
+            $('#next-image').click(next_image);
+            $('#refresh-image').click(get_recent_images);
+            setInterval( get_recent_images, 5000 );
         })
         
 

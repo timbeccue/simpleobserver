@@ -30,7 +30,8 @@ def testlogexists():
 import boto3
 @application.route('/getrecentimages', methods=['GET', 'POST'])
 def gettestimage():
-    ''' Generate a list of urls for all jpgs in s3/ptrtestbucket/wmd/postage, sorted by last modified '''
+    ''' Generate a list of urls for all jpgs in s3/ptrtestbucket/wmd/postage, 
+        sorted like [oldest, ..., newest]. '''
     
     s3 = boto3.client(
        's3', 
@@ -38,18 +39,21 @@ def gettestimage():
        aws_secret_access_key=boto_credentials['secret_access_key'],
     )
     Bucket = 'ptrtestbucket'
+    urls = []
 
+    # Define sort order from earliest to latest last-modified-time.
     get_last_modified = lambda obj: int(obj['LastModified'].strftime('%s'))
 
-    urls = []
+    # Get list of all files in wmd/postage, then sort them. 
     objs = s3.list_objects(Bucket=Bucket, Prefix='wmd/postage/')['Contents']
     sorted_keys = [obj['Key'] for obj in sorted(objs, key=get_last_modified)]
 
+    # If the key (filename) ends in '.jpg', create a url and add to urls list.
     for key in sorted_keys:
         if key[-4:] == '.jpg': 
             Params = {'Bucket': Bucket, 'Key': key}
             urls.append(s3.generate_presigned_url('get_object', Params))
-    
+        
     json_urls = json.dumps(urls)
     return json_urls
     
