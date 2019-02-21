@@ -30,33 +30,31 @@ def testlogexists():
 import boto3
 @application.route('/getrecentimages', methods=['GET', 'POST'])
 def gettestimage():
-    ''' Generate a list of urls for all jpgs in s3/ptrtestbucket/wmd/postage, 
-        sorted like [oldest, ..., newest]. '''
-    
-    s3 = boto3.client(
-       's3', 
-       aws_access_key_id=boto_credentials['access_key_id'],
-       aws_secret_access_key=boto_credentials['secret_access_key'],
-    )
-    Bucket = 'ptrtestbucket'
+    ''' Get all objects from dynamodb (name and url of objects in s3 postage).
+        Return a list of urls sorted by the objects' creation dates. '''
+
     urls = []
+    dynamodb = boto3.resource(
+        'dynamodb', 
+        aws_access_key_id=boto_credentials['access_key_id'],
+        aws_secret_access_key=boto_credentials['secret_access_key'],
+        region_name=boto_credentials['region']
+    )
+    table = dynamodb.Table('wmd_postage')
 
-    # Define sort order from earliest to latest last-modified-time.
-    get_last_modified = lambda obj: int(obj['LastModified'].strftime('%s'))
-
-    # Get list of all files in wmd/postage, then sort them. 
-    objs = s3.list_objects(Bucket=Bucket, Prefix='wmd/postage/')['Contents']
-    sorted_keys = [obj['Key'] for obj in sorted(objs, key=get_last_modified)]
-
-    # If the key (filename) ends in '.jpg', create a url and add to urls list.
-    for key in sorted_keys:
-        if key[-4:] == '.jpg': 
-            Params = {'Bucket': Bucket, 'Key': key}
-            urls.append(s3.generate_presigned_url('get_object', Params))
+    # Put all dynamodb rows (dicts) in a list.
+    response = table.scan()
+    for i in response['Items']:
+        urls.append(i)
         
-    json_urls = json.dumps(urls)
-    return json_urls
+    # Define sort order from earliest to latest last-modified-time.
+    date_sort = lambda obj: ''.join(s for s in obj['capture_time'] if s.isdigit())
+
+    # Sort items by date, then reduce to a list of date-sorted urls only.
+    urls.sort(key=date_sort) 
+    urls = [item['url'] for item in urls]
     
+    return json.dumps(urls)
 
 # AJAX Routes
 from application import weather_plots

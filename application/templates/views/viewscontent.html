@@ -225,7 +225,8 @@
 
                 // Check if recent image has changed (compare names, since urls will change each refresh).
                 // If names are different, update. Otherwise, we don't change anything.
-                if (url_to_filename(latest_urls[latest_urls.length-1]) != newest_img_name) {
+                if (url_to_filename(latest_urls[latest_urls.length-1]) != newest_img_name || 
+                    latest_urls.length != urls.length) {
 
                     // Update list of urls and the index of the one currently displayed.
                     urls = JSON.parse(data);
@@ -269,7 +270,7 @@
             $('#prev-image').click(prev_image);
             $('#next-image').click(next_image);
             $('#refresh-image').click(get_recent_images);
-            setInterval( get_recent_images, 5000 );
+            setInterval( get_recent_images, 2000 );
         })
         
 
