@@ -48,9 +48,10 @@
                         <fieldset class="camera-field">
                             {{ cameraform.filename_hint.label }} 
                             {{ cameraform.filename_hint(form="camerasettings", autocomplete="off", class="form-control") }} </fieldset>
+                        </fieldset>
                         <fieldset class="camera-field">
-                            {{ cameraform.sitename.label }}
-                            {{ cameraform.sitename(form="camerasettings", autocomplete="off", class="form-control") }}
+                            {{ cameraform.size.label }} 
+                            {{ cameraform.size(form="camerasettings", autocomplete="off", class="form-control") }} </fieldset>
                         </fieldset>
                     </div>
                 </div>
@@ -58,22 +59,45 @@
                 <div class="card camera-card">
                     <div class="card-header">Focus</div>
                     <div class="card-body" id="focus-tab-content">
-                        <button class='btn btn-small btn-secondary'>default focus</button>
-                        <button class='btn btn-small btn-secondary'>autofocus now</button>
+                        <span style="display: flex; justify-content:space-between">
+                            <button style="width: 45%;" class='btn btn-small btn-secondary button-command' data-msg="focus" value="in">in</button> 
+                            <button style="width: 45%;" class='btn btn-small btn-secondary button-command' data-msg="focus" value="out">out</button>
+                        </span>
+                        <span style="display: flex; justify-content:space-between">
+                            <button style="width: 45%;" class='btn btn-small btn-secondary button-command' data-msg="focus" value="home">home</button>
+                            <button style="width: 45%;" class='btn btn-small btn-secondary button-command' data-msg="focus" value="auto">auto</button>
+                        </span>     
+                        <fieldset><label for="focus_position_status">Current Focus</label><input type=text id="focus_position_status" readonly></fieldset>
+                        <br>
+                        <form class='form-command' action="/command/focus-specific">
+                        <span style="display: flex; justify-content:space-between">
+                            <fieldset><label for="focus_position">Set Focus:</label><input style="width: 70%;" name="focus_val" type=text id="focus_position"></fieldset>
+                            <button class="btn btn-small btn-secondary">Go to focus</button>
+                        </span>
+                        </form>
                     </div>
                 </div>
 
                 <div class="card camera-card">
                     <div class="card-header">Rotate</div>
                     <div class="card-body" id="rotate-tab-content">
-                        <fielset>
-                            {{ cameraform.position_angle.label }}
-                            <br><p>[-180, 180]</p>
-                            {{ cameraform.position_angle(form="camerasettings", class="form-control") }}
-                        </fieldset>
-                        {% for error in cameraform.position_angle.errors %}
-                        <!--p style="color: red;">[{{ error }}]</p-->
-                        {% endfor %}
+                        <span style="display: flex; justify-content:space-between">
+                            <button style="width: 45%;" class='btn btn-small btn-secondary button-command' data-msg="rotate" value="in">in</button> 
+                            <button style="width: 45%;" class='btn btn-small btn-secondary button-command' data-msg="rotate" value="out">out</button>
+                        </span>
+                        <span style="display: flex; justify-content:space-between">
+                            <button style="width: 45%;" class='btn btn-small btn-secondary'></button> 
+                            <button style="width: 45%;" class='btn btn-small btn-secondary'></button>
+                        </span>
+                        <fieldset><label for="position_angle_status">Current Position Angle</label><input type=text id="position_angle_status" readonly></fieldset>
+                        <br>
+                        <form class='form-command' action="/command/rotate-specific">
+                        <span style="display: flex; justify-content:space-between">
+                            <fieldset><label for="position_angle_status">Set Angle:</label><input style="width: 70%;" name="pa_val" type=text id="position_angle_status"></fieldset>
+                            <button class="btn btn-small btn-secondary">Rotate</button>
+                        </span>
+                        </form>
+                        
                     </div>
                 </div>
 
@@ -105,14 +129,14 @@
 }
 #focus-tab-content {
     display: grid;
-    grid-template-columns: 100%;
-    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
     grid-gap: 10px;
 }
 #rotate-tab-content {
     display: grid;
-    grid-template-columns: 100%;
-    grid-template-rows: 1fr;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
     grid-gap: 10px;
 }
 

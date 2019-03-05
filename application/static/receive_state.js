@@ -45,12 +45,14 @@ $(document).ready( function() {
             $('#state-lmst').text(parseFloat(state_mnt1.tel_sid_time).toFixed(3));
         }
         
-        if (obj["foc-1"] && obj["foc-1"]["foc-1"] != "empty") {
-            $.extend(state_foc1, obj["foc-1"]);
+        if (obj["foc1"] && obj["foc1"]["foc1"] != "empty") {
+            $.extend(state_foc1, obj["foc1"]);
+            $('#focus_position_status:text').val(state_foc1.focus);
         }
 
-        if (obj["rot-1"] && obj["rot-1"]["rot-1"] != "empty") {
-            $.extend(state_rot1, obj["rot-1"]);
+        if (obj["rot1"] && obj["rot1"]["rot1"] != "empty") {
+            $.extend(state_rot1, obj["rot1"]);
+            $('#position_angle_status:text').val(state_rot1.pa);
         }
 
         if (obj["wx-1"] && obj["wx-1"]["wx-1"] != "empty") {

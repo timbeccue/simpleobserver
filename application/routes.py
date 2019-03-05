@@ -171,7 +171,7 @@ def event_stream(refresh_frequency=1):
 def compile_state_to_send():
     ''' Get various state information from redis and publish to SSE broadcast combined in a single JSON object '''
 
-    state_keys = ['mnt-1', 'foc-1', 'rot-1', 'wx-1']
+    state_keys = ['mnt-1', 'foc1', 'rot1', 'wx-1']
     compiled_state = {} 
     
     for key in state_keys:
@@ -283,6 +283,33 @@ def home():
 @login_required
 def command(msg):
 
+    cmd = []
+
+    if msg == 'focus':
+        button = request.form['command']
+        cmd = cmd_focus(button)
+        response = f"Focusing: {button}"
+        return jsonify(response=response, requested="requested", processed=cmd[1], live=live_commands)
+    if msg == 'focus-specific':
+        print(request.form)
+        val = request.form['focus_val']
+        cmd = cmd_focus("value", val)
+        response = f"Focusing to {val}."
+        return jsonify(response=response, requested="requested", processed=cmd[1], live=live_commands)
+    if msg == 'rotate':
+        button = request.form['command']
+        cmd = cmd_position_angle(button)
+        response = f"Rotating: {button}"
+        return jsonify(response=response, requested="requested", processed=cmd[1], live=live_commands)
+    if msg == 'rotate-specific':
+        print(request.form)
+        val = request.form['pa_val']
+        cmd = cmd_position_angle("angle", val)
+        response = f"Rotating to {val} degrees."
+        return jsonify(response=response, requested="requested", processed=cmd[1], live=live_commands)
+
+
+
     # Camera/Imaging Commands
     if msg == 'camera':
         form = CameraForm()
@@ -293,7 +320,7 @@ def command(msg):
         print(form.autofocus.data)
         print(form.bin.data)
         print(form.filename_hint.data)
-        print(form.sitename.data)
+        print(form.size.data)
         print(form.filter.data)
 
         if form.validate_on_submit():
@@ -304,10 +331,11 @@ def command(msg):
             autofocus = form.autofocus.data
             position_angle = form.position_angle.data
             filename_hint = form.filename_hint.data
-            sitename = form.sitename.data
+            sitename = site_attributes['site_abbreviation']
+            size = form.size.data
             bin = form.bin.data
             filter = form.filter.data
-            cmd = cmd_expose(time, count, bin, dither, autofocus, position_angle, filename_hint, sitename, delay, filter)
+            cmd = cmd_expose(time, count, bin, dither, autofocus, filename_hint, sitename, size, delay, filter)
             send(cmd)
             print(cmd)
             response = f"Taking {count} {time} second image(s)."

@@ -51,7 +51,7 @@ def cmd_parking(cmd):
     return [key, val]
 
 # capture image(s)
-def cmd_expose(time, count, binning, dither, autofocus, position_angle, filename_hint, sitename, start_delay=0, filter='c',soft_bin=0):
+def cmd_expose(time, count, binning, dither, autofocus, filename_hint, sitename, size, start_delay=0, filter='c',soft_bin=0):
     key = '>ptr-cam-1'
     val = {
         'time': time,
@@ -62,9 +62,9 @@ def cmd_expose(time, count, binning, dither, autofocus, position_angle, filename
         'filter': filter,
         'dither': dither,
         'filename_hint': filename_hint,
+        'size': size,
         'sitename': sitename,
         'autofocus': autofocus,
-        'position_angle': position_angle
     }
     return [key, val]
 
@@ -132,5 +132,25 @@ def cmd_cover(on_or_off, param0_255):
     val = {
         'command': on_or_off,
         'value': param0_255
+    }
+    return [key, val]
+
+def cmd_focus(button, position=0):
+    ''' button is either 'in', 'out', 'auto', 'default', or 'value'.
+    If button=='value', then position is a number that the focuser should go to.'''
+    key = '>ptr-focus-1'
+    val = {
+        'command': button,
+        'position': position
+    }
+    return [key, val]
+
+def cmd_position_angle(button, position=0):
+    ''' button is either 'in', 'out', or 'angle'.
+    If button=='angle', then position is a number between 180 and -180.'''
+    key = '>ptr-positionangle-1'
+    val = {
+        'command': button,
+        'angle': position
     }
     return [key, val]

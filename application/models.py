@@ -73,13 +73,13 @@ class CameraForm(FlaskForm):
     bin = SelectField('Binning', default='1', choices=[('1','1'), ('2','2'), ('4','4')])
     filter = SelectField('Filter', default='c', choices=filter_choices)
     filename_hint = StringField('Hint')
-    sitename = SelectField('Site', default='ptr', choices=[('ptr','ptr'), ('wmd','wmd'), ('saf','saf')])
+    size = SelectField('Size', default='100%', choices=[('1', '100%'), ('0.707', '70.7%'), ('0.5', '50%'), ('0.35','35%'), ('0.25','25%'), ('0.125', '12.5%')])
     capture = SubmitField(' Capture Image')
 
     autofocus = BooleanField('Autofocus', default=1)
 
     position_angle = FloatField('Position Angle', default=0, validators=[
-                                NumberRange(min=-180, max=180, message="Please enter a value between 0 and 360.")])
+                                NumberRange(min=-180, max=180, message="Val between -180 and 180")])
 
 class ObjectFilter(FlaskForm):
     open_clusters = BooleanField('open clusters', default=1)
