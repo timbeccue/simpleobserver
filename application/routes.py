@@ -21,6 +21,31 @@ weather_logger.add_job(weatherlogger.log_everything, 'interval', seconds=55)
 weather_logger.start()
 ####################################################################################
 
+# Allow api calls from http://localhost:8080 (eg. the Vue client).
+def add_cors_headers(response):
+    response.headers['Access-Control-Allow-Origin'] = 'http://localhost:8080'
+    if request.method == 'OPTIONS':
+        response.headers['Access-Control-Allow-Methods'] = 'DELETE, GET, POST, PUT'
+        headers = request.headers.get('Access-Control-Request-Headers')
+        if headers:
+            response.headers['Access-Control-Allow-Headers'] = headers
+    return response
+application.after_request(add_cors_headers)
+
+from application.auth_helper import auth_required
+@application.route('/api/test', methods=['GET', 'POST'])
+def apitest():
+    # Get jwt from header, then decode and verify it. 
+    #jwt = request.headers.get('Authorization')
+    #result = decode_verify_jwt(jwt) # returns json token claims if verified, otherwise returns False.
+    return "test api success"
+
+@application.route('/api/loginrequired', methods=['GET', 'POST'])
+@auth_required
+def apirestricted(user):
+    result = user
+    print(f'Protected API. jwt verification result: {result}')
+    return("protected api success")
 
 @application.route('/testlogexists', methods=['GET', 'POST'])
 def testlogexists():

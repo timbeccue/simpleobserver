@@ -18,6 +18,8 @@ migrate = Migrate(application, db)
 login = LoginManager(application)
 login.login_view = 'login'
 
+
+
 redis_host = config_file['NETWORK']['redis_host']
 redis_port = config_file['NETWORK']['redis_port']
 core1_redis = redis.StrictRedis(host=redis_host, port=redis_port, db=0, decode_responses=True)
