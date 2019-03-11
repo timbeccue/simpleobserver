@@ -20,17 +20,76 @@ weather_logger = BackgroundScheduler(daemon=True)
 weather_logger.add_job(weatherlogger.log_everything, 'interval', seconds=55)
 weather_logger.start()
 ####################################################################################
+from application.auth_helper import auth_required
 
-# Allow api calls from http://localhost:8080 (eg. the Vue client).
-def add_cors_headers(response):
-    response.headers['Access-Control-Allow-Origin'] = 'http://localhost:8080'
-    if request.method == 'OPTIONS':
-        response.headers['Access-Control-Allow-Methods'] = 'DELETE, GET, POST, PUT'
-        headers = request.headers.get('Access-Control-Request-Headers')
-        if headers:
-            response.headers['Access-Control-Allow-Headers'] = headers
-    return response
-application.after_request(add_cors_headers)
+
+
+@application.route('/commands/<type>', methods=['POST'])
+@auth_required
+def commands(type):
+
+    content = request.get_json()
+    cmd = []
+
+    if type == "focus":
+        try: cmd = cmd_focus(content["command"], content["position"])
+        except: cmd = cmd_focus(content["command"])
+
+    if type == "rotate": 
+        try: cmd = cmd_position_angle(content["command"], content["angle"])
+        except: cmd = cmd_position_angle(content["command"])
+
+    if type == "park":
+        cmd = cmd_parking(content["command"])
+
+    if type == "lamp":
+        cmd = cmd_lamp(content["command"])
+
+    if type == "ir-lamp":
+        cmd = cmd_ir(content["command"])
+
+    if type == "roof":
+        cmd = cmd_roof(content["command"])
+
+    if type == "flatscreen":
+        try: cmd = cmd_flatscreen(content["command"], content["value"])
+        except: cmd = cmd_flatscreen(content["command"])
+
+    if type == "cover":
+        try: cmd = cmd_cover(content["command"], content["value"])
+        except: cmd = cmd_cover(content["command"])
+
+    if type == "slew": 
+        cmd = cmd_slew([content["ra"], content["dec"]])
+
+    if type == "camera":
+        cmd = cmd_expose(
+            content["time"],
+            content["count"],
+            content["bin"],
+            content["dither"],
+            content["autofocus"],
+            content["hint"],
+            site_attributes["site_abbreviation"],
+            content["size"],
+            content["delay"],
+            content["filter"],
+        )
+    
+    print(cmd)
+    send(cmd)
+    result = jsonify(cmd)
+    return result
+
+
+
+
+@application.route('/api/test/button', methods=['GET', 'POST'])
+def testbutton():
+    if request.method == 'GET':
+        time.sleep(3)
+        return "delayed button test return"
+    return "button test return"
 
 from application.auth_helper import auth_required
 @application.route('/api/test', methods=['GET', 'POST'])
@@ -42,10 +101,22 @@ def apitest():
 
 @application.route('/api/loginrequired', methods=['GET', 'POST'])
 @auth_required
-def apirestricted(user):
-    result = user
-    print(f'Protected API. jwt verification result: {result}')
+def apirestricted():
     return("protected api success")
+
+@application.route('/api/parkoff', methods=['GET', 'POST'])
+@auth_required
+def parkingtest():
+    content = request.get_json()
+    value = content['command']
+    #value="park"
+    response = f"Telescope is {value}ing."
+    cmd = cmd_parking(value)
+    send(cmd)
+    processed = cmd[1] if (len(cmd)>0) else ''
+    data = jsonify(response=response, requested="requested", processed=processed, live=live_commands)
+    return data
+
 
 @application.route('/testlogexists', methods=['GET', 'POST'])
 def testlogexists():
@@ -89,67 +160,11 @@ def plot_weather(logtype):
         return("no log found")
     return(weather_plots.create_plot(logtype))
 
-#@application.route('/getinfo/<item>', methods=['GET', 'POST'])
-## The variable 'item' is a string of config items to get, delimited by a dash (-)
-#def get_info(item):
-#    items = item.split('-')
-#    data = {}
-#    try:
-#        for val in items:
-#            data[val] = site_attributes[val]
-#        return jsonify(status="success", data=data)
-#    except:
-#        return jsonify(status="fail")
 
 @application.route('/dome-cam-url', methods=['GET', 'POST'])
 def dome_cam():
     return jsonify(url=site_attributes['dome-camera'])
 
-
-# Something with simbad/astropy/astroquery is causing the site to fail (err 500) on aws. Temporarily disabled.
-
-#from astroquery.simbad import Simbad
-#from astropy.table import Table, vstack
-#@application.route('/simbadquery', methods=['GET', 'POST'])
-#def simbadquery():
-#    ''' 
-#    Should return JSON with status=success or fail. 
-#    If status=fail, json should include content="error message".
-#    If status=success, content should contain a string that is already coded in json format.
-#    '''
-#
-#    search_args = request.form['query-args'].split(",")
-#    print(search_args)
-#    wildcard = True#request.form['haswildcards']
-#
-#    if not search_args or not wildcard: #ensure nonempty fields
-#        return jsonify(status='fail', content="error: no search argument given.")
-#
-#    # Customize fields returned by Simbad
-#    cSimbad = Simbad()
-#    cSimbad.add_votable_fields('main_id', 'id(m)', 'id(ngc)','ra(d)', 'dec(d)', 'ubv', 'flux(V)', 'id(name)', 'dim_majaxis')
-#    cSimbad.remove_votable_fields('coordinates', 'main_id')
-#
-#    # Comma separated queries return multiple tables that are combined into one.
-#    def objects(*args): 
-#        def gen(*args):
-#            for arg in args:
-#                yield cSimbad.query_objects(arg, wildcard=True)
-#        return vstack(list(gen(*args)))
-#
-#
-#    raw_result = objects(search_args)
-#    try:
-#        result_b = raw_result.to_pandas()
-#    except Exception as ex:
-#        print(ex)
-#        return jsonify(status='fail', content="error: simbad did not respond to request.")
-#    
-#    result = result_b.to_json()
-#    print(result)
-#    return jsonify(status="success", content=result)
-
-    
 
 # User Login Routes
 @application.route('/login', methods=['GET', 'POST'])
@@ -192,7 +207,6 @@ def event_stream(refresh_frequency=1):
         state_dict = compile_state_to_send()
         yield 'data: {}\n\n'.format(state_dict)
         time.sleep(refresh_frequency)
-
 def compile_state_to_send():
     ''' Get various state information from redis and publish to SSE broadcast combined in a single JSON object '''
 
@@ -206,7 +220,6 @@ def compile_state_to_send():
         compiled_state[key] = raw
 
     return json.dumps(compiled_state)
-
 @application.route('/status/all', methods=['GET', 'POST'])
 def stream():
     refresh_frequency = .8
@@ -219,43 +232,6 @@ def stream():
     #resp.headers["Cache-Control"] = 'no-cache'
     #resp.headers["X-Accel-Buffering"] = 'no'
     return resp
-
-#altitudes = []
-#import numpy as np
-#from astropy.coordinates import SkyCoord, EarthLocation, AltAz
-#from astropy.time import Time
-#import astropy.units as u
-#def make_altitude_lut():
-#    time = Time.now()
-#    location = EarthLocation(lat=34*u.degree, lon=-119*u.degree)
-#    # How many points to precalculate for ra and dec.
-#    num_ra = 360
-#    num_dec = 180
-#    # Line up each ra and dec value 
-#    ra = np.repeat(np.arange(num_ra), num_dec)
-#    dec = np.tile(np.arange(num_dec), num_ra) - 90
-#    
-#    eq = SkyCoord(ra, dec, unit=u.degree)
-#    aa = eq.transform_to(AltAz(obstime=time, location=location)).alt.deg
-#    altitudes = np.ndarray.tolist(aa.astype(int))
-#    return altitudes
-
-#def altitude_lut():
-#    while True:
-#        altitudes = make_altitude_lut()
-#        yield 'data: {}\n\n'.format(json.dumps(altitudes))
-#        time.sleep(30000) # Not in use, so no need for fast refresh.
-
-#@application.route('/get_altitude_lut', methods=['GET', 'POST'])
-#def stream_altitude_lut():
-#    sse = altitude_lut()
-#    resp = Response(sse, mimetype="text/event-stream")
-#    resp.headers["Cache-Control"] = 'no-cache'
-#    resp.headers["X-Accel-Buffering"] = 'no'
-#    return resp
-
-
-
 
 
 import application.database_helpers as database
@@ -270,39 +246,30 @@ def alt():
 @login_required
 def addtodatabase():
     return database.add_to_database()
-
 # Filter the display of objects by type.
 # This route takes users selection and saves it in a session, to be read by tablelookup when the table is redrawn.
 @application.route('/apply_table_filters', methods=['POST', 'GET'])
 def apply_table_filters():
     return database.apply_table_filters()
-
-
 # Dumps all data into a json file (geojson format) for use in the d3celestial sky chart.
 @application.route('/database_to_json')
 @login_required
 def database_to_json():
     return database.database_to_json()
-
 @application.route('/recreate_database')
 @login_required
 def recreate_database():
     return database.recreate_database()
-
 @application.route('/merge_geojson')
 @login_required
 def merge_geojson():
     return database.merge_geojson()
 
 
-#############################################
-# END TESTPAGE STUFF ########################
-#############################################
-
-
 @application.route('/', methods=['GET', 'POST'])
 def home():
     return render_template('base.html', loginform=LoginForm(), cameraform=CameraForm(), filter=ObjectFilter(), site=site_attributes)
+
 
 @application.route('/command/<msg>', methods=['POST'])
 @login_required
@@ -451,6 +418,7 @@ def command(msg):
     send(cmd)
     processed = cmd[1] if (len(cmd)>0) else ''
     return jsonify(response=response, requested="requested", processed=processed, live=live_commands)
+
 
 
 from application.reference import all_dsos, all_stars, double_stars, nebula, galaxies, globular_clusters

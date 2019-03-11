@@ -46,7 +46,7 @@ def cmd_slew(eq):
 def cmd_parking(cmd):
     key = '>ptr-mnt-1'
     val = {
-        'command': cmd
+        'command': cmd # cmd is either 'park' or 'unpark'.
     }
     return [key, val]
 
@@ -115,7 +115,7 @@ def cmd_ir(on_or_off):
     }
     return [key, val]
 # Screen flats panel
-def cmd_flatscreen(on_or_off, param0_255):
+def cmd_flatscreen(on_or_off, param0_255=0):
     ''' on_or_of is a string either 'on' or 'off'.
         param0_255 is an int in [0,255]. '''
     key = '>ptr-screen-1'
@@ -125,7 +125,7 @@ def cmd_flatscreen(on_or_off, param0_255):
     }
     return [key, val]
 # Screen flats panel
-def cmd_cover(on_or_off, param0_255):
+def cmd_cover(on_or_off, param0_255=0):
     ''' on_or_of is a string either 'on' or 'off'.
         param0_255 is an int in [0,255]. '''
     key = '>ptr-cover-1'

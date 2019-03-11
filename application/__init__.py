@@ -3,6 +3,7 @@ from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
+from flask_cors import CORS
 import redis
 
 from configparser import ConfigParser
@@ -18,6 +19,7 @@ migrate = Migrate(application, db)
 login = LoginManager(application)
 login.login_view = 'login'
 
+cors = CORS(application, resources={r"/*": {"origins": "*"}})
 
 
 redis_host = config_file['NETWORK']['redis_host']

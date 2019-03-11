@@ -57,15 +57,17 @@ def auth_required(f):
     @wraps(f)
     def decorated_function(*args, **kws):
         if not 'Authorization' in request.headers:
+            print("no Authorization in request.headers")
             abort(401)
         
         token = request.headers.get('Authorization')
         try:
             user = decode_verify_jwt(token)
         except:
+            print("exception when decoding/verifying jwt token")
             abort(401)
         if not user: 
             abort(401)
         
-        return f(user, *args, **kws)
+        return f(*args, **kws)
     return decorated_function
