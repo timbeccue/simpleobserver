@@ -636,7 +636,6 @@ function newSkyMap() {
         } else {
             alert("Error: color settings could not be changed.");
         }
-
     }
 
 

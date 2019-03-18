@@ -17,7 +17,7 @@ def send(cmd, expire=expire_time):
 
 def parse_goto_input(text):
     valid_ra = [0,24]
-    valid_de = [0,90]
+    valid_de = [-90,90]
 
     # look for two numbers separated by a comma
     text.strip().lower()
