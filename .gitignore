@@ -9,6 +9,7 @@ venv/
 sandbox/
 application/weatherlogs/*.csv
 config.ini
+run.sh
 
 
 databases/astro.db 
