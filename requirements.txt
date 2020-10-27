@@ -23,7 +23,7 @@ Click==7.0
 colorama==0.3.9
 colorclass==2.2.0
 configparser==3.5.0
-cryptography==2.5
+cryptography==3.2
 datatables==0.4.9
 decorator==4.3.0
 dnspython==1.15.0
